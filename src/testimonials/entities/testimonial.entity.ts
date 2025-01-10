@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'testimonials' })
 export class Testimonial {
   @PrimaryGeneratedColumn('uuid')
   id: string;

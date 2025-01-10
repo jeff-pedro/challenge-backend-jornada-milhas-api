@@ -12,8 +12,6 @@ import { validate } from './validations/env.validation';
 
 @Module({
   imports: [
-    TestimonialsModule,
-    DestinationsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -23,10 +21,10 @@ import { validate } from './validations/env.validation';
       useClass: PostgresConfigService,
       inject: [PostgresConfigService],
     }),
+    TestimonialsModule,
+    DestinationsModule,
     UsersModule,
     PhotosModule,
   ],
 })
-export class AppModule {
-  constructor(private dataSource: DataSource) {}
-}
+export class AppModule {}
