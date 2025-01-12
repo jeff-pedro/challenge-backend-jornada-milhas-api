@@ -1,84 +1,132 @@
+<p align="right">
+  <a href="./README.md" title="english">
+    <img src="./docs/img/usa.png" alt="english doc" width="30">
+  </a>
+  <a href="./docs/README_pt-br.md" title="portuguese">
+    <img src="./docs/img/brazil.png" alt="portuguese doc" width="30">
+  </a>
+<p align="center">
+
 <h1 align="center">Challenge Backend: Jornada Milhas</h1>
 
 <p align="center">
-  <a href="" target="_blank">Jornada Milhas</a> é uma website fictício que forcene informações sobre possíveis destinos de viagens.
+  <a href="" target="_blank"><img src="docs/img/logo.png" width="300" alt="Jornada Milhas logo" /></a>
 <p align="center">
 
-<!-- <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a> -->
-<!-- </p> -->
-
-<!-- [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456 -->
-<!-- [circleci-url]: https://circleci.com/gh/nestjs/nest -->
-
-<!-- <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-  <p align="center"> -->
-
-<!-- <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a> -->
-<!-- <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a> -->
-<!-- <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a> -->
-<!-- <a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a> -->
-<!-- <a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a> -->
-<!-- <a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a> -->
-<!-- <a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a> -->
-<!-- <a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a> -->
-<!-- <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a> -->
-<!-- <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a> -->
-<!-- <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a> -->
-
-</p>
+<p align="center">
+  API for a fictional website that provides information about potential travel destinations.  
+<p align="center">
 
 ## Descrição
 
-API Restful para o site de recomendação de destinos de viagens [Jornada Milhas](https://api.jornadamilhas.sapituca.site).
+Restful API for the travel destination recommendation site [Jornada Milhas](https://api.jornadamilhas.sapituca.site) developed during the Challenge Back-End by <a href="https://cursos.alura.com.br" target="_blank">Alura</a>.
 
-## Sobre o desafio
+## About the Challenge
 
-Este projeto foi desenvolvido em `TypeScript` e `NestJS`, usando `TypeORM` como camada de acesso aos dados. O principal objetivo deste projeto é aplicar e praticar conhecimentos pré-adquiridos nestas tecnologias, além de aproveitar a oportunidade para aprimorar técnicas de progração, aprender mais sobre desing de software e aprofundar nos estudos das tecnologias usadas durante o desenvolvimento.
+This project was developed in `TypeScript` and `NestJS`, using `TypeORM` as the data access layer. The main goal of this project is to apply and practice pre-acquired knowledge in these technologies while taking the opportunity to improve programming techniques, learn more about software design, and deepen the understanding of the technologies used during development.
 
-O desafio foi divido em 4 semanas, onde cada semana terá entregáveis a serem desenvolvidos e para gerenciar o [projeto Jornada Milhas](https://github.com/users/jeff-pedro/projects/4) e suas tarefas foi usando o próprio **GitHub Projects**.
+The challenge was divided into four weeks, with deliverables for each week.**GitHub Projects** was used to manage the [Jornada Milhas project](https://github.com/users/jeff-pedro/projects/4) and its tasks.
 
-## Documentação
-Para saber detalhes do projeto veja a documentação no [Github Wiki](https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki)
+## Documentation
 
-## Tecnologias usadas
+For project details, see the documentation on the [Github Wiki](https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki).
 
-<!-- lista de tecnologias usadas -->
+## Technologies Used
 
-## Instalação
+![Node.js](https://img.shields.io/badge/Node.js-white?style=for-the-badge&logo=node.js&logoColor=green)
+![Nest.js](https://img.shields.io/badge/Nest.js-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![TypeORM](https://img.shields.io/badge/TypeORM-FE0803?style=for-the-badge&logo=TypeORM&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-F6F5F2?style=for-the-badge&logo=postgresql&logoColor=blue)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)
+![EsLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![Github Action](https://img.shields.io/badge/Github_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
+![Render](https://img.shields.io/badge/Render-000000?style=for-the-badge&logo=render&logoColor=white)
+
+## Prerequisites
+
+* [Node.js v22.11.0](https://nodejs.org/en/download)
+* NPM v10.9.0
+* [PostgreSQL](https://www.postgresql.org/download/) / [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/linux/)
+* [Cohere API Key](https://dashboard.cohere.com/api-keys)
+
+## Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Executando o app
+## Environment Variables
+
+Create a `.env` file in the project’s root directory.
 
 ```bash
-# desenvolvimento
-$ npm run start
-
-# modo watch
-$ npm run start:dev
-
-# modo produção
-$ npm run start:prod
+touch .env
 ```
 
-## Teste
+Fill it with the configured database values and the Cohere API Key.
 
 ```bash
-# testes unitários
-$ npm run test
+# COHERE AI
+COHERE_API_KEY=""
 
-# testes e2e
-$ npm run test:e2e
-
-# testes de cobertura
-$ npm run test:cov
+# DATABASE
+DB_HOST=""
+DB_PORT=""
+DB_USERNAME=""
+DB_PASSWORD=""
+DB_NAME=""
 ```
 
-## Para manter contato
+## Launching the Infrastructure (Optional)
 
-- Autor - [Jefferson Santos](https://jefferson.sapituca.site)
-- Site - [https://jornadamilhas.sapituca.site](https://jornadamilhas.sapituca.site)
-- LinkedIn - [in/jeffersonpedro](https://www.linkedin.com/in/jeffersonpedro)
+Starting the database with `docker compose`
+
+```bash
+cd ./challenge-backend-jornada-milhas
+docker compose up -d 
+```
+
+## Running the App
+
+```bash
+# development
+npm run start
+
+# watch mode
+npm run start:dev
+
+# production mode
+npm run start:prod
+```
+
+## Testing
+
+```bash
+# unit tests
+npm run test
+
+# e2e tests
+npm run test:e2e
+
+# coverage tests
+npm run test:cov
+```
+
+## Migrations
+
+```bash
+# generate migration file
+npm run typeorm migration:generate src/db/migration/[migration-name]
+
+# run migration
+npm run typeorm migration:run
+```
+
+## Contact
+
+* Author - [Jefferson Santos](https://jefferson.sapituca.site)
+* Website - [https://jornadamilhas.sapituca.site](https://jornadamilhas.sapituca.site)
+* LinkedIn - [in/jeffersonpedro](https://www.linkedin.com/in/jeffersonpedro)
