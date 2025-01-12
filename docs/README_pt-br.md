@@ -24,7 +24,7 @@ Para uma documentação detalhada, incluindo instruções de configuração, uso
 ## 🚀 Quick Start
 
 ```bash
-# Instalar dependencies
+# Instalar dependências
 npm install
 
 # Executar o app em modo desenvolvimento
