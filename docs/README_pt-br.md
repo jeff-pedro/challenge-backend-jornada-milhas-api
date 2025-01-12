@@ -2,7 +2,7 @@
   <a href="./readme_pt-br.md" title="português">
     <img src="./img/brazil.png" alt="documento em português" width="30">
   </a>
-  <a href="../readme.md" title="inglês">
+  <a href="../README.md" title="inglês">
     <img src="./img/usa.png" alt="documento em inglês" width="30">
   </a>
 <p align="center">
