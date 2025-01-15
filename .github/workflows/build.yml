@@ -4,7 +4,7 @@ on:
   workflow_call:
   
 jobs:
-  build:
+  docker:
         runs-on: ubuntu-latest
         
         steps:
@@ -27,7 +27,7 @@ jobs:
               with:
                 context: .
                 push: true
-                tags: production
-                target: ${{ secrets.DOCKER_USERNAME }}/jornadamilhas:latest
+                target: production
+                tags: ${{ secrets.DOCKER_USERNAME }}/jornadamilhas:latest
 
           
