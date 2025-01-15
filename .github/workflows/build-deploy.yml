@@ -37,9 +37,9 @@ jobs:
             - name: Deploy
               # Only run this step if the main branch
               # if: github.ref == 'refs/heads/main'
-              run: |
-                echo ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-                curl "$deploy_url"
               env:
                 deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+              run: |
+                curl ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
         
