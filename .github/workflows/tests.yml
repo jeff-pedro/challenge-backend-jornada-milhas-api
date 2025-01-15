@@ -12,9 +12,29 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                 node-version: 22
-            
+       
             - name: Install dependencies
               run: npm ci --include=dev
             
             - name: Run tests
               run: npm test
+
+    # integration-test:
+    #     name: Integration Tests
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - uses: actions/checkout@v4
+    #         - uses: actions/setup-node@v4
+    #           with:
+    #             node-version: 22
+
+    #         - name: Install dependencies
+    #           run: npm ci --include=dev
+
+    #         - name: Run tests
+    #           run: npm run test:e2e
+
+    build:
+        name: Build
+        needs: [unit-test, integration-test]
+        uses: ./.github/workflows/build.yml
