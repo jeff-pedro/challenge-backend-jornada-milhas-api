@@ -1,0 +1,13 @@
+node_modules
+.env*
+dist
+coverage.
+.github
+.vscode
+docs
+*.md
+*.log
+.prettierrc
+.eslintrc
+Dockerfile
+docker-compose.yml
