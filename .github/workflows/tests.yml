@@ -41,7 +41,7 @@ jobs:
     #           run: npm run test:e2e
 
     build:
-        name: Build
+        name: Build and Deploy
         needs: [unit-test]
         uses: ./.github/workflows/build-deploy.yml
         secrets: inherit

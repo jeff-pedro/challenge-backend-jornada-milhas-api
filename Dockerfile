@@ -11,7 +11,7 @@ RUN npm ci --include=dev
 COPY tsconfig*.json ./
 COPY src/ src/
 # build the Nest application
-RUN npm run build   
+RUN npm run build
 
 
 
@@ -55,4 +55,5 @@ COPY --from=development /usr/src/app/dist ./dist
 
 EXPOSE 3000 443
 # run migrations and start the application
-CMD ["sh", "-c", "npx typeorm migration:run -d dist/db/data-source-cli.js && node dist/main.js"]
+# CMD ["sh", "-c", "npx typeorm migration:run -d dist/db/data-source-cli.js && node dist/main.js"]
+CMD [ "npm", "run", "start:prod" ]
