@@ -1,17 +1,22 @@
 name: tests
 
 on:
-    push:
+  pull_request:
+  push:
+    branches: [ "main", "deploy/container" ]
 
 jobs:
     unit-test:
+        
         name: Unit Tests
         runs-on: ubuntu-latest
+        
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
               with:
                 node-version: 22
+                cache: 'npm'
        
             - name: Install dependencies
               run: npm ci --include=dev
@@ -27,6 +32,7 @@ jobs:
     #         - uses: actions/setup-node@v4
     #           with:
     #             node-version: 22
+    #             cache: 'npm'
 
     #         - name: Install dependencies
     #           run: npm ci --include=dev
