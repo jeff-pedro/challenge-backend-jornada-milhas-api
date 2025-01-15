@@ -10,22 +10,22 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - name: Docker login
-              uses: docker/login-action@v3.3.0
-              with:
-                username: ${{ secrets.DOCKER_USERNAME }}
-                password: ${{ secrets.DOCKERHUB_TOKEN }}
+            # - name: Docker login
+            #   uses: docker/login-action@v3.3.0
+            #   with:
+            #     username: ${{ secrets.DOCKER_USERNAME }}
+            #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-            - name: Docker Setup Buildx
-              uses: docker/setup-buildx-action@v3.8.0
+            # - name: Docker Setup Buildx
+            #   uses: docker/setup-buildx-action@v3.8.0
 
-            - name: Build and push Docker images
-              uses: docker/build-push-action@v6.11.0
-              with:
-                context: .
-                push: true
-                target: production
-                tags: ${{ secrets.DOCKER_USERNAME }}/jornadamilhas:latest
+            # - name: Build and push Docker images
+            #   uses: docker/build-push-action@v6.11.0
+            #   with:
+            #     context: .
+            #     push: true
+            #     target: production
+            #     tags: ${{ secrets.DOCKER_USERNAME }}/jornadamilhas:latest
 
   deploy:
         runs-on: ubuntu-latest
@@ -39,6 +39,7 @@ jobs:
               # if: github.ref == 'refs/heads/main'
               env:
                 deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+              run: echo "$deploy_url"  
               run: |
-                curl $deploy_url
+                curl "$deploy_url"
         
