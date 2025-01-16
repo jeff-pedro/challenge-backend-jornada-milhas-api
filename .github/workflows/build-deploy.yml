@@ -1,7 +1,5 @@
-name: Build
+name: Build and Deploy
 
-# on:
-#   workflow_call:
 on:
   workflow_run:
     workflows: [Tests]
