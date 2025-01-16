@@ -5,31 +5,31 @@ on:
   
 jobs:
   
-  build-container:
+  build:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
 
-            # - name: Docker login
-            #   uses: docker/login-action@v3.3.0
-            #   with:
-            #     username: ${{ secrets.DOCKER_USERNAME }}
-            #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-            # - name: Docker Setup Buildx
-            #   uses: docker/setup-buildx-action@v3.8.0
-
-            # - name: Build and push Docker images
-            #   uses: docker/build-push-action@v6.11.0
-            #   with:
-            #     context: .
-            #     push: true
-            #     target: production
-            #     tags: ${{ secrets.DOCKER_USERNAME }}/jornadamilhas:latest
+            - name: Docker login
+              uses: docker/login-action@v3.3.0
+              with:
+                username: ${{ secrets.DOCKER_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
+            
+            - name: Docker Setup Buildx
+              uses: docker/setup-buildx-action@v3.8.0
+            
+            - name: Build and push Docker images
+              uses: docker/build-push-action@v6.11.0
+              with:
+                context: .
+                push: true
+                target: production
+                tags: ${{ secrets.DOCKER_USERNAME }}/jornadamilhas:latest
 
   deploy:
         runs-on: ubuntu-latest
-        needs: [build-container]
+        needs: [build]
         
         steps:
             - uses: actions/checkout@v4
