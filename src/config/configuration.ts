@@ -1,6 +1,8 @@
 export default () => {
   const environment = process.env.NODE_ENV || 'development';
 
+  console.log(environment);
+
   const entities = [__dirname + '/../**/entities/*.entity{.js,.ts}'];
 
   type Environment = 'development' | 'production' | 'test';
@@ -35,10 +37,7 @@ export default () => {
     test: {
       db: {
         type: 'sqlite',
-        host: 'localhost',
-        username: 'root',
-        password: null,
-        database: 'src/db/test-db.sqlite',
+        database: ':memory:',
         entities,
         dropSchema: true,
         synchronize: true, // synchronize tables with entities - only for development
