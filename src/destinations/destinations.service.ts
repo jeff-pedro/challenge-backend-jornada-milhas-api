@@ -21,7 +21,7 @@ export class DestinationsService {
     private destinationRepository: Repository<Destination>,
     private configService: ConfigService<
       {
-        accessKeys: { cohereApiKey: string };
+        app: { accessKeys: { cohereApiKey: string } };
       },
       true
     >,
@@ -99,7 +99,7 @@ export class DestinationsService {
 
   async generateText(prompt: string): Promise<string> {
     try {
-      const token = this.configService.get('accessKeys.cohereApiKey', {
+      const token = this.configService.get('app.accessKeys.cohereApiKey', {
         infer: true,
       });
 

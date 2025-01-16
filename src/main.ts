@@ -8,8 +8,8 @@ async function bootstrap() {
     abortOnError: false,
     cors: true,
   });
-  const configService = app.get(ConfigService<{ port: number }, true>);
-  const port = configService.get('port', { infer: true });
+  const configService = app.get(ConfigService<{ app: { port: number } }, true>);
+  const port = configService.get('app.port', { infer: true });
 
   app.useGlobalPipes(
     new ValidationPipe({

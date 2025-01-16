@@ -5,7 +5,7 @@ import { DestinationsModule } from './destinations/destinations.module';
 import { TestimonialsModule } from './testimonials/testimonials.module';
 import { UsersModule } from './users/users.module';
 import { PhotosModule } from './photos/photos.module';
-import { PostgresConfigService } from './config/postgres.config.service';
+import { DatabaseConfigService } from './config/db.config';
 import configuration from './config/configuration';
 import { validate } from './validations/env.validation';
 import { MainModule } from './main.module';
@@ -18,8 +18,8 @@ import { MainModule } from './main.module';
       validate,
     }),
     TypeOrmModule.forRootAsync({
-      useClass: PostgresConfigService,
-      inject: [PostgresConfigService],
+      useClass: DatabaseConfigService,
+      inject: [DatabaseConfigService],
     }),
     TestimonialsModule,
     DestinationsModule,

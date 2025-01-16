@@ -10,7 +10,7 @@ describe('AppModule', () => {
   });
 
   it('should validate environment variables', () => {
-    process.env.NODE_ENV = 'development';
+    process.env.NODE_ENV = 'test';
     process.env.PORT = '3000';
     process.env.COHERE_API_KEY = 'test-api-key';
 
@@ -18,7 +18,7 @@ describe('AppModule', () => {
   });
 
   it('should throw an error for invalid environment variables', () => {
-    process.env.NODE_ENV = 'invalid_env';
+    process.env.NODE_ENV = 'test';
     process.env.PORT = '-1';
     process.env.COHERE_API_KEY = '';
 

@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
 
-describe('DestinationsController (e2e)', () => {
+describe.only('DestinationsController (e2e)', () => {
   let app: INestApplication;
   let destinationId: string;
   let destinationName: string;
