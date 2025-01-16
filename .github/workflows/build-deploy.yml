@@ -1,7 +1,5 @@
 name: Build
 
-# on:
-#   workflow_call:
 on:
   workflow_run:
     workflows: [Tests]
