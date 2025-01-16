@@ -33,14 +33,11 @@ jobs:
         
         steps:
             - uses: actions/checkout@v4
-              env:
-                deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
             - name: Deploy
               # Only run this step if the main branch
-              # if: github.ref == 'refs/heads/main'
+              if: github.ref == 'refs/heads/main'
               run: |
-                curl "$deploy_url"
-                # curl ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+                curl ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
         
