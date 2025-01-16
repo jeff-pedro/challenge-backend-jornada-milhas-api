@@ -1,4 +1,4 @@
-name: tests
+name: Tests
 
 on:
   pull_request:
@@ -43,8 +43,8 @@ jobs:
             - name: Run tests
               run: npm run test:e2e
 
-    build:
-        name: Build and Deploy
-        needs: [unit-test, integration-test]
-        uses: ./.github/workflows/build-deploy.yml
-        secrets: inherit
+    # build:
+    #     name: Build and Deploy
+    #     needs: [unit-test, integration-test]
+    #     uses: ./.github/workflows/build-deploy.yml
+    #     secrets: inherit

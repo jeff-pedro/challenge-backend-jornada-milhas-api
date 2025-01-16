@@ -1,7 +1,13 @@
-name: build
+name: Build
 
+# on:
+#   workflow_call:
 on:
-  workflow_call:
+  workflow_run:
+    workflows: [Tests]
+    types:
+      - completed
+
   
 jobs:
   
