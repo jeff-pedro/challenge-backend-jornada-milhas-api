@@ -9,6 +9,8 @@ import { DatabaseConfigService } from './config/db.config';
 import configuration from './config/configuration';
 import { validate } from './validations/env.validation';
 import { MainModule } from './main.module';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './filters/http-exception.filters';
 
 @Module({
   imports: [
@@ -26,6 +28,12 @@ import { MainModule } from './main.module';
     UsersModule,
     PhotosModule,
     MainModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule {}
