@@ -36,7 +36,7 @@ describe('UsersController (e2e)', () => {
         password: '123456',
       });
 
-    userId = userResponse.body.data.id;
+    userId = userResponse.body.id;
   });
 
   describe('/POST users', () => {
@@ -166,8 +166,8 @@ describe('UsersController (e2e)', () => {
         `${USER_URL}/${userId}`,
       );
 
-      expect(response.body.data.photo.url).toEqual(updatedPhoto.url);
-      expect(response.body.data.photo.description).toEqual(
+      expect(response.body.photo.url).toEqual(updatedPhoto.url);
+      expect(response.body.photo.description).toEqual(
         updatedPhoto.description,
       );
     });
