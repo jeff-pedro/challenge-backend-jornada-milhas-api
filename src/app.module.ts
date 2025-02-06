@@ -9,8 +9,11 @@ import { DatabaseConfigService } from './config/db.config';
 import configuration from './config/configuration';
 import { validate } from './validations/env.validation';
 import { MainModule } from './main.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/http-exception.filters';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RedisOptions } from './config/app-options.constants';
+import { HttpCacheInterceptor } from './interceptors/http-cache.interceptor';
 
 @Module({
   imports: [
@@ -23,6 +26,7 @@ import { HttpExceptionFilter } from './filters/http-exception.filters';
       useClass: DatabaseConfigService,
       inject: [DatabaseConfigService],
     }),
+    CacheModule.registerAsync(RedisOptions),
     TestimonialsModule,
     DestinationsModule,
     UsersModule,
@@ -33,7 +37,10 @@ import { HttpExceptionFilter } from './filters/http-exception.filters';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
-    },
+    }, {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpCacheInterceptor,
+    }
   ],
 })
 export class AppModule {}

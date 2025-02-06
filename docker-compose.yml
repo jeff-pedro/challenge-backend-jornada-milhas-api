@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: development
-    container_name: jm-dev
+    container_name: dev
     working_dir: /app
     command: [ "npm", "run", "start:dev"]
     environment:
@@ -24,7 +24,7 @@ services:
 
   db:
     image: postgres:latest
-    container_name: jm-db
+    container_name: db
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
@@ -43,6 +43,15 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    
+  redis:
+    image: redis:7.0-alpine
+    container_name: cache
+    ports:
+      - 6379:6379
+    volumes:
+      - jm-redis:/data
 
 volumes:
   jm-data:
+  jm-redis:

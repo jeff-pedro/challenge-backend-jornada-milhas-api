@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { AppModule } from '../src/app.module';
+import { AppModuleTest } from './app.module.spec';
 
 describe('TestimonialsController (e2e)', () => {
   let app: INestApplication;
@@ -13,7 +13,7 @@ describe('TestimonialsController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModuleTest],
     }).compile();
 
     app = moduleRef.createNestApplication();
