@@ -11,7 +11,7 @@ import { validate } from './validations/env.validation';
 import { MainModule } from './main.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/http-exception.filters';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { CacheModule } from '@nestjs/cache-manager';
 import { RedisOptions } from './config/app-options.constants';
 import { HttpCacheInterceptor } from './interceptors/http-cache.interceptor';
 
@@ -37,7 +37,7 @@ import { HttpCacheInterceptor } from './interceptors/http-cache.interceptor';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
-    },{
+    }, {
       provide: APP_INTERCEPTOR,
       useClass: HttpCacheInterceptor,
     }
