@@ -1,8 +1,6 @@
 export default () => {
   const environment = process.env.NODE_ENV || 'development';
 
-  console.log(environment);
-
   const entities = [__dirname + '/../**/entities/*.entity{.js,.ts}'];
 
   type Environment = 'development' | 'production' | 'test';
