@@ -11,6 +11,8 @@ import { validate } from './validations/env.validation';
 import { MainModule } from './main.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/http-exception.filters';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RedisOptions } from './config/app-options.constants';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { HttpExceptionFilter } from './filters/http-exception.filters';
       useClass: DatabaseConfigService,
       inject: [DatabaseConfigService],
     }),
+    CacheModule.registerAsync(RedisOptions),
     TestimonialsModule,
     DestinationsModule,
     UsersModule,

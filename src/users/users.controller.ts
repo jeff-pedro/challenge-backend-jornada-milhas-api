@@ -7,15 +7,19 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor( private readonly usersService: UsersService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<{ data: User }> {
@@ -24,12 +28,14 @@ export class UsersController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   async findAll(): Promise<{ data: User[] }> {
     const user = await this.usersService.findAll();
     return { data: user };
   }
 
   @Get(':id')
+  @UseInterceptors(CacheInterceptor)
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<{ data: User }> {
