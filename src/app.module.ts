@@ -13,6 +13,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/http-exception.filters';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { RedisOptions } from './config/app-options.constants';
+import { HttpCacheInterceptor } from './interceptors/http-cache.interceptor';
 
 @Module({
   imports: [
@@ -38,7 +39,7 @@ import { RedisOptions } from './config/app-options.constants';
       useClass: HttpExceptionFilter,
     },{
       provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
+      useClass: HttpCacheInterceptor,
     }
   ],
 })
