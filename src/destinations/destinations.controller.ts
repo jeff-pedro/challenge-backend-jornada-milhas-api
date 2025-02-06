@@ -8,12 +8,14 @@ import {
   Delete,
   Query,
   ParseUUIDPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { DestinationsService } from './destinations.service';
 import { CreateDestinationDto } from './dto/create-destination.dto';
 import { UpdateDestinationDto } from './dto/update-destination.dto';
 import { ListDestinationDto } from './dto/list-destination.dto';
 import { Destination } from './entities/destination.entity';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('destinations')
 export class DestinationsController {
@@ -29,12 +31,14 @@ export class DestinationsController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   async findAll(@Query('name') name: string): Promise<{ data: Destination[] }> {
     const destinations = await this.destinationsService.findAll(name);
     return { data: destinations };
   }
 
   @Get(':id')
+  @UseInterceptors(CacheInterceptor)
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<{ data: ListDestinationDto }> {

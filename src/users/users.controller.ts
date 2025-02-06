@@ -7,15 +7,13 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
-  Inject,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('users')
 export class UsersController {
