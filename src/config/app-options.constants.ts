@@ -1,22 +1,23 @@
 import KeyvRedis from "@keyv/redis";
 import { CacheModuleAsyncOptions } from "@nestjs/cache-manager";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
-const redisOptions = {
-    socket: {
-        host: 'localhost',
-        port: 6379
-
-    },
-}
+const getRedisConfig = (configService: ConfigService) => ({
+  socket: {
+    host: configService.get<string>('REDIS_HOST'),
+    port: parseInt(configService.get<string>('REDIS_PORT') ?? '6379')
+  }, 
+})
 
 export const RedisOptions: CacheModuleAsyncOptions = {
       isGlobal: true,
-      useFactory: async () => {
-        return {
-          stores: [
-            new KeyvRedis(redisOptions)
-          ],
-          ttl: 10 * 1000, // tem de vida dos dados de 10 segundos,
-        }
-      }
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        stores: [
+          new KeyvRedis(getRedisConfig(configService))
+        ],
+        ttl: parseInt(configService.get<string>('CACHE_TTL')!), // tempo de vida dos dados
+      }),
     }
+    

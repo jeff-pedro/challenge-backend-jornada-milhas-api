@@ -7,14 +7,12 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  UseInterceptors,
 } from '@nestjs/common';
 import { TestimonialsService } from './testimonials.service';
 import { CreateTestimonialDto } from './dto/create-testimonial.dto';
 import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 import { ListTestimonialDto } from './dto/list-testimonial.dto';
 import { Testimonial } from './entities/testimonial.entity';
-import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller()
 export class TestimonialsController {
@@ -37,14 +35,12 @@ export class TestimonialsController {
   }
 
   @Get('/testimonials')
-  @UseInterceptors(CacheInterceptor)
   async findAll(): Promise<{ data: Testimonial[] }> {
     const testimonialsList = await this.testimonialsService.findAll();
     return { data: testimonialsList };
   }
 
   @Get('/testimonials/:id')
-  @UseInterceptors(CacheInterceptor)
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<{ data: object }> {
@@ -73,7 +69,6 @@ export class TestimonialsController {
   }
 
   @Get('/testimonials-home')
-  @UseInterceptors(CacheInterceptor)
   async pick(): Promise<{ data: Testimonial[] }> {
     const testimonials = await this.testimonialsService.getRandomTestimonials();
     return { data: testimonials };

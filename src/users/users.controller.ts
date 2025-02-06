@@ -26,14 +26,12 @@ export class UsersController {
   }
 
   @Get()
-  @UseInterceptors(CacheInterceptor)
   async findAll(): Promise<{ data: User[] }> {
     const user = await this.usersService.findAll();
     return { data: user };
   }
 
   @Get(':id')
-  @UseInterceptors(CacheInterceptor)
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<{ data: User }> {
