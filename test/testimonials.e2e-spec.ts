@@ -38,7 +38,7 @@ describe('TestimonialsController (e2e)', () => {
         password: '123456',
       });
 
-    userId = user.body.data.id;
+    userId = user.body.id;
 
     testimonial = await request(app.getHttpServer())
       .post('/testimonials')
@@ -47,7 +47,7 @@ describe('TestimonialsController (e2e)', () => {
         testimonial: 'Some testimonial.',
       });
 
-    testimonialId = testimonial.body.data.id;
+    testimonialId = testimonial.body.id;
   });
 
   describe('/POST testimonials', () => {
@@ -195,7 +195,7 @@ describe('TestimonialsController (e2e)', () => {
       );
 
       expect(response.status).toBe(200);
-      // expect(response.body.data).toHaveLength(3);
+      // expect(response.body).toHaveLength(3);
     });
   });
 

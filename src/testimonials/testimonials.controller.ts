@@ -21,33 +21,29 @@ export class TestimonialsController {
   @Post('/testimonials')
   async create(
     @Body() createTestimonialDto: CreateTestimonialDto,
-  ): Promise<{ data: ListTestimonialDto }> {
+  ): Promise<ListTestimonialDto> {
     const testimonialSaved =
       await this.testimonialsService.create(createTestimonialDto);
 
-    return {
-      data: new ListTestimonialDto(
+    return new ListTestimonialDto(
         testimonialSaved.id,
         testimonialSaved.userId,
         testimonialSaved.testimonial,
-      ),
-    };
+      );
   }
 
   @Get('/testimonials')
-  async findAll(): Promise<{ data: Testimonial[] }> {
+  async findAll(): Promise<Testimonial[]> {
     const testimonialsList = await this.testimonialsService.findAll();
-    return { data: testimonialsList };
+    return testimonialsList;
   }
 
   @Get('/testimonials/:id')
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<{ data: object }> {
+  ): Promise<object> {
     const testimonialSaved = await this.testimonialsService.findOne(id);
-    return {
-      data: testimonialSaved,
-    };
+    return testimonialSaved;
   }
 
   @Patch('/testimonials/:id')
@@ -69,8 +65,8 @@ export class TestimonialsController {
   }
 
   @Get('/testimonials-home')
-  async pick(): Promise<{ data: Testimonial[] }> {
+  async pick(): Promise<Testimonial[]> {
     const testimonials = await this.testimonialsService.getRandomTestimonials();
-    return { data: testimonials };
+    return testimonials;
   }
 }

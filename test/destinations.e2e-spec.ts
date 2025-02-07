@@ -36,8 +36,8 @@ describe.only('DestinationsController (e2e)', () => {
         descriptiveText: 'Some descriptive text about Berlin...',
       });
 
-    destinationId = destinatioResponse.body.data.id;
-    destinationName = destinatioResponse.body.data.name;
+    destinationId = destinatioResponse.body.id;
+    destinationName = destinatioResponse.body.name;
   });
 
   describe('/POST destinations', () => {
@@ -51,23 +51,6 @@ describe.only('DestinationsController (e2e)', () => {
           descriptiveText: 'Some descriptive text about Amsterdam...',
         })
         .expect(201);
-    });
-
-    it('should create and return the correct object structure', async () => {
-      const response = await request(app.getHttpServer())
-        .post(DESTINATION_URL)
-        .send({
-          name: 'Amsterdam',
-          photos: [{ url: 'amsterdam1.jpg' }, { url: 'amsterdam2.jpg' }],
-          target: 'Go to Amsterdam in 2030',
-          descriptiveText: 'Some descriptive text about Amsterdam...',
-        });
-
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          data: expect.any(Object),
-        }),
-      );
     });
 
     it('should return an error when receiving invalid type data', async () => {

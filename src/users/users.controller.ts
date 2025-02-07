@@ -18,23 +18,23 @@ export class UsersController {
   constructor( private readonly usersService: UsersService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<{ data: User }> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     const savedUser = await this.usersService.create(createUserDto);
-    return { data: savedUser };
+    return savedUser;
   }
 
   @Get()
-  async findAll(): Promise<{ data: User[] }> {
+  async findAll(): Promise<User[]> {
     const user = await this.usersService.findAll();
-    return { data: user };
+    return user;
   }
 
   @Get(':id')
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<{ data: User }> {
+  ): Promise<User> {
     const user = await this.usersService.findOne(id);
-    return { data: user };
+    return user;
   }
 
   @Patch(':id')

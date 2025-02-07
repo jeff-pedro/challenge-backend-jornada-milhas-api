@@ -22,33 +22,31 @@ export class DestinationsController {
   @Post()
   async create(
     @Body() createDestinationDto: CreateDestinationDto,
-  ): Promise<{ data: Destination }> {
+  ): Promise<Destination> {
     const destination =
       await this.destinationsService.create(createDestinationDto);
-    return { data: destination };
+    return destination;
   }
 
   @Get()
-  async findAll(@Query('name') name: string): Promise<{ data: Destination[] }> {
+  async findAll(@Query('name') name: string): Promise<Destination[]> {
     const destinations = await this.destinationsService.findAll(name);
-    return { data: destinations };
+    return destinations;
   }
 
   @Get(':id')
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<{ data: ListDestinationDto }> {
+  ): Promise<ListDestinationDto> {
     const destination = await this.destinationsService.findOne(id);
 
-    return {
-      data: new ListDestinationDto(
-        destination.id,
-        destination.photos,
-        destination.name,
-        destination.target,
-        destination.descriptiveText,
-      ),
-    };
+    return new ListDestinationDto(
+      destination.id,
+      destination.photos,
+      destination.name,
+      destination.target,
+      destination.descriptiveText,
+    )
   }
 
   @Patch(':id')

@@ -51,13 +51,11 @@ describe('TestimonialsController', () => {
         id: '1',
         ...testimonialDto,
       };
-      const result = {
-        data: new ListTestimonialDto(
+      const result = new ListTestimonialDto(
           testimonialSaved.id,
           testimonialSaved.userId,
           testimonialSaved.testimonial,
-        ),
-      };
+        );
       jest
         .spyOn(testimonialsService, 'create')
         .mockResolvedValueOnce(testimonialSaved);
@@ -78,7 +76,7 @@ describe('TestimonialsController', () => {
           deletedAt: '2024-01-01',
         },
       ];
-      const result = { data: testimonialSaved };
+      const result = testimonialSaved;
       jest
         .spyOn(testimonialsService, 'findAll')
         .mockResolvedValue(testimonialSaved);
@@ -100,7 +98,7 @@ describe('TestimonialsController', () => {
         updatedAt: '2024-01-01',
         deletedAt: '2024-01-01',
       };
-      const expected = { data: testimonial };
+      const expected = testimonial;
       jest.spyOn(testimonialsService, 'findOne').mockResolvedValue(testimonial);
 
       const result = await controller.findOne(id);
@@ -136,7 +134,7 @@ describe('TestimonialsController', () => {
 
   describe('randomTestimonials', () => {
     it('should return 3 random testimonials', async () => {
-      const result = { data: Array(3) };
+      const result = Array(3);
 
       jest
         .spyOn(testimonialsService, 'getRandomTestimonials')
@@ -145,7 +143,7 @@ describe('TestimonialsController', () => {
       const response = await controller.pick();
 
       expect(response).toEqual(result);
-      expect(response.data).toHaveLength(3);
+      expect(response).toHaveLength(3);
     });
   });
 });

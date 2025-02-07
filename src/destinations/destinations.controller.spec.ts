@@ -57,7 +57,7 @@ describe('DestinationsController', () => {
         target: 'Test target',
         descriptiveText: 'Text description',
       };
-      const result = { data: destination };
+      const result = destination;
       jest.spyOn(destinationService, 'create').mockResolvedValue(destination);
 
       expect(await controller.create(createDestinationDto)).toEqual(result);
@@ -70,17 +70,13 @@ describe('DestinationsController', () => {
         .spyOn(destinationService, 'findAll')
         .mockResolvedValue([destination]);
 
-      expect(await controller.findAll('')).toStrictEqual({
-        data: [destination],
-      });
+      expect(await controller.findAll('')).toStrictEqual([destination]);
     });
   });
 
   describe('findOne', () => {
     it('should return an array of destinations', async () => {
-      const result = {
-        data: destination,
-      };
+      const result = destination;
 
       jest.spyOn(destinationService, 'findOne').mockResolvedValue(destination);
 
