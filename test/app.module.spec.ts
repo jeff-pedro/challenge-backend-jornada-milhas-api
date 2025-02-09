@@ -15,6 +15,7 @@ import { HttpExceptionFilter } from '../src/resources/filters/http-exception.fil
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: '.env.test',
       isGlobal: true,
       load: [configuration],
       validate,

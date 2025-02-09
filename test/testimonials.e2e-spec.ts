@@ -51,7 +51,7 @@ describe('TestimonialsController (e2e)', () => {
   });
 
   describe('/POST testimonials', () => {
-    it('should create a new user', async () => {
+    it('should create a new testimonial', async () => {
       return request(app.getHttpServer())
         .post(TESTIMONIAL_URL)
         .send({
@@ -61,7 +61,7 @@ describe('TestimonialsController (e2e)', () => {
         .expect(201);
     });
 
-    it('should return a 400 when userId property was not provided ', () => {
+    it('should return a 400 when userId property was not provided', () => {
       return request(app.getHttpServer())
         .post(TESTIMONIAL_URL)
         .send({
@@ -108,14 +108,14 @@ describe('TestimonialsController (e2e)', () => {
       expect(response.body.message).toBe('User not found');
     });
 
-    it('should return a 400 when testimonial property was not provided ', async () => {
+    it('should return a 400 when testimonial property was not provided', async () => {
       return request(app.getHttpServer())
         .post(TESTIMONIAL_URL)
         .send({ userId })
         .expect(400);
     });
 
-    it('should return an error when testimonial property is empty ', async () => {
+    it('should return an error when testimonial property is empty', async () => {
       const response = await request(app.getHttpServer())
         .post(TESTIMONIAL_URL)
         .send({

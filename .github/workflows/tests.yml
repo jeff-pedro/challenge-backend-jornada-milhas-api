@@ -35,7 +35,9 @@ jobs:
                 cache: 'npm'
 
             - name: Copy .env file
-              run: cp .env.example .env
+              run: |
+                cp .env.example .env.test
+                echo HASH_SALT=${{ secrets.HASH_SALT }}>> .env.test
 
             - name: Install dependencies
               run: npm ci --include=dev
