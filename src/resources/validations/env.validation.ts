@@ -56,7 +56,7 @@ class EnvironmentVariables {
   @IsNumber()
   @Min(0)
   @Max(65535)
-  REDIS_PORT: string; 
+  REDIS_PORT: number; 
   
   @IsOptional()
   @IsNumber()
