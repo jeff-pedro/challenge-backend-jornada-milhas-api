@@ -34,6 +34,9 @@ jobs:
                 node-version: 22
                 cache: 'npm'
 
+            - run: |
+                echo HASH_SALT=${{ secrets.HASH_SALT }}
+            
             - name: Copy .env file
               run: |
                 cp .env.example .env.test
