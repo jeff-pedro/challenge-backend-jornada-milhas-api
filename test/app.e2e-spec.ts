@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
-import { validate } from '../src/validations/env.validation';
+import { validate } from '../src/resources/validations/env.validation';
 
 describe('AppModule', () => {
   beforeEach(async () => {

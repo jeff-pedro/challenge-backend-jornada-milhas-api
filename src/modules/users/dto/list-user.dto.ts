@@ -1,4 +1,4 @@
-import { Photo } from 'src/photos/entities/photo.entity';
+import { Photo } from '../../photos/entities/photo.entity';
 
 export class ListUserDto {
     constructor (

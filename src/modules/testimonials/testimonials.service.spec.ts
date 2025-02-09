@@ -4,7 +4,7 @@ import { Testimonial } from './entities/testimonial.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
-import { User } from '../users/entities/user.entity';
+import { User } from '../modules/users/entities/user.entity';
 import { Photo } from '../photos/entities/photo.entity';
 
 describe('TestimonialsService', () => {
