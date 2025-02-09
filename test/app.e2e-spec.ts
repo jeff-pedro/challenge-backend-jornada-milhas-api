@@ -1,11 +1,11 @@
 import { Test } from '@nestjs/testing';
-import { AppModule } from '../src/app.module';
+import { AppModuleTest } from './app.module.spec';
 import { validate } from '../src/resources/validations/env.validation';
 
 describe('AppModule', () => {
   beforeEach(async () => {
     await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModuleTest],
     }).compile();
   });
 
