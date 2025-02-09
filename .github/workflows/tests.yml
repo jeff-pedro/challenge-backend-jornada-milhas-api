@@ -37,7 +37,7 @@ jobs:
             - name: Copy .env file
               run: |
                 cp .env.example .env.test
-                echo HASH_SALT=${{ secrets.HASH_SALT }}>> .env.test
+                echo HASH_SALT=${{ secrets.HASH_SALT }} >> .env.test
                 cat .env.test
 
             - name: Install dependencies
