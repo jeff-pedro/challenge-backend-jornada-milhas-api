@@ -1,6 +1,6 @@
 {
   "name": "jornada-milhas",
-  "version": "3.2.0",
+  "version": "1.2.1",
   "description": "Restful API that communicates with a travel destination website",
   "author": "Jefferson Santos",
   "private": true,
