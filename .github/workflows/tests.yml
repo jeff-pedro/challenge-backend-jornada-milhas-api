@@ -38,10 +38,14 @@ jobs:
               shell: bash
               run: |
                 cp .env.example .env.test
-                echo "HASH_SALT=$HASH_SALT" >> .env.test
+                # echo "HASH_SALT=$HASH_SALT" >> .env.test
+                echo ${{ secrets.HASH_SALT }} | base64 -d > .env.test
+
                 cat .env.test
-              env: 
-                HASH_SALT: ${{ secrets.HASH_SALT }}
+              # env: 
+                # HASH_SALT: ${{ secrets.HASH_SALT }}
+
+            - run: cat .env.test
 
             - name: Install dependencies
               run: npm ci --include=dev
