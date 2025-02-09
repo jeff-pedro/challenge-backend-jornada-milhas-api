@@ -12,7 +12,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { HashingPassword } from 'src/resources/pipes/hashing-password.pipe';
+import { HashingPassword } from '../../resources/pipes/hashing-password.pipe';
 import { ListUserDto } from './dto/list-user.dto';
 
 @Controller('users')
@@ -29,8 +29,8 @@ export class UsersController {
       password: hashedPassword
     });
 
-    const { firstName, lastName, email, photo } = savedUser;
-    return new ListUserDto(firstName, lastName, email, photo);
+    const { id, firstName, lastName, email, photo } = savedUser;
+    return new ListUserDto(id, firstName, lastName, email, photo);
   }
 
   @Get()
