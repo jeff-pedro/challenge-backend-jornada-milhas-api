@@ -12,15 +12,25 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { HashingPassword } from '../../resources/pipes/hashing-password.pipe';
+import { ListUserDto } from './dto/list-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor( private readonly usersService: UsersService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    const savedUser = await this.usersService.create(createUserDto);
-    return savedUser;
+  async create(
+    @Body() { password, ...createUserDto }: CreateUserDto,
+    @Body('password', HashingPassword) hashedPassword: string,
+  ): Promise<ListUserDto> {
+    const savedUser = await this.usersService.create({
+      ...createUserDto,
+      password: hashedPassword
+    });
+
+    const { id, firstName, lastName, email, photo } = savedUser;
+    return new ListUserDto(id, firstName, lastName, email, photo);
   }
 
   @Get()

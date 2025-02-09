@@ -1,19 +1,20 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DestinationsModule } from './destinations/destinations.module';
-import { TestimonialsModule } from './testimonials/testimonials.module';
-import { UsersModule } from './users/users.module';
-import { PhotosModule } from './photos/photos.module';
+import { DestinationsModule } from './modules/destinations/destinations.module';
+import { TestimonialsModule } from './modules/testimonials/testimonials.module';
+import { UsersModule } from './modules/users/users.module';
+import { PhotosModule } from './modules/photos/photos.module';
 import { DatabaseConfigService } from './config/db.config';
 import configuration from './config/configuration';
-import { validate } from './validations/env.validation';
+import { validate } from './resources/validations/env.validation';
 import { MainModule } from './main.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { HttpExceptionFilter } from './filters/http-exception.filters';
+import { HttpExceptionFilter } from './resources/filters/http-exception.filters';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisOptions } from './config/app-options.constants';
-import { HttpCacheInterceptor } from './interceptors/http-cache.interceptor';
+import { HttpCacheInterceptor } from './resources/interceptors/http-cache.interceptor';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { HttpCacheInterceptor } from './interceptors/http-cache.interceptor';
     UsersModule,
     PhotosModule,
     MainModule,
+    AuthModule,
   ],
   providers: [
     {

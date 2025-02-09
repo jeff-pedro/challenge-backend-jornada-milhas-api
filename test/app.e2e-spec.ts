@@ -1,27 +1,47 @@
 import { Test } from '@nestjs/testing';
-import { AppModule } from '../src/app.module';
-import { validate } from '../src/validations/env.validation';
+import { AppModuleTest } from './app.module.spec';
+import { validate } from '../src/resources/validations/env.validation';
+
 
 describe('AppModule', () => {
+  const originalEnv = process.env;
+
   beforeEach(async () => {
+    // Clone the original environment variables
+    process.env = { ...originalEnv };
+
     await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModuleTest],
     }).compile();
   });
 
+  afterEach(() => {
+    // Restore the original environment variables
+    process.env = originalEnv;
+  });
+  
   it('should validate environment variables', () => {
-    process.env.NODE_ENV = 'test';
-    process.env.PORT = '3000';
-    process.env.COHERE_API_KEY = 'test-api-key';
-
+    // first test .env* file
     expect(() => validate(process.env)).not.toThrow();
   });
-
-  it('should throw an error for invalid environment variables', () => {
-    process.env.NODE_ENV = 'test';
+  
+  it('should throw an error for invalid NODE_ENV variable', () => {
+    process.env.NODE_ENV = 'invalid_env';
+    expect(() => validate(process.env)).toThrow();
+  });
+  
+  it('should throw an error for invalid PORT env variable', () => {
     process.env.PORT = '-1';
-    process.env.COHERE_API_KEY = '';
+    expect(() => validate(process.env)).toThrow();
+  });
 
+  it('should throw an error fwhen missing COHERE_API_KEY env variable', () => {
+    delete process.env.COHERE_API_KEY;
+    expect(() => validate(process.env)).toThrow();
+  });
+
+  it('should throw an error when missing HASH_SALT env variable', () => {
+    delete process.env.HASH_SALT;
     expect(() => validate(process.env)).toThrow();
   });
 });

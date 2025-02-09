@@ -2,16 +2,19 @@ name: Build and Deploy
 
 on:
   workflow_run:
-    workflows: [Tests]
+    workflows: ["Tests"]
     types:
       - completed
-
   
 jobs:
   
   build:
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         runs-on: ubuntu-latest
         steps:
+            - name: testando
+              run: echo ${{ github.event.workflow_run.conclusion }}
+
             - uses: actions/checkout@v4
 
             - name: Docker login
@@ -32,9 +35,9 @@ jobs:
                 tags: ${{ secrets.DOCKER_USERNAME }}/jornadamilhas:latest
 
   deploy:
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         runs-on: ubuntu-latest
         needs: [build]
-        
         steps:
             - uses: actions/checkout@v4
 

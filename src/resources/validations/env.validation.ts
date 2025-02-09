@@ -1,8 +1,10 @@
 import { plainToInstance } from 'class-transformer';
 import {
   IsEnum,
+  IsHash,
   IsNumber,
   IsOptional,
+  IsPort,
   IsString,
   Max,
   Min,
@@ -16,12 +18,12 @@ enum Environment {
 }
 
 class EnvironmentVariables {
-  @IsEnum(Environment)
   @IsOptional()
+  @IsEnum(Environment)
   NODE_ENV: Environment;
 
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   @Min(0)
   @Max(65535)
   PORT: number;
@@ -45,12 +47,32 @@ class EnvironmentVariables {
 
   @IsString()
   DB_NAME: string;
+
+  @IsOptional()
+  @IsString()
+  REDIS_HOST: string;
+  
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(65535)
+  REDIS_PORT: number; 
+  
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  CACHE_TTL: number;
+
+  @IsString()
+  HASH_SALT: string
 }
 
 export function validate(config: Record<string, unknown>) {
-  const validatedConfig = plainToInstance(EnvironmentVariables, config, {
-    enableImplicitConversion: true,
-  });
+  const validatedConfig = plainToInstance(
+    EnvironmentVariables, 
+    config, 
+    { enableImplicitConversion: true });
+
   const errors = validateSync(validatedConfig, {
     skipMissingProperties: false,
   });
@@ -58,5 +80,6 @@ export function validate(config: Record<string, unknown>) {
   if (errors.length > 0) {
     throw new Error(errors.toString());
   }
+  
   return validatedConfig;
 }
