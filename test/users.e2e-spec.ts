@@ -136,7 +136,7 @@ describe('UsersController (e2e)', () => {
 
       expect(response.status).toBe(404);
       expect(response.body.message).toMatch(
-        `User with ID ${invalidUserId} not found`,
+        `User not found`,
       );
     });
   });
@@ -190,7 +190,7 @@ describe('UsersController (e2e)', () => {
 
       expect(response.status).toBe(404);
       expect(response.body.message).toMatch(
-        `User with ID ${invalidUserId} not found`,
+        `User not found`,
       );
     });
   });

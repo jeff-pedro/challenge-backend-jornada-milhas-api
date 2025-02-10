@@ -120,7 +120,37 @@ describe('UsersService', () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
 
       expect(service.findOne('1')).rejects.toBeInstanceOf(NotFoundException);
-      expect(service.findOne('1')).rejects.toThrow('User with ID 1 not found');
+      expect(service.findOne('1')).rejects.toThrow('User not found');
+    });
+  });
+
+  describe('findByEmail', () => {
+    it('should call userRepository.findOne with correct params', async () => {
+      const mockUser = {
+        id: '1',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john@mail.com',
+        photo: { id: 1, url: 'url.jpg' },
+      } as User;
+
+      const expectedParams = {
+        where: { email: mockUser.email },
+        relations: ['photo'],
+      };
+
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(mockUser);
+
+      await service.findByEmail('john@mail.com');
+
+      expect(userRepository.findOne).toHaveBeenCalledWith(expectedParams);
+    });
+
+    it('should throw NotFoundException if user not found', async () => {
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
+
+      expect(service.findOne('1')).rejects.toBeInstanceOf(NotFoundException);
+      expect(service.findOne('1')).rejects.toThrow('User not found');
     });
   });
 
