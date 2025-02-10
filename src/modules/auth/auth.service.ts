@@ -1,23 +1,35 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { HttpException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor (private readonly userService: UsersService) {}
+  constructor (
+    private readonly userService: UsersService,
+    private jwtService: JwtService
+  ) {}
 
-  async login({ email, password }: CreateAuthDto) {
-    const user = await this.userService.findByEmail(email);
+  async singIn(email: string, password: string): Promise<{ access_token: string } | undefined> {
+    try {
+      const user = await this.userService.findByEmail(email);
+      const isMatch = await bcrypt.compare(password, user.password);
+      
+      if (!isMatch) {
+        throw new UnauthorizedException('Incorrect user or password.');
+      }
 
-    const hashedPassoword = user.password;
+      const username = `${user.firstName}.${user.lastName}`.toLowerCase()
+      const payload = { sub: user.id, username }     
+      
+      const token = await this.jwtService.signAsync(payload);
 
-    const isMatch = await bcrypt.compare(password, hashedPassoword);
-    
-    if (!isMatch) {
-      throw new UnauthorizedException('Incorrect user or password!');
+      return { access_token: token }; 
+    } catch (error) {
+      if(error instanceof NotFoundException) {
+        throw new UnauthorizedException('Incorrect user or password.')
+      }
+      return error.response;
     }
-
-    return user;
   }
 }
