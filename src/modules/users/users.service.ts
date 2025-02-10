@@ -30,13 +30,17 @@ export class UsersService {
   }
 
   async findOne(id: string): Promise<User> {
-    const user = await this.findUserById(id);
+    const user = await this.findUserBy({ id });
+    return user;
+  }
 
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.findUserBy({ email });
     return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<void> {
-    const user = await this.findUserById(id);
+    const user = await this.findUserBy({ id });
 
     const updatedUser = this.prepareUserUpdate(user, updateUserDto);
 
@@ -53,14 +57,14 @@ export class UsersService {
     return updatedUser;
   }
 
-  private async findUserById(id: string): Promise<User> {
+  private async findUserBy(where: object): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { id },
+      where,
       relations: ['photo'],
     });
 
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User not found`);
     }
 
     return user;
