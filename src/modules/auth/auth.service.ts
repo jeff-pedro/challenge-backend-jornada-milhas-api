@@ -29,7 +29,7 @@ export class AuthService {
       if(error instanceof NotFoundException) {
         throw new UnauthorizedException('Incorrect user or password.')
       }
-      return error.response;
+      throw error;
     }
   }
 }
