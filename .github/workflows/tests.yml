@@ -40,8 +40,8 @@ jobs:
                 JWT_SECRET: ${{ secrets.JWT_SECRET }}
               run: |
                 cp .env.example .env.test
-                sed -i 's/^HASH_SALT=.*/HASH_SALT=$HASH_SALT/' .env.test
-                sed -i 's/^JWT_SECRET=.*/JWT_SECRET=$JWT_SECRET/' .env.test
+                sed -i "s/^HASH_SALT=.*/HASH_SALT=${HASH_SALT}/" .env.test
+                sed -i "s/^JWT_SECRET=.*/JWT_SECRET=${JWT_SECRET}/" .env.test
                 cat .env.test
 
             - name: Install dependencies
