@@ -40,8 +40,8 @@ jobs:
                 JWT_SECRET: ${{ secrets.JWT_SECRET }}
               run: |
                 cp .env.example .env.test
-                echo HASH_SALT=$HASH_SALT\n >> .env.test
-                echo JWT_SECRET=$JWT_SECRET\n >> .env.test
+                echo -e HASH_SALT=$HASH_SALT\n >> .env.test
+                echo -e JWT_SECRET=$JWT_SECRET\n >> .env.test
                 cat .env.test
 
             - name: Install dependencies
