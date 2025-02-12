@@ -14,6 +14,7 @@ import { CreateDestinationDto } from './dto/create-destination.dto';
 import { UpdateDestinationDto } from './dto/update-destination.dto';
 import { ListDestinationDto } from './dto/list-destination.dto';
 import { Destination } from './entities/destination.entity';
+import { Public } from '../../resources/decorators/public-route.decorator';
 
 @Controller('destinations')
 export class DestinationsController {
@@ -28,6 +29,7 @@ export class DestinationsController {
     return destination;
   }
 
+  @Public()
   @Get()
   async findAll(@Query('name') name: string): Promise<Destination[]> {
     const destinations = await this.destinationsService.findAll(name);

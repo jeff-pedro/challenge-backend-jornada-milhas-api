@@ -14,11 +14,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { HashingPassword } from '../../resources/pipes/hashing-password.pipe';
 import { ListUserDto } from './dto/list-user.dto';
+import { Public } from '../../resources/decorators/public-route.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor( private readonly usersService: UsersService) {}
 
+  @Public()
   @Post()
   async create(
     @Body() { password, ...createUserDto }: CreateUserDto,
@@ -33,6 +35,7 @@ export class UsersController {
     return new ListUserDto(id, firstName, lastName, email, photo);
   }
 
+  @Public()
   @Get()
   async findAll(): Promise<User[]> {
     const user = await this.usersService.findAll();
