@@ -11,6 +11,7 @@ import { validate } from '../src/resources/validations/env.validation';
 import { MainModule } from '../src/main.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '../src/resources/filters/http-exception.filters';
+import { AuthModule } from '../src/modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { HttpExceptionFilter } from '../src/resources/filters/http-exception.fil
     DestinationsModule,
     UsersModule,
     PhotosModule,
+    AuthModule,
     MainModule,
   ],
   providers: [

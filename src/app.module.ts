@@ -32,8 +32,8 @@ import { AuthModule } from './modules/auth/auth.module';
     DestinationsModule,
     UsersModule,
     PhotosModule,
-    MainModule,
     AuthModule,
+    MainModule,
   ],
   providers: [
     {
@@ -42,7 +42,9 @@ import { AuthModule } from './modules/auth/auth.module';
     }, {
       provide: APP_INTERCEPTOR,
       useClass: HttpCacheInterceptor,
-    }
+      // TODO: criar solução para habilitar o cache apenas em métodos GET
+      // decorator novo?
+     },
   ],
 })
 export class AppModule {}

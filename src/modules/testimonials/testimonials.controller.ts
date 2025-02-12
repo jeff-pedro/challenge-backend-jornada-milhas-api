@@ -13,6 +13,7 @@ import { CreateTestimonialDto } from './dto/create-testimonial.dto';
 import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 import { ListTestimonialDto } from './dto/list-testimonial.dto';
 import { Testimonial } from './entities/testimonial.entity';
+import { Public } from '../../resources/decorators/public-route.decorator';
 
 @Controller()
 export class TestimonialsController {
@@ -32,6 +33,7 @@ export class TestimonialsController {
       );
   }
 
+  @Public()
   @Get('/testimonials')
   async findAll(): Promise<Testimonial[]> {
     const testimonialsList = await this.testimonialsService.findAll();
