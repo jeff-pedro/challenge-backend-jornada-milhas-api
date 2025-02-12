@@ -11,8 +11,9 @@ export class HttpCacheInterceptor extends CacheInterceptor {
       return undefined;
     }
 
-    const { url } = context.getArgs()[0];
-    const [_, endpoint, id] = url.split('/')
-    return `${endpoint}-${id}`;
+    const url = request.originalUrl || request.url;
+    const [_, endpoint, id] = url.split('/');
+
+    return id ? `${endpoint}-${id}` : endpoint;
   }
 }
