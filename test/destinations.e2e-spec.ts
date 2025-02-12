@@ -2,11 +2,14 @@ import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModuleTest } from './app.module.spec';
+import { JwtService } from '@nestjs/jwt';
 
-describe.only('DestinationsController (e2e)', () => {
+describe('DestinationsController (e2e)', () => {
   let app: INestApplication;
   let destinationId: string;
   let destinationName: string;
+  let jwtService: JwtService;
+  let accessToken: string;
 
   const DESTINATION_URL = '/destinations';
 
@@ -27,8 +30,13 @@ describe.only('DestinationsController (e2e)', () => {
 
     await app.init();
 
+    // Generate access token
+    jwtService = moduleRef.get<JwtService>(JwtService);
+    accessToken = await jwtService.signAsync({ sub: 'test-user-id' });
+
     const destinatioResponse = await request(app.getHttpServer())
       .post(DESTINATION_URL)
+      .auth(accessToken, { type: 'bearer' })
       .send({
         name: 'Berlin',
         photos: [{ url: 'berlin.jpg' }],
@@ -38,6 +46,10 @@ describe.only('DestinationsController (e2e)', () => {
 
     destinationId = destinatioResponse.body.id;
     destinationName = destinatioResponse.body.name;
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe('/POST destinations', () => {
@@ -50,6 +62,7 @@ describe.only('DestinationsController (e2e)', () => {
           target: 'Go to Amsterdam in 2030',
           descriptiveText: 'Some descriptive text about Amsterdam...',
         })
+        .auth(accessToken, { type: 'bearer' })
         .expect(201);
     });
 
@@ -60,7 +73,8 @@ describe.only('DestinationsController (e2e)', () => {
           photos: true,
           name: 1,
           price: '4500.00',
-        });
+        })
+        .auth(accessToken, { type: 'bearer' });
 
       expect(res.body).toEqual(
         expect.objectContaining({
@@ -88,6 +102,7 @@ describe.only('DestinationsController (e2e)', () => {
 
         const res = await request(app.getHttpServer())
           .post(DESTINATION_URL)
+          .auth(accessToken, { type: 'bearer' })
           .send(destinationDto);
 
         expect(res.status).toBe(400);
@@ -98,6 +113,7 @@ describe.only('DestinationsController (e2e)', () => {
     it('should return an error when passing more than 2 photos to the array', async () => {
       const response = await request(app.getHttpServer())
         .post(DESTINATION_URL)
+        .auth(accessToken, { type: 'bearer' })
         .send({
           name: 'Amsterdam',
           photos: [
@@ -118,6 +134,7 @@ describe.only('DestinationsController (e2e)', () => {
     it('should return an error when passing less than 1 photo to the array', async () => {
       const response = await request(app.getHttpServer())
         .post(DESTINATION_URL)
+        .auth(accessToken, { type: 'bearer' })
         .send({
           name: 'Amsterdam',
           photos: [],
@@ -134,6 +151,7 @@ describe.only('DestinationsController (e2e)', () => {
     it('should return an error when passing a non-existent property', async () => {
       const response = await request(app.getHttpServer())
         .post(DESTINATION_URL)
+        .auth(accessToken, { type: 'bearer' })
         .send({
           name: 'Amsterdam',
           photos: [{ url: 'photo1.jpg' }],
@@ -153,6 +171,7 @@ describe.only('DestinationsController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .post(DESTINATION_URL)
+        .auth(accessToken, { type: 'bearer' })
         .send({
           name: 'Amsterdam',
           photos: [{ url: 'photo1.jpg' }],
@@ -181,9 +200,8 @@ describe.only('DestinationsController (e2e)', () => {
     });
 
     it('should return an error when receives via query params an non-existent destination name', async () => {
-      const response = await request(app.getHttpServer()).get(
-        `${DESTINATION_URL}/?name=NonExistentDestination`,
-      );
+      const response = await request(app.getHttpServer())
+      .get(`${DESTINATION_URL}/?name=NonExistentDestination`)
 
       expect(response.status).toBe(404);
       expect(response.body.message).toBe('Any destination was found');
@@ -194,13 +212,14 @@ describe.only('DestinationsController (e2e)', () => {
     it('should return status of 200', () => {
       return request(app.getHttpServer())
         .get(`${DESTINATION_URL}/${destinationId}`)
+        .auth(accessToken, { type: 'bearer' })
         .expect(200);
     });
 
     it('should return a 400 when ID was not a valid UUID', async () => {
-      const response = await request(app.getHttpServer()).get(
-        `${DESTINATION_URL}/123`,
-      );
+      const response = await request(app.getHttpServer())
+        .get(`${DESTINATION_URL}/123`)
+        .auth(accessToken, { type: 'bearer' });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toMatch('uuid is expected');
@@ -209,9 +228,9 @@ describe.only('DestinationsController (e2e)', () => {
     it('should return a 404 when the destination does not exists', async () => {
       const invalidDestinationId = '021f7fb8-a6bd-49a9-b571-85f68640e370';
 
-      const response = await request(app.getHttpServer()).get(
-        `${DESTINATION_URL}/${invalidDestinationId}`,
-      );
+      const response = await request(app.getHttpServer())
+        .get(`${DESTINATION_URL}/${invalidDestinationId}`)
+        .auth(accessToken, { type: 'bearer' });
 
       expect(response.status).toBe(404);
       expect(response.body.message).toMatch('Destination not found');
@@ -222,6 +241,7 @@ describe.only('DestinationsController (e2e)', () => {
     it('should return status of 200', () => {
       return request(app.getHttpServer())
         .patch(`${DESTINATION_URL}/${destinationId}`)
+        .auth(accessToken, { type: 'bearer' })
         .send({
           name: 'Pernambuco',
         })
@@ -231,6 +251,7 @@ describe.only('DestinationsController (e2e)', () => {
     it('should return a 400 when ID was not a valid UUID', async () => {
       const response = await request(app.getHttpServer())
         .patch(`${DESTINATION_URL}/123`)
+        .auth(accessToken, { type: 'bearer' })
         .send({
           name: 'Pernambuco',
         });
@@ -244,6 +265,7 @@ describe.only('DestinationsController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .patch(`${DESTINATION_URL}/${invalidDestinationId}`)
+        .auth(accessToken, { type: 'bearer' })
         .send({
           name: 'Pernambuco',
         });
@@ -254,16 +276,17 @@ describe.only('DestinationsController (e2e)', () => {
   });
 
   describe('/DELETE destinations', () => {
-    it('should return status of 200', async () => {
+    it('should return status of 200', () => {
       return request(app.getHttpServer())
         .delete(`${DESTINATION_URL}/${destinationId}`)
+        .auth(accessToken, { type: 'bearer' })
         .expect(200);
     });
 
     it('should return a 400 when ID was not a valid UUID', async () => {
-      const response = await request(app.getHttpServer()).delete(
-        `${DESTINATION_URL}/123`,
-      );
+      const response = await request(app.getHttpServer())
+        .delete(`${DESTINATION_URL}/123`)
+        .auth(accessToken, { type: 'bearer' });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toMatch('uuid is expected');
@@ -272,16 +295,12 @@ describe.only('DestinationsController (e2e)', () => {
     it('should return a 404 when the destination does not exists', async () => {
       const invalidDestinationId = '021f7fb8-a6bd-49a9-b571-85f68640e370';
 
-      const response = await request(app.getHttpServer()).delete(
-        `${DESTINATION_URL}/${invalidDestinationId}`,
-      );
+      const response = await request(app.getHttpServer())
+        .delete(`${DESTINATION_URL}/${invalidDestinationId}`)
+        .auth(accessToken, { type: 'bearer' });
 
       expect(response.status).toBe(404);
       expect(response.body.message).toMatch('Destination not found');
     });
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });

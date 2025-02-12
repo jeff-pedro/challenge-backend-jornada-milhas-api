@@ -2,10 +2,13 @@ import * as request from 'supertest';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModuleTest } from './app.module.spec';
+import { JwtService } from '@nestjs/jwt';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
   let userId: string;
+  let jwtService: JwtService;
+  let accessToken: string;
 
   const USER_URL = '/users';
 
@@ -37,6 +40,10 @@ describe('UsersController (e2e)', () => {
       });
 
     userId = userResponse.body.id;
+
+    // Generate an access token
+    jwtService = moduleRef.get<JwtService>(JwtService);
+    accessToken = await jwtService.signAsync({ userId });
   });
 
   describe('/POST users', () => {
@@ -115,13 +122,16 @@ describe('UsersController (e2e)', () => {
 
   describe('/GET/:id users', () => {
     it('should return status of 200', () => {
-      return request(app.getHttpServer()).get(USER_URL).expect(200);
+      return request(app.getHttpServer())
+        .get(`${USER_URL}/${userId}`)
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
     });
 
     it('should return a 400 when ID was not a valid UUID', async () => {
-      const response = await request(app.getHttpServer()).get(
-        `${USER_URL}/123`,
-      );
+      const response = await request(app.getHttpServer())
+        .get(`${USER_URL}/123`)
+        .auth(accessToken, { type: 'bearer' });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toMatch('uuid is expected');
@@ -130,9 +140,9 @@ describe('UsersController (e2e)', () => {
     it('should return a 404 when the user does not exists', async () => {
       const invalidUserId = '021f7fb8-a6bd-49a9-b571-85f68640e370';
 
-      const response = await request(app.getHttpServer()).get(
-        `${USER_URL}/${invalidUserId}`,
-      );
+      const response = await request(app.getHttpServer())
+        .get(`${USER_URL}/${invalidUserId}`)
+        .auth(accessToken, { type: 'bearer' });
 
       expect(response.status).toBe(404);
       expect(response.body.message).toMatch(
@@ -145,6 +155,7 @@ describe('UsersController (e2e)', () => {
     it('should return status of 200', () => {
       return request(app.getHttpServer())
         .patch(`${USER_URL}/${userId}`)
+        .auth(accessToken, { type: 'bearer' })
         .send({ firstName: 'Jane' })
         .expect(200);
     });
@@ -157,14 +168,13 @@ describe('UsersController (e2e)', () => {
 
       await request(app.getHttpServer())
         .patch(`${USER_URL}/${userId}`)
-        .send({
-          photo: updatedPhoto,
-        })
+        .auth(accessToken, { type: 'bearer' })
+        .send({ photo: updatedPhoto })
         .expect(200);
 
-      const response = await request(app.getHttpServer()).get(
-        `${USER_URL}/${userId}`,
-      );
+      const response = await request(app.getHttpServer())
+      .get(`${USER_URL}/${userId}`)
+      .auth(accessToken, { type: 'bearer' });
 
       expect(response.body.photo.url).toEqual(updatedPhoto.url);
       expect(response.body.photo.description).toEqual(
@@ -175,6 +185,7 @@ describe('UsersController (e2e)', () => {
     it('should return a 400 when ID was not a valid UUID', async () => {
       const response = await request(app.getHttpServer())
         .patch(`${USER_URL}/123`)
+        .auth(accessToken, { type: 'bearer' })
         .send({ firstName: 'Jane' });
 
       expect(response.status).toBe(400);
@@ -186,6 +197,7 @@ describe('UsersController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .patch(`${USER_URL}/${invalidUserId}`)
+        .auth(accessToken, { type: 'bearer' })
         .send({ firstName: 'Jane' });
 
       expect(response.status).toBe(404);
@@ -199,13 +211,14 @@ describe('UsersController (e2e)', () => {
     it('should return status of 200', () => {
       return request(app.getHttpServer())
         .delete(`${USER_URL}/${userId}`)
+        .auth(accessToken, { type: 'bearer' })
         .expect(200);
     });
 
     it('should return a 400 when ID was not a valid UUID', async () => {
-      const response = await request(app.getHttpServer()).delete(
-        `${USER_URL}/123`,
-      );
+      const response = await request(app.getHttpServer())
+      .delete(`${USER_URL}/123`)
+      .auth(accessToken, { type: 'bearer' });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toMatch('uuid is expected');
@@ -214,9 +227,9 @@ describe('UsersController (e2e)', () => {
     it('should return a 404 when the user does not exists', async () => {
       const invalidUserId = '021f7fb8-a6bd-49a9-b571-85f68640e370';
 
-      const response = await request(app.getHttpServer()).delete(
-        `${USER_URL}/${invalidUserId}`,
-      );
+      const response = await request(app.getHttpServer())
+      .delete(`${USER_URL}/${invalidUserId}`)
+      .auth(accessToken, { type: 'bearer' });
 
       expect(response.status).toBe(404);
       expect(response.body.message).toMatch(

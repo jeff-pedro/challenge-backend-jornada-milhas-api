@@ -32,8 +32,8 @@ import { AuthModule } from './modules/auth/auth.module';
     DestinationsModule,
     UsersModule,
     PhotosModule,
-    MainModule,
     AuthModule,
+    MainModule,
   ],
   providers: [
     {
