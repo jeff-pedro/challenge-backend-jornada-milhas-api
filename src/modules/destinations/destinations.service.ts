@@ -1,43 +1,39 @@
 import {
   Injectable,
   NotFoundException,
-  RequestTimeoutException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UpdateDestinationDto } from './dto/update-destination.dto';
 import { Destination } from './entities/destination.entity';
 import { ConfigService } from '@nestjs/config';
-import { CohereClient, CohereError, CohereTimeoutError } from 'cohere-ai';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDestinationDto } from './dto/create-destination.dto';
+import { GoogleGenerativeAI, GoogleGenerativeAIError } from '@google/generative-ai';
 
 @Injectable()
 export class DestinationsService {
-  private destinations: Destination[] = [];
-
   constructor(
     @InjectRepository(Destination)
     private destinationRepository: Repository<Destination>,
     private configService: ConfigService<
       {
-        app: { accessKeys: { cohereApiKey: string } };
+        app: { accessKeys: { geminiApiKey: string } };
       },
       true
     >,
   ) {}
-
   async create(
     createDestinationDto: CreateDestinationDto,
   ): Promise<Destination> {
     if (!createDestinationDto.descriptiveText) {
       const textDescription = `Faça um resumo sobre ${createDestinationDto.name} enfatizando o 
       porque este lugar é incrível. Utilize uma linguagem 
-      informal e até 100 caracteres no máximo em cada parágrafo. 
+      informal de até 100 caracteres no máximo em cada parágrafo. 
       Crie 2 parágrafos neste resumo. O texto deve ser escrito em português do Brasil.`;
 
       createDestinationDto.descriptiveText =
-        await this.generateText(textDescription);
+        await this.generateDescriptionWithGemini(textDescription);
     }
 
     return this.destinationRepository.save(createDestinationDto);
@@ -97,32 +93,29 @@ export class DestinationsService {
     }
   }
 
-  async generateText(prompt: string): Promise<string> {
+  async generateDescriptionWithGemini(prompt: string): Promise<string> {
     try {
-      const token = this.configService.get('app.accessKeys.cohereApiKey', {
+      const token = this.configService.get('app.accessKeys.geminiApiKey', {
         infer: true,
       });
+      const genAI = new GoogleGenerativeAI(token);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      const cohere = new CohereClient({ token });
+      const chat = await model.generateContent(prompt);
 
-      const chat = await cohere.chat({
-        model: 'command',
-        message: prompt,
-      });
-
-      return chat.text;
+      return chat.response.text() || "Description unavailable";
     } catch (error) {
-      if (error instanceof CohereTimeoutError) {
-        throw new RequestTimeoutException('Request timed out', {
-          cause: error,
-        });
-      } else if (error instanceof CohereError) {
+      
+      console.error("Error getting Gemini description", error.message, error);
+
+      if (error instanceof GoogleGenerativeAIError) {
         throw new UnauthorizedException('Unauthorized api key', {
           cause: error,
         });
       }
 
-      throw error;
+      console.error("Error getting Gemini description", error.message, error);
+      throw new Error("Error getting Gemini description");
     }
   }
 }
