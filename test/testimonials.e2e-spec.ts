@@ -46,7 +46,7 @@ describe('TestimonialsController (e2e)', () => {
         lastName: 'Doe',
         photo: { url: 'profile.jpg', description: 'my profile image' },
         email: 'jane@mail.com',
-        password: '123456',
+        password: 'Abc-123',
       });
 
     userId = user.body.id;
