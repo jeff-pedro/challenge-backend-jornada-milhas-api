@@ -3,6 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModuleTest } from './app.module.spec';
 import { JwtService } from '@nestjs/jwt';
+import { useContainer } from 'class-validator';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
@@ -26,6 +27,8 @@ describe('UsersController (e2e)', () => {
         transform: true,
       }),
     );
+
+    useContainer(app.select(AppModuleTest), { fallbackOnErrors: true });
 
     await app.init();
 
@@ -51,13 +54,26 @@ describe('UsersController (e2e)', () => {
       return request(app.getHttpServer())
         .post(USER_URL)
         .send({
-          firstName: 'Jana',
-          lastName: 'Doe',
+          firstName: 'Jack',
+          lastName: 'Sparrow',
           photo: { url: 'profile.jpg' },
-          email: 'jane@mail.com',
+          email: 'sparrow@mail.com',
           password: '123456',
         })
         .expect(201);
+    });
+
+    it('should return a 400 when give an email that already exists', () => {
+      return request(app.getHttpServer())
+        .post(USER_URL)
+        .send({
+          firstName: 'Jack',
+          lastName: 'Sparrow',
+          photo: { url: 'profile.jpg' },
+          email: 'sparrow@mail.com',
+          password: '123456',
+        })
+        .expect(400);
     });
 
     it('should return a 400 when password is less than 6 characters', () => {

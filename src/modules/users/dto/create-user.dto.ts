@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { PhotoUserDto } from './photo-user.dto';
 import { Photo } from '../../photos/entities/photo.entity';
+import { IsUniqueEmail } from '../validations/unique-email.validator';
 
 export class CreateUserDto {
   @IsString()
@@ -24,8 +25,9 @@ export class CreateUserDto {
   @Type(() => PhotoUserDto)
   photo?: Photo;
 
-  @IsNotEmpty()
   @IsEmail()
+  @IsUniqueEmail()
+  @IsNotEmpty()
   email: string;
 
   @IsNotEmpty()

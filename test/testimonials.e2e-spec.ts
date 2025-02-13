@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModuleTest } from './app.module.spec';
 import { JwtService } from '@nestjs/jwt';
+import { useContainer } from 'class-validator';
 
 describe('TestimonialsController (e2e)', () => {
   let app: INestApplication;
@@ -20,6 +21,8 @@ describe('TestimonialsController (e2e)', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
+
+    useContainer(app.select(AppModuleTest), { fallbackOnErrors: true });
 
     app.useGlobalPipes(
       new ValidationPipe({
