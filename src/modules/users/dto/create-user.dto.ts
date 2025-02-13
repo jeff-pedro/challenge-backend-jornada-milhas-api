@@ -5,6 +5,10 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
+  Max,
+  MaxLength,
+  Min,
   MinLength,
   ValidateNested,
 } from 'class-validator';
@@ -32,6 +36,10 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @MinLength(6)
+  @MaxLength(30)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)[a-zA-Z\d\W]+$/, {
+    message: 'password must have at least 1 lowercase letter, 1 uppercase letter, 1 special character, and a number' 
+  })
   password: string;
 
   @IsOptional()

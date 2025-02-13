@@ -20,7 +20,7 @@ export class IsUniqueEmailConstraint implements ValidatorConstraintInterface {
     }
 
     defaultMessage(args: ValidationArguments) {
-        return 'Email $value already exists. Choose another email.';
+        return 'email $value already exists';
     }
 }
 
