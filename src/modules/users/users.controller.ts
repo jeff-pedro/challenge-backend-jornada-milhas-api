@@ -21,7 +21,7 @@ export class UsersController {
   constructor( private readonly usersService: UsersService) {}
 
   @Public()
-  @Post()
+  @Post() 
   async create(
     @Body() { password, ...createUserDto }: CreateUserDto,
     @Body('password', HashingPassword) hashedPassword: string,
