@@ -39,7 +39,7 @@ describe('UsersController (e2e)', () => {
         lastName: 'Doe',
         photo: { url: 'profile.jpg' },
         email: 'jane@mail.com',
-        password: '123456',
+        password: 'Abc-123',
       });
 
     userId = userResponse.body.id;
@@ -58,7 +58,7 @@ describe('UsersController (e2e)', () => {
           lastName: 'Sparrow',
           photo: { url: 'profile.jpg' },
           email: 'sparrow@mail.com',
-          password: '123456',
+          password: 'Abc-123',
         })
         .expect(201);
     });
@@ -71,7 +71,7 @@ describe('UsersController (e2e)', () => {
           lastName: 'Sparrow',
           photo: { url: 'profile.jpg' },
           email: 'sparrow@mail.com',
-          password: '123456',
+          password: 'Abc-123',
         })
         .expect(400);
     });
