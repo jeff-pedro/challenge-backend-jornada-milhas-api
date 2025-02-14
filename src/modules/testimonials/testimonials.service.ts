@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Testimonial } from './entities/testimonial.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -18,10 +18,9 @@ export class TestimonialsService {
   ) {}
 
   async create(
-    createTestimonialDto: CreateTestimonialDto,
+    { testimonial }: CreateTestimonialDto,
+    userId: string
   ): Promise<{ id: string; userId: string; testimonial: string }> {
-    const { userId, testimonial } = createTestimonialDto;
-
     const user = await this.findUserById(userId);
 
     const testimonialSaved = await this.testimonialRepository.save({
@@ -47,7 +46,11 @@ export class TestimonialsService {
   }
 
   async findAll(options?: object): Promise<Testimonial[]> {
-    const testimonialSaved = await this.testimonialRepository.find(options);
+    const testimonialSaved = await this.testimonialRepository.find({
+      ...options,
+      relations: ['user'],
+      select: { user: { id: true }}
+    });
 
     if (testimonialSaved.length === 0) {
       throw new NotFoundException('Any testimonial was found');
@@ -88,15 +91,26 @@ export class TestimonialsService {
   async update(
     id: string,
     updateTestimonialDto: UpdateTestimonialDto,
+    userId: string
   ): Promise<void> {
-    const testimonialToUpdate = await this.testimonialRepository.update(
-      { id },
-      updateTestimonialDto,
-    );
+    const testimonialSaved = await this.testimonialRepository.findOne({
+      where: { id },
+      relations: ['user'],
+      select: { user: { id: true } }
+    });
 
-    if (testimonialToUpdate.affected === 0) {
+    if (testimonialSaved === null) {
       throw new NotFoundException('Testimonial not found');
     }
+
+    if (testimonialSaved?.user.id !== userId) {
+      throw new ForbiddenException(`There is no testimonial for id#${userId}`);
+    }
+
+    await this.testimonialRepository.update(
+      { id, user: { id: userId }},
+      updateTestimonialDto,
+    );
   }
 
   async remove(id: string): Promise<void> {
