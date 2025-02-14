@@ -4,15 +4,23 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModuleTest } from './app.module.spec';
 import { JwtService } from '@nestjs/jwt';
 import { useContainer } from 'class-validator';
+import { Repository } from 'typeorm';
+import { User } from '../src/modules/users/entities/user.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Testimonial } from '../src/modules/testimonials/entities/testimonial.entity';
 
 describe('TestimonialsController (e2e)', () => {
   let app: INestApplication;
   let userId: string;
-  let testimonial: request.Response;
   let testimonialId: string;
   let jwtService:JwtService;
   let accessToken: string;
+  let userRepository: Repository<User>;
+  let testimonialRepository: Repository<Testimonial>;
 
+  const USER_REPOSITORY_TOKEN = getRepositoryToken(User);
+  const TESTIMONIAL_REPOSITORY_TOKEN = getRepositoryToken(Testimonial);
+  
   const TESTIMONIAL_URL = '/testimonials';
 
   beforeAll(async () => {
@@ -34,32 +42,31 @@ describe('TestimonialsController (e2e)', () => {
 
     await app.init();
 
+    userRepository = moduleRef.get<Repository<User>>(USER_REPOSITORY_TOKEN);
+    testimonialRepository = moduleRef.get<Repository<Testimonial>>(TESTIMONIAL_REPOSITORY_TOKEN);
+
+    const user = await userRepository.save({
+      firstName: 'Jane',
+      lastName: 'Doe',
+      photo: { url: 'profile.jpg', description: 'my profile image' },
+      email: 'jane@mail.com',
+      password: 'Abc-123',
+    });
+
+    userId = user.id;
+    
+    // Gerenare testimonials
+    for await (const i of Array(4).keys()) {
+      await testimonialRepository.save({
+        testimonial: 'Some testimonial',
+        user,
+      });
+    }
+    testimonialId = (await testimonialRepository.find())[0].id;
+
     // Generate access token
     jwtService = moduleRef.get<JwtService>(JwtService);
-    accessToken = await jwtService.signAsync({ sub: 'test-user-id' })
-
-    const user = await request(app.getHttpServer())
-      .post('/users')
-      .auth(accessToken, { type: 'bearer' })
-      .send({
-        firstName: 'Jane',
-        lastName: 'Doe',
-        photo: { url: 'profile.jpg', description: 'my profile image' },
-        email: 'jane@mail.com',
-        password: 'Abc-123',
-      });
-
-    userId = user.body.id;
-
-    testimonial = await request(app.getHttpServer())
-      .post('/testimonials')
-      .auth(accessToken, { type: 'bearer' })
-      .send({
-        userId,
-        testimonial: 'Some testimonial.',
-      });
-
-    testimonialId = testimonial.body.id;
+    accessToken = await jwtService.signAsync({ sub: userId })
   });
 
   afterAll(async () => {
@@ -71,69 +78,15 @@ describe('TestimonialsController (e2e)', () => {
       return request(app.getHttpServer())
         .post(TESTIMONIAL_URL)
         .auth(accessToken, { type: 'bearer' })
-        .send({
-          userId,
-          testimonial: 'Some testimonial.',
-        })
+        .send({ testimonial: 'Some testimonial' })
         .expect(201);
-    });
-
-    it('should return a 400 when userId property was not provided', () => {
-      return request(app.getHttpServer())
-        .post(TESTIMONIAL_URL)
-        .auth(accessToken, { type: 'bearer' })
-        .send({
-          testimonial: 'Some testimonial.',
-        })
-        .expect(400);
-    });
-
-    it('should return an error when userId was not an UUID', async () => {
-      const response = await request(app.getHttpServer())
-        .post(TESTIMONIAL_URL)
-        .auth(accessToken, { type: 'bearer' })
-        .send({
-          userId: '123',
-          testimonial: 'Some testimonial.',
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body.message[0]).toBe('userId must be a UUID');
-    });
-
-    it('should return an error when userId is empty', async () => {
-      const response = await request(app.getHttpServer())
-        .post(TESTIMONIAL_URL)
-        .auth(accessToken, { type: 'bearer' })
-        .send({
-          userId: '',
-          testimonial: 'Some testimonial.',
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body.message[0]).toBe('userId must be a UUID');
-    });
-
-    it('should return an error when user not exists', async () => {
-      const invalidUserId = '021f7fb8-a6bd-49a9-b571-85f68640e370';
-
-      const response = await request(app.getHttpServer())
-        .post(TESTIMONIAL_URL)
-        .auth(accessToken, { type: 'bearer' })
-        .send({
-          userId: invalidUserId,
-          testimonial: 'Some testimonial.',
-        });
-
-      expect(response.status).toBe(404);
-      expect(response.body.message).toBe('User not found');
     });
 
     it('should return a 400 when testimonial property was not provided', async () => {
       return request(app.getHttpServer())
         .post(TESTIMONIAL_URL)
         .auth(accessToken, { type: 'bearer' })
-        .send({ userId })
+        .send({})
         .expect(400);
     });
 
@@ -141,10 +94,7 @@ describe('TestimonialsController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .post(TESTIMONIAL_URL)
         .auth(accessToken, { type: 'bearer' })
-        .send({
-          userId,
-          testimonial: '',
-        });
+        .send({ testimonial: '' });
 
       expect(response.status).toBe(400);
       expect(response.body.message[0]).toBe('testimonial should not be empty');
@@ -154,11 +104,7 @@ describe('TestimonialsController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .post(TESTIMONIAL_URL)
         .auth(accessToken, { type: 'bearer' })
-        .send({
-          userId,
-          testimonial: 'Some testimonial.',
-          nonExistentProperty: '',
-        });
+        .send({ testimonial: 'Some testimonial.', nonExistentProperty: '' });
 
       expect(response.status).toBe(400);
       expect(response.body).toEqual(
@@ -200,9 +146,7 @@ describe('TestimonialsController (e2e)', () => {
       return request(app.getHttpServer())
         .patch(`${TESTIMONIAL_URL}/${testimonialId}`)
         .auth(accessToken, { type: 'bearer' })
-        .send({
-          testimonial: 'Testimonial updated.',
-        })
+        .send({ testimonial: 'Testimonial updated.' })
         .expect(200);
     });
   });
@@ -219,11 +163,11 @@ describe('TestimonialsController (e2e)', () => {
   describe('/GEt testimonials-home', () => {
     it('should return an array with 3 random testimonial objects', async () => {
       const response = await request(app.getHttpServer())
-      .get('/testimonials-home')
-      .auth(accessToken, { type: 'bearer' });
-
+        .get('/testimonials-home')
+        .auth(accessToken, { type: 'bearer' });
+      
       expect(response.status).toBe(200);
-      // expect(response.body).toHaveLength(3);
+      expect(response.body).toHaveLength(3);
     });
   });
 });

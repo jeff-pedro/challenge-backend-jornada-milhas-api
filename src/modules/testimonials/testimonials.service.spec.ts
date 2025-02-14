@@ -3,9 +3,11 @@ import { TestimonialsService } from './testimonials.service';
 import { Testimonial } from './entities/testimonial.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { User } from '../../modules/users/entities/user.entity';
 import { Photo } from '../photos/entities/photo.entity';
+import { CreateTestimonialDto } from './dto/create-testimonial.dto';
+import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 
 describe('TestimonialsService', () => {
   let service: TestimonialsService;
@@ -77,6 +79,9 @@ describe('TestimonialsService', () => {
 
   describe('create', () => {
     const mockTestimonial = new Testimonial();
+    const mockTestimonialDto: CreateTestimonialDto = { testimonial: 'Text' };
+    const userId = '1';
+  
     Object.assign(mockTestimonial, {
       testimonial: 'Text',
       user: mockUser,
@@ -87,10 +92,7 @@ describe('TestimonialsService', () => {
         .spyOn(testimonialRepository, 'save')
         .mockResolvedValue(mockTestimonial);
 
-      await service.create({
-        userId: '1',
-        testimonial: 'Text',
-      });
+      await service.create(mockTestimonialDto, userId);
 
       expect(testimonialRepository.save).toHaveBeenCalledWith(mockTestimonial);
     });
@@ -101,12 +103,9 @@ describe('TestimonialsService', () => {
         .spyOn(testimonialRepository, 'save')
         .mockResolvedValue(mockTestimonial);
 
-      await service.create({
-        userId: '1',
-        testimonial: 'Text',
-      });
+      await service.create(mockTestimonialDto, userId);
 
-      expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: '1' });
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: userId });
     });
 
     it('should create and return the correct object', async () => {
@@ -115,10 +114,7 @@ describe('TestimonialsService', () => {
         .spyOn(testimonialRepository, 'save')
         .mockResolvedValue(mockTestimonial);
 
-      const result = await service.create({
-        userId: '1',
-        testimonial: 'Text',
-      });
+      const result = await service.create(mockTestimonialDto, userId);
 
       expect(result).toHaveProperty('id');
       expect(result).toHaveProperty('userId');
@@ -128,10 +124,7 @@ describe('TestimonialsService', () => {
     it('should throw an error if testimonial not found', async () => {
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
 
-      const result = service.create({
-        userId: '1',
-        testimonial: 'Text',
-      });
+      const result = service.create(mockTestimonialDto, userId);
 
       expect(result).rejects.toBeInstanceOf(NotFoundException);
       expect(result).rejects.toThrow('User not found');
@@ -162,16 +155,29 @@ describe('TestimonialsService', () => {
 
   describe('update', () => {
     it('should throw an error if testimonial not found', async () => {
-      jest
-        .spyOn(testimonialRepository, 'update')
-        .mockResolvedValueOnce({ affected: 0, generatedMaps: [], raw: '' });
+      const mockUpdateTestimonialDto: UpdateTestimonialDto = { testimonial: 'Text' };
+      const userId = '1', testimonialId = '1';
+      
+      jest.spyOn(testimonialRepository, 'findOne').mockResolvedValueOnce(null);
 
-      const result = service.update('invalid-id', {
-        testimonial: 'Some testimonial',
-      });
+      const result = service.update(testimonialId, mockUpdateTestimonialDto, userId);
 
       expect(result).rejects.toBeInstanceOf(NotFoundException);
       expect(result).rejects.toThrow('Testimonial not found');
+    });
+
+    it('should throw an error if user not found', async () => {
+      const mockUpdateTestimonialDto: UpdateTestimonialDto = { testimonial: 'Text' };
+      const mockTestimonial = new Testimonial();
+      mockTestimonial.user = { id: '2' } as User;
+      const userId = '1', testimonialId = '1';
+      
+      jest.spyOn(testimonialRepository, 'findOne').mockResolvedValueOnce(mockTestimonial);
+
+      const result = service.update(testimonialId, mockUpdateTestimonialDto, userId);
+
+      expect(result).rejects.toBeInstanceOf(ForbiddenException);
+      expect(result).rejects.toThrow(`There is no testimonial for id#${userId}`);
     });
   });
 

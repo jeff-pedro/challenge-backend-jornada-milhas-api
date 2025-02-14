@@ -3,6 +3,11 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 
+export interface UserPayload {
+  sub: string,
+  username: string
+}
+
 @Injectable()
 export class AuthService {
   constructor (
@@ -20,7 +25,7 @@ export class AuthService {
       }
 
       const username = `${user.firstName}.${user.lastName}`.toLowerCase()
-      const payload = { sub: user.id, username }     
+      const payload: UserPayload = { sub: user.id, username }     
       
       const token = await this.jwtService.signAsync(payload);
 
