@@ -1,5 +1,5 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DestinationsModule } from './modules/destinations/destinations.module';
 import { TestimonialsModule } from './modules/testimonials/testimonials.module';
@@ -39,12 +39,15 @@ import { AuthModule } from './modules/auth/auth.module';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
-    }, {
+    }, 
+    {
       provide: APP_INTERCEPTOR,
       useClass: HttpCacheInterceptor,
-      // TODO: criar solução para habilitar o cache apenas em métodos GET
-      // decorator novo?
-     },
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor
+    }
   ],
 })
 export class AppModule {}
