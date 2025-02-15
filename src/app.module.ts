@@ -15,6 +15,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { RedisOptions } from './config/app-options.constants';
 import { HttpCacheInterceptor } from './resources/interceptors/http-cache.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
+import { GlobalLoggerInterceptor } from './resources/interceptors/global-logger.interceptor';
 
 @Module({
   imports: [
@@ -47,6 +48,10 @@ import { AuthModule } from './modules/auth/auth.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: GlobalLoggerInterceptor
     },
     ConsoleLogger
   ],

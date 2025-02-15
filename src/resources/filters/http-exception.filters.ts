@@ -24,6 +24,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
+    if ('user' in request) {
+      this.logger.log(`Route accessed by user: ${ request.user.sub }`)
+    }
+
     const { status, body } =
       exception instanceof HttpException
         ? {
