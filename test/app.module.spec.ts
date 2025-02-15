@@ -1,5 +1,5 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, ConsoleLogger, Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DestinationsModule } from '../src/modules/destinations/destinations.module';
 import { TestimonialsModule } from '../src/modules/testimonials/testimonials.module';
@@ -9,9 +9,10 @@ import { DatabaseConfigService } from '../src/config/db.config';
 import configuration from '../src/config/configuration';
 import { validate } from '../src/resources/validations/env.validation';
 import { MainModule } from '../src/main.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from '../src/resources/filters/http-exception.filters';
 import { AuthModule } from '../src/modules/auth/auth.module';
+import { EmptyLogger } from './empty-logger';
 
 @Module({
   imports: [
@@ -37,6 +38,14 @@ import { AuthModule } from '../src/modules/auth/auth.module';
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor
+    },
+    {
+      provide: ConsoleLogger,
+      useClass: EmptyLogger
+    }
   ],
 })
 export class AppModuleTest {}
