@@ -8,6 +8,8 @@ import {
   Delete,
   Query,
   ParseUUIDPipe,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { DestinationsService } from './destinations.service';
 import { CreateDestinationDto } from './dto/create-destination.dto';
@@ -15,6 +17,7 @@ import { UpdateDestinationDto } from './dto/update-destination.dto';
 import { ListDestinationDto } from './dto/list-destination.dto';
 import { Destination } from './entities/destination.entity';
 import { Public } from '../../resources/decorators/public-route.decorator';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('destinations')
 export class DestinationsController {
@@ -24,16 +27,23 @@ export class DestinationsController {
   async create(
     @Body() createDestinationDto: CreateDestinationDto,
   ): Promise<Destination> {
-    const destination =
-      await this.destinationsService.create(createDestinationDto);
-    return destination;
+    return this.destinationsService.create(createDestinationDto);
+  }
+
+  @Public()
+  @Post(':id/upload')
+  @UseInterceptors(FilesInterceptor('files'))
+  async uploadPhotos(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UploadedFiles() files: Express.Multer.File[]
+  ) {
+    return this.destinationsService.attachPhotos(id, files);
   }
 
   @Public()
   @Get()
   async findAll(@Query('name') name: string): Promise<Destination[]> {
-    const destinations = await this.destinationsService.findAll(name);
-    return destinations;
+    return this.destinationsService.findAll(name);
   }
 
   @Get(':id')

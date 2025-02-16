@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDestinationDto } from './dto/create-destination.dto';
 import { GoogleGenerativeAI, GoogleGenerativeAIError } from '@google/generative-ai';
+import { Photo } from '../photos/entities/photo.entity';
 
 @Injectable()
 export class DestinationsService {
@@ -117,5 +118,18 @@ export class DestinationsService {
       console.error("Error getting Gemini description", error.message, error);
       throw new Error("Error getting Gemini description");
     }
+  }
+
+  async attachPhotos(id: string, files: Express.Multer.File[]) {
+    const destination = await this.findOne(id);
+    const photoEntity = new Photo();
+
+    files.forEach(file => {
+      photoEntity.url = file.path;
+      photoEntity.description = 'Photo description'; // TODO: auto-generate via AI
+      destination.photos.push(photoEntity);
+    });
+
+    await this.destinationRepository.save(destination);
   }
 }
