@@ -17,15 +17,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   catch(exception: unknown, host: ArgumentsHost) {
     this.logger.error(exception);
-
+    
     const { httpAdapter } = this.adapterHost;
-
+    
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
     if ('user' in request) {
-      this.logger.log(`Route accessed by user: ${ request.user.sub }`)
+      this.logger.log(`Route accessed by user: ${ request.user.sub }`);
     }
 
     const { status, body } =
