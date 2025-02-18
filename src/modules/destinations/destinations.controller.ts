@@ -37,7 +37,8 @@ export class DestinationsController {
     @Param('id', ParseUUIDPipe) id: string,
     @UploadedFiles() files: Express.Multer.File[]
   ) {
-    return this.destinationsService.attachPhotos(id, files);
+    await this.destinationsService.attachPhotos(id, files);
+    return { message: `Destination #${id} was updated` };
   }
 
   @Public()

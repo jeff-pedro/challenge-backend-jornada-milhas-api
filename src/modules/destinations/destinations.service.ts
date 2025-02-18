@@ -55,15 +55,12 @@ export class DestinationsService {
   }
 
   async findOne(id: string): Promise<Destination> {
-    const destinationSaved = await this.destinationRepository.findOne({
-      where: { id },
-      relations: ['photos'],
-      select: {
-        photos: {
-          url: true,
-        },
-      },
-    });
+    const destinationSaved = await this.destinationRepository
+    .createQueryBuilder('destination')
+    .leftJoinAndSelect('destination.photos', 'photo')
+    .where('destination.id = :id', { id })
+    .select(['destination', 'photo.url'])
+    .getOne();
 
     if (!destinationSaved) {
       throw new NotFoundException('Destination not found');
@@ -122,14 +119,14 @@ export class DestinationsService {
 
   async attachPhotos(id: string, files: Express.Multer.File[]) {
     const destination = await this.findOne(id);
-    const photoEntity = new Photo();
 
-    files.forEach(file => {
+    for (const file of files) {
+      const photoEntity = new Photo();
       photoEntity.url = file.path;
       photoEntity.description = 'Photo description'; // TODO: auto-generate via AI
       destination.photos.push(photoEntity);
-    });
-
+    }
+    
     await this.destinationRepository.save(destination);
   }
 }
