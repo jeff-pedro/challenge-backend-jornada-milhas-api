@@ -30,7 +30,6 @@ export class DestinationsController {
     return this.destinationsService.create(createDestinationDto);
   }
 
-  @Public()
   @Post(':id/upload')
   @UseInterceptors(FilesInterceptor('files'))
   async uploadPhotos(
