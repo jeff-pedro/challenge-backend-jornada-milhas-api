@@ -7,13 +7,11 @@ services:
     container_name: dev
     working_dir: /app
     command: [ "npm", "run", "start:dev"]
+    env_file: .env
     environment:
       - NODE_ENV=development
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
       - DB_HOST=db
-      - COHERE_API_KEY=${COHERE_API_KEY}
+      - REDIS_HOST=redis
     ports:
       - 3000:3000
     volumes:

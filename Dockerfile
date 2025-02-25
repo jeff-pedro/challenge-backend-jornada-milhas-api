@@ -29,7 +29,7 @@ CMD [ "sh", "-c", "npm run test" ]
 
 
 
-FROM node:${NODE_VERSION} AS builder
+FROM node:${NODE_VERSION}-alpine AS builder
 
 WORKDIR /app
 
@@ -56,4 +56,3 @@ COPY --from=development /usr/src/app/dist ./dist
 EXPOSE 3000 443
 # run migrations and start the application
 CMD ["sh", "-c", "npx typeorm migration:run -d dist/db/data-source-cli.js && node dist/main.js"]
-# CMD [ "npm", "run", "start:prod" ]
