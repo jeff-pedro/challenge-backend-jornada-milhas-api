@@ -39,7 +39,7 @@ jobs:
                 HASH_SALT: ${{ secrets.HASH_SALT }}
                 JWT_SECRET: ${{ secrets.JWT_SECRET }}
                 JWT_EXPIRES_IN: 60s
-                UPLOAD_DESTINATION_PATH: "./upload/destinations"
+                UPLOAD_DESTINATION_PATH: ./upload/destinations
               run: |
                 cp .env.example .env.test
                 sed -i "s/^HASH_SALT=.*/HASH_SALT=${HASH_SALT}/" .env.test
