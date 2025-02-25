@@ -7,12 +7,9 @@ describe('DestinationsController', () => {
   let controller: DestinationsController;
   let destinationService: DestinationsService;
 
-  const photos = new Photo();
-  photos.url = 'http://photo1.jpg';
-
   const destination = {
     id: '1',
-    photos: [photos],
+    photos: [new Photo()],
     name: 'Test',
     target: 'Test target',
     descriptiveText: 'Text description',
@@ -30,6 +27,7 @@ describe('DestinationsController', () => {
             findOne: jest.fn(),
             update: jest.fn(),
             remove: jest.fn(),
+            attachPhotos: jest.fn(),
           },
         },
       ],
@@ -61,6 +59,20 @@ describe('DestinationsController', () => {
       jest.spyOn(destinationService, 'create').mockResolvedValue(destination);
 
       expect(await controller.create(createDestinationDto)).toEqual(result);
+    });
+  });
+  
+
+  describe('uploadPhotos', () => {
+    it('should return a successful message', async () => {
+      const photos = new Photo();
+      const files: Express.Multer.File[] = [];
+  
+      jest.spyOn(destinationService, 'attachPhotos').mockResolvedValue([photos]);
+
+      const result = await controller.uploadPhotos('1', files)
+
+      expect(result).toHaveLength(1);
     });
   });
 

@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDestinationDto } from './dto/create-destination.dto';
 import { GoogleGenerativeAI, GoogleGenerativeAIError } from '@google/generative-ai';
+import { Photo } from '../photos/entities/photo.entity';
 
 @Injectable()
 export class DestinationsService {
@@ -54,15 +55,12 @@ export class DestinationsService {
   }
 
   async findOne(id: string): Promise<Destination> {
-    const destinationSaved = await this.destinationRepository.findOne({
-      where: { id },
-      relations: ['photos'],
-      select: {
-        photos: {
-          url: true,
-        },
-      },
-    });
+    const destinationSaved = await this.destinationRepository
+    .createQueryBuilder('destination')
+    .leftJoinAndSelect('destination.photos', 'photo')
+    .where('destination.id = :id', { id })
+    .select(['destination', 'photo.url'])
+    .getOne();
 
     if (!destinationSaved) {
       throw new NotFoundException('Destination not found');
@@ -117,5 +115,19 @@ export class DestinationsService {
       console.error("Error getting Gemini description", error.message, error);
       throw new Error("Error getting Gemini description");
     }
+  }
+
+  async attachPhotos(id: string, files: Express.Multer.File[]): Promise<Photo[]> {
+    const destination = await this.findOne(id);
+
+    for (const file of files) {
+      const photoEntity = new Photo();
+      photoEntity.url = file.path;
+      photoEntity.description = 'Photo description'; // TODO: auto-generate via AI
+      destination.photos.push(photoEntity);
+    }
+    
+    await this.destinationRepository.save(destination);
+    return destination.photos;
   }
 }

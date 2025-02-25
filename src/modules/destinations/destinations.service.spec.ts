@@ -3,9 +3,10 @@ import { DestinationsService } from './destinations.service';
 import { Destination } from './entities/destination.entity';
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI, GoogleGenerativeAIError } from '@google/generative-ai';
-import { Repository } from 'typeorm';
+import { createQueryBuilder, Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Photo } from '../photos/entities/photo.entity';
 
 // Disable console.error
 global.console.error = jest.fn();
@@ -16,6 +17,23 @@ describe('DestinationsService', () => {
   let configService: ConfigService;
 
   const DESTINATION_REPOSITORY_TOKEN = getRepositoryToken(Destination);
+  
+  const mockQueryBuilder = {
+    leftJoinAndSelect: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis(),
+    select: jest.fn().mockReturnThis(),
+    getOne: jest.fn().mockResolvedValue(null)
+  }
+  
+  const mockDestinationRepository = {
+    createQueryBuilder: jest.fn().mockReturnValue(mockQueryBuilder),
+    save: jest.fn(),
+    find: jest.fn(),
+    findBy: jest.fn(),
+    findOne: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn()
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,14 +41,7 @@ describe('DestinationsService', () => {
         DestinationsService,
         {
           provide: DESTINATION_REPOSITORY_TOKEN,
-          useValue: {
-            save: jest.fn(),
-            find: jest.fn(),
-            findBy: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            delete: jest.fn(),
-          },
+          useValue: mockDestinationRepository,
         },
         {
           provide: ConfigService,
@@ -59,7 +70,7 @@ describe('DestinationsService', () => {
   it('destinationRepository should be defined', () => {
     expect(destinationRepository).toBeDefined();
   });
-
+ 
   describe('create', () => {
     const mockDestination = {
       name: 'Test Destination',
@@ -142,10 +153,8 @@ describe('DestinationsService', () => {
 
   describe('findOne', () => {
     it('should throw an error if destination not found', async () => {
-      jest.spyOn(destinationRepository, 'findOne').mockResolvedValueOnce(null);
-
       const result = service.findOne('uuid');
-
+      
       expect(result).rejects.toBeInstanceOf(NotFoundException);
       expect(result).rejects.toThrow('Destination not found');
     });
@@ -175,5 +184,36 @@ describe('DestinationsService', () => {
       expect(result).rejects.toBeInstanceOf(NotFoundException);
       expect(result).rejects.toThrow('Destination not found');
     });
+  });
+
+  describe('attachPhotos', () => {
+    it('should create a new photo and insert to a destination', async () => {
+      const mockDestination = {
+        name: 'Test Destination',
+        photos: [
+          { url: 'http://images/photo1.jpg', description: 'destination image' },
+        ],
+        target: 'A destination target',
+      };
+
+      jest.spyOn(service as any, 'findOne').mockResolvedValue(mockDestination);
+
+      /* Alternative */
+      // Captures a createQueryBuilder's getOne method and returns any desired value
+
+      // jest.spyOn(mockQueryBuilder, 'getOne').mockResolvedValue(mockDestination);
+
+  
+      const files: Express.Multer.File[] = []
+  
+      const result = await service.attachPhotos('1', files);
+      
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        description: expect.any(String),
+        url: expect.any(String)
+      })
+      expect(destinationRepository.save).toHaveBeenCalledWith(mockDestination);
+    })
   });
 });

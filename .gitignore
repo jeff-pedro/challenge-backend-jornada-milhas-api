@@ -5,6 +5,7 @@
 
 # Database
 /src/db/test-db.sqlite
+/upload
 
 # Logs
 logs

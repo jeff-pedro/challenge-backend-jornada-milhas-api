@@ -12,6 +12,7 @@ import {
 import { PhotoDestinationDto } from './photo-destination.dto';
 
 export class CreateDestinationDto {
+  @IsOptional()
   @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(2)
