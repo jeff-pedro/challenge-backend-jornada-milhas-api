@@ -1,4 +1,6 @@
 import * as request from 'supertest';
+import * as path from 'path';
+import * as fs from 'fs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModuleTest } from './app.module.spec';
@@ -185,6 +187,64 @@ describe('DestinationsController (e2e)', () => {
       );
     });
   });
+
+  describe.only('/POST destination/{id}/upload', () => {
+    it('should return status of 201', async () => {
+      const filePath = path.join(__dirname, 'test.jpg');
+      // Create a large file for testing
+      fs.writeFileSync(filePath, 'a'.repeat(1024));
+      
+      return await request(app.getHttpServer())
+        .post(`${DESTINATION_URL}/${destinationId}/upload`)
+        .auth(accessToken, { type: 'bearer' })
+        .attach('files', filePath)
+        .expect(201)
+        .then(() => {
+          // Clean up the file after the test
+          fs.unlinkSync(filePath);
+        });
+    });
+
+    it('should return error when a file is not attached', async () => {
+      return request(app.getHttpServer())
+        .post(`${DESTINATION_URL}/${destinationId}/upload`)
+        .auth(accessToken, { type: 'bearer' })
+        .attach('files', '')
+        .expect(422);
+    });
+
+    it('should return error when receiving an invalid image format', async () => {
+      const filePath = path.join(__dirname, 'test.txt');
+      // Create a large file for testing
+      fs.writeFileSync(filePath, 'a'.repeat(1024));
+      
+      return request(app.getHttpServer())
+        .post(`${DESTINATION_URL}/${destinationId}/upload`)
+        .auth(accessToken, { type: 'bearer' })
+        .attach('files', filePath)
+        .expect(422)
+        .then(() => {
+          // Clean up the file after the test
+          fs.unlinkSync(filePath);
+        });
+    });
+
+    it('should return error when file size is gretter than 5MB', async () => {
+      const largeFilePath = path.join(__dirname, 'large-test.jpg');
+      // Create a large file for testing
+      fs.writeFileSync(largeFilePath, 'a'.repeat(1024 * 1024 * 6)); // 6MB file
+
+      return request(app.getHttpServer())
+        .post(`${DESTINATION_URL}/${destinationId}/upload`)
+        .auth(accessToken, { type: 'bearer' })
+        .attach('files', largeFilePath)
+        .expect(422)
+        .then(() => {
+          // Clean up the large file after the test
+          fs.unlinkSync(largeFilePath);
+        })
+    });
+  })
 
   describe('/GET destinations', () => {
     it('should return status of 200', async () => {
