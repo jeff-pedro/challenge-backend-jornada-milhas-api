@@ -117,7 +117,7 @@ export class DestinationsService {
     }
   }
 
-  async attachPhotos(id: string, files: Express.Multer.File[]) {
+  async attachPhotos(id: string, files: Express.Multer.File[]): Promise<Photo[]> {
     const destination = await this.findOne(id);
 
     for (const file of files) {
@@ -128,5 +128,6 @@ export class DestinationsService {
     }
     
     await this.destinationRepository.save(destination);
+    return destination.photos;
   }
 }
