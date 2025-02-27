@@ -6,9 +6,10 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 export class DatabaseConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
-  createTypeOrmOptions(): TypeOrmModuleOptions {
+  createTypeOrmOptions(): TypeOrmModuleOptions  {
+    const dbConfig = this.configService.get('db');
     return {
-      ...this.configService.get('db'),
+      ...dbConfig,
     };
   }
 }
