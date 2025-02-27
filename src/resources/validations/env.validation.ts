@@ -1,10 +1,9 @@
 import { plainToInstance } from 'class-transformer';
 import {
   IsEnum,
-  IsHash,
+  IsIn,
   IsNumber,
   IsOptional,
-  IsPort,
   IsString,
   Max,
   Min,
@@ -29,7 +28,7 @@ class EnvironmentVariables {
   PORT: number;
 
   @IsString()
-  COHERE_API_KEY: string;
+  GEMINI_API_KEY: string;
 
   @IsNumber()
   @Min(0)
@@ -48,6 +47,14 @@ class EnvironmentVariables {
   @IsString()
   DB_NAME: string;
 
+  @IsString()
+  @IsIn(["true", "false"])
+  DB_SSL_ENABLED: string;
+  
+  @IsOptional()
+  @IsString()
+  DB_SSL_CA_PATH: string;
+
   @IsOptional()
   @IsString()
   REDIS_HOST: string;
@@ -65,6 +72,15 @@ class EnvironmentVariables {
 
   @IsString()
   HASH_SALT: string
+
+  @IsString()
+  JWT_SECRET: string;
+  
+  @IsString()
+  JWT_EXPIRES_IN: string;
+
+  @IsString()
+  UPLOAD_DESTINATION_PATH: string;
 }
 
 export function validate(config: Record<string, unknown>) {
