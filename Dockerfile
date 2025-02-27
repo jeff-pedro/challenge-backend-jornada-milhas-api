@@ -9,6 +9,7 @@ COPY package*.json ./
 RUN npm ci --include=dev
 # copy the configurations and source files
 COPY tsconfig*.json ./
+COPY nest-cli.json ./
 COPY src/ src/
 # build the Nest application
 RUN npm run build
@@ -55,4 +56,4 @@ COPY --from=development /usr/src/app/dist ./dist
 
 EXPOSE 3000 443
 # run migrations and start the application
-CMD ["sh", "-c", "npx typeorm migration:run -d dist/db/data-source-cli.js && node dist/main.js"]
+CMD ["sh", "-c", "npx typeorm migration:run -d dist/database/data-source-cli.js && node dist/main.js"]
