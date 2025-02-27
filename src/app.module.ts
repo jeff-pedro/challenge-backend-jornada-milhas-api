@@ -5,7 +5,7 @@ import { DestinationsModule } from './modules/destinations/destinations.module';
 import { TestimonialsModule } from './modules/testimonials/testimonials.module';
 import { UsersModule } from './modules/users/users.module';
 import { PhotosModule } from './modules/photos/photos.module';
-import { DatabaseConfigService } from './config/db.config';
+import { DatabaseConfigService } from './config/database/database-options.constants';
 import configuration from './config/configuration';
 import { validate } from './resources/validations/env.validation';
 import { MainModule } from './main.module';

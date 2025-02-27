@@ -1,56 +1,30 @@
-export default () => {
+import { Environment, EnvironmentConfig } from "./interfaces/environment.config";
+import { AppConfig } from "./interfaces/app.config";
+import { getDevelopmentConfig, getProductionConfig, getTestConfig } from './database/database.config';
+import { DatabaseConfig } from "./interfaces/database.config";
+
+export default (): EnvironmentConfig => {
   const environment = process.env.NODE_ENV || 'development';
+  const isSSLEnabled = process.env.DB_SSL_ENABLED === "true";
 
-  const entities = [__dirname + '/../**/entities/*.entity{.js,.ts}'];
+  const getDatabaseConfig = () => {
+    const configs: Record<Environment, () => DatabaseConfig> = {
+      development: getDevelopmentConfig,
+      production: () => getProductionConfig(isSSLEnabled),
+      test: getTestConfig,
+    }
+    return configs[environment as Environment]();
+  }
 
-  type Environment = 'development' | 'production' | 'test';
-
-  const environmentConfig: Record<Environment, any> = {
-    development: {
-      db: {
-        type: 'postgres',
-        host: process.env.DB_HOST ?? 'localhost',
-        port: parseInt(`${process.env.DB_PORT}`, 10) ?? 5432,
-        username: process.env.DB_USERNAME ?? 'root',
-        password: process.env.DB_PASSWORD ?? 'root',
-        database: process.env.DB_NAME ?? 'jornadamilhas',
-        entities,
-        synchronize: true, // synchronize tables with entities - only for development
-        logging: true,
-      },
+  const getAppConfig = (): AppConfig => ({
+    port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
+    accessKeys: {
+      geminiApiKey: process.env.GEMINI_API_KEY,
     },
-    production: {
-      db: {
-        type: 'postgres',
-        host: process.env.DB_HOST,
-        username: process.env.DB_USERNAME,
-        port: parseInt(`${process.env.DB_PORT}`, 10),
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-        entities,
-        synchronize: false, // never use synchronize: true in production - otherwise you can lose production data
-        logging: false,
-      },
-    },
-    test: {
-      db: {
-        type: 'sqlite',
-        database: ':memory:',
-        entities,
-        dropSchema: true,
-        synchronize: true, // synchronize tables with entities - only for development
-        logging: false,
-      },
-    },
-  };
+  });
 
   return {
-    app: {
-      port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
-      accessKeys: {
-        geminiApiKey: process.env.GEMINI_API_KEY,
-      },
-    },
-    ...environmentConfig[environment as Environment],
+    app: getAppConfig(),
+    db: getDatabaseConfig(),
   };
 };
