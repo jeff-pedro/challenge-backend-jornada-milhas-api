@@ -188,7 +188,7 @@ describe('DestinationsController (e2e)', () => {
     });
   });
 
-  describe.only('/POST destination/{id}/upload', () => {
+  describe('/POST destination/{id}/upload', () => {
     it('should return status of 201', async () => {
       const filePath = path.join(__dirname, 'test.jpg');
       // Create a large file for testing
