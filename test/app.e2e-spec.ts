@@ -35,8 +35,8 @@ describe('AppModule', () => {
     expect(() => validate(process.env)).toThrow();
   });
 
-  it('should throw an error fwhen missing COHERE_API_KEY env variable', () => {
-    delete process.env.COHERE_API_KEY;
+  it('should throw an error fwhen missing GEMINI_API_KEY env variable', () => {
+    delete process.env.GEMINI_API_KEY;
     expect(() => validate(process.env)).toThrow();
   });
 
