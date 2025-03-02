@@ -15,25 +15,31 @@ import {
 import { PhotoUserDto } from './photo-user.dto';
 import { Photo } from '../../photos/entities/photo.entity';
 import { IsUniqueEmail } from '../validations/unique-email.validator';
+import { ApiExtraModels, ApiProperty, ApiPropertyOptional, ApiSchema, getSchemaPath } from '@nestjs/swagger';
 
 export class CreateUserDto {
+  @ApiProperty({ example: 'Peter' })
   @IsString()
   @IsNotEmpty()
   firstName: string;
 
+  @ApiProperty({ example: 'Quill' })
   @IsNotEmpty()
   @IsString()
   lastName: string;
 
+  @ApiPropertyOptional({ type: PhotoUserDto })
   @ValidateNested()
   @Type(() => PhotoUserDto)
   photo?: Photo;
 
+  @ApiProperty({ example: 'starlord@milano.io' })
   @IsEmail()
   @IsUniqueEmail()
   @IsNotEmpty()
   email: string;
 
+  @ApiProperty({ example: 'Abc-123' })
   @IsNotEmpty()
   @MinLength(6)
   @MaxLength(30)

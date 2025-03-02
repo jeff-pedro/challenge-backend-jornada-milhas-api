@@ -1,10 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { Public } from './resources/decorators/public-route.decorator';
+import { ApiExcludeController, ApiOperation } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller()
 export class MainController {
   constructor() {}
-
   @Get()
   @Public()
   getHello(): object {
