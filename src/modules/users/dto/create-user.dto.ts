@@ -6,16 +6,14 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
   MaxLength,
-  Min,
   MinLength,
   ValidateNested,
 } from 'class-validator';
 import { PhotoUserDto } from './photo-user.dto';
 import { Photo } from '../../photos/entities/photo.entity';
 import { IsUniqueEmail } from '../validations/unique-email.validator';
-import { ApiExtraModels, ApiProperty, ApiPropertyOptional, ApiSchema, getSchemaPath } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'Peter' })
