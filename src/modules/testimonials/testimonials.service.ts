@@ -61,17 +61,13 @@ export class TestimonialsService {
 
   async findOne(
     id: string,
-  ): Promise<{ id: string; name: string; photo: Photo; testimonial: string }> {
+  ): Promise<{ id: string; userId: string; testimonial: string }> {
     const testimonialSaved = await this.testimonialRepository.findOne({
       where: { id },
       relations: ['user'],
       select: {
         user: {
-          firstName: true,
-          lastName: true,
-          photo: {
-            url: true,
-          },
+          id: true,
         },
       },
     });
@@ -82,8 +78,7 @@ export class TestimonialsService {
 
     return {
       id: testimonialSaved.id,
-      name: `${testimonialSaved.user.firstName} ${testimonialSaved.user.lastName}`,
-      photo: testimonialSaved.user.photo,
+      userId: testimonialSaved.user.id,
       testimonial: testimonialSaved.testimonial,
     };
   }
