@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
         const token = this.extractTokenFromHeader(request);
 
         if (!token) {
-            throw new UnauthorizedException('Authentication error');
+            throw new UnauthorizedException('Authorization information is missing or invalid');
         }
 
         try {
