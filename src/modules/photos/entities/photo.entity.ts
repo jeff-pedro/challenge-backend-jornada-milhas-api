@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Destination } from '../../destinations/entities/destination.entity';
 import { User } from '../../users/entities/user.entity';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'photos' })
 export class Photo {
@@ -24,6 +24,7 @@ export class Photo {
   @Column({ nullable: true })
   description: string;
 
+  @ApiHideProperty()
   @ManyToOne(() => Destination, (destination) => destination.photos, {
     onDelete: 'CASCADE',
   })
@@ -33,6 +34,7 @@ export class Photo {
   })
   destination: Destination;
 
+  @ApiHideProperty()
   @OneToOne(() => User, (user) => user.photo, {
     onDelete: 'CASCADE',
   })

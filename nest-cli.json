@@ -4,6 +4,17 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "assets": ["assets/**/*"]
+    "assets": ["assets/**/*"],
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "introspectComments": true,
+          "controllerKeyOfComment": "description",
+          "dtoKeyOfComment": "description",
+          "classValidatorShim": true
+        }
+      }
+    ]
   }
 }
