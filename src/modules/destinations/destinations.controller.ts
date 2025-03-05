@@ -90,8 +90,11 @@ export class DestinationsController {
   @Public()
   @Get()
   @ApiOkResponse({ description: 'Successful operation', type: Destination})
-  @ApiQuery({ name: 'name', required: false })
-  // TODO: Seperar em 2 métodos, uma para todos e um que filtra por nome.
+  @ApiQuery({ 
+    name: 'name', 
+    required: false, 
+    description: 'The destination name that needs to be fetched.', 
+    example: 'user1' })
   async findAll(@Query('name') name?: string): Promise<Destination[]> {
     return this.destinationsService.findAll(name);
   }
@@ -127,7 +130,7 @@ export class DestinationsController {
    * @throws {404} Any destination was found with the provided ID.
    */
   @Patch(':id')
-  @ApiOkResponse({ description: 'Successful operation' })
+  @ApiOkResponse({ description: 'Successful operation.' })
   @ApiBearerAuth()
   async update(
     @Param('id', ParseUUIDPipe) id: string,
