@@ -196,10 +196,18 @@ describe('TestimonialsService', () => {
 
   describe('getRandomTestimonials', () => {
     it('should call testimonialRepository.find with correct params', async () => {
-      const options = { order: { id: 'ASC' }, take: 3 };
+      const options = { 
+        order: { id: 'ASC' }, 
+        take: 3, 
+        relations: ['user'], 
+        select: { user: { id: true } }
+      }
 
-      await service.getRandomTestimonials();
+      jest.spyOn(testimonialRepository, 'find').mockResolvedValue([]);
 
+      const result = service.getRandomTestimonials();
+
+      expect(result).rejects.toThrow(NotFoundException);
       expect(testimonialRepository.find).toHaveBeenCalledWith(options);
     });
   });
