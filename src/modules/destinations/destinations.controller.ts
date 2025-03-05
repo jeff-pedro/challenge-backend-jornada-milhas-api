@@ -33,12 +33,12 @@ export class DestinationsController {
    * 
    * @remarks This operation allows you to create a new destination.
    * 
-   * @throws {400} Bad Request.
+   * @throws {400} Malformatted request body or invalid input.
    * @throws {401} Authorization information is missing or invalid.
    */
-  @Post()
   @ApiBearerAuth()
   @ApiCreatedResponse({ description: 'Successful operation.', type: CreateDestinationDto})
+  @Post()
   async create(
     @Body() createDestinationDto: CreateDestinationDto,
   ): Promise<Destination> {
@@ -56,7 +56,6 @@ export class DestinationsController {
    * @throws {404} Any destination was found with the provided information.
    * @throws {422} Image file is missing or has an invalid format.
    */
-  @Post(':id/upload')
   @UseInterceptors(FilesInterceptor('files'))
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
@@ -66,6 +65,7 @@ export class DestinationsController {
   })
   @ApiParam({ name: 'id', description: 'ID of destination to update' })
   @ApiCreatedResponse({ description: 'Successful operation.', type: [Photo]})
+  @Post(':id/upload')
   async uploadPhotos(
     @Param('id', ParseUUIDPipe) id: string,
     @UploadedFiles(
@@ -85,16 +85,16 @@ export class DestinationsController {
    * 
    * @remarks This operation allows you to get all destinations.
    * 
-   * @throws {404} Not Found.
+   * @throws {404} Any destination was found.
    */
   @Public()
-  @Get()
   @ApiOkResponse({ description: 'Successful operation', type: Destination})
   @ApiQuery({ 
     name: 'name', 
     required: false, 
     description: 'The destination name that needs to be fetched.', 
     example: 'user1' })
+  @Get()
   async findAll(@Query('name') name?: string): Promise<Destination[]> {
     return this.destinationsService.findAll(name);
   }
@@ -108,9 +108,9 @@ export class DestinationsController {
    * @throws {401} Authorization information is missing or invalid.
    * @throws {404} Any destination was found with the provided ID.
    */
-  @Get(':id')
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'Successful operation.' })
+  @Get(':id')
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<ListDestinationDto> {
@@ -129,9 +129,9 @@ export class DestinationsController {
    * @throws {401} Authorization information is missing or invalid.
    * @throws {404} Any destination was found with the provided ID.
    */
-  @Patch(':id')
   @ApiOkResponse({ description: 'Successful operation.' })
   @ApiBearerAuth()
+  @Patch(':id')
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateDestinationDto: UpdateDestinationDto,
@@ -150,9 +150,9 @@ export class DestinationsController {
    * @throws {401} Authorization information is missing or invalid.
    * @throws {404} Any destination was found with the provided ID.
    */
-  @Delete(':id')
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'Successful operation.' })
+  @Delete(':id')
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<{ message: string }> {
