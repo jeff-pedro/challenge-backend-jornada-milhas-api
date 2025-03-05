@@ -17,8 +17,8 @@ async function bootstrap() {
     .setTitle('Jornada Milhas API')
     .setDescription(description)
     .setVersion(version)
-    .setContact('Development contact', homepage, author.email)
-    .setExternalDoc('Github Wiki', 'https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki')
+    .setContact('🧑🏽‍💻 Development', author.url, author.email)
+    .setExternalDoc('📚 More about the project...', 'https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki')
     .addBearerAuth()
     .build();
     
