@@ -11,7 +11,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 @Entity({ name: 'users' })
 export class User {
@@ -31,6 +31,7 @@ export class User {
   @Column({ name: 'email', length: 70, nullable: false })
   email: string;
 
+  @ApiHideProperty()
   @Exclude()
   @Column({ name: 'password', length: 255, nullable: false })
   password: string;
@@ -47,6 +48,7 @@ export class User {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
 
+  @ApiHideProperty()
   @OneToMany(() => Testimonial, (testimonial) => testimonial.user)
   testimonials: Testimonial[];
 

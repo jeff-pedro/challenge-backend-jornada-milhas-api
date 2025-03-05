@@ -1,12 +1,20 @@
-import { UUIDTypes } from 'uuid';
 import { Photo } from '../../photos/entities/photo.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { PhotoUserDto } from './photo-user.dto';
 
 export class ListUserDto {
-    constructor (
-        readonly id: UUIDTypes,
-        readonly firstName: string,
-        readonly lastName: string,
-        readonly email: string,
-        readonly photo?: Photo,
-    ) {}
+    readonly id: string;
+    
+    readonly firstName: string;
+    
+    readonly lastName: string;
+    
+    readonly email: string;
+
+    @ApiProperty({ type: PhotoUserDto })
+    readonly photo?: Photo;
+
+    constructor (partial: Partial<ListUserDto>) {
+        Object.assign(this, partial);
+    }
 }
