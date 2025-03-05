@@ -6,15 +6,14 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Max,
   MaxLength,
-  Min,
   MinLength,
   ValidateNested,
 } from 'class-validator';
 import { PhotoUserDto } from './photo-user.dto';
 import { Photo } from '../../photos/entities/photo.entity';
 import { IsUniqueEmail } from '../validations/unique-email.validator';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
   @IsString()
@@ -25,6 +24,7 @@ export class CreateUserDto {
   @IsString()
   lastName: string;
 
+  @ApiProperty({ type: PhotoUserDto })
   @ValidateNested()
   @Type(() => PhotoUserDto)
   photo?: Photo;
@@ -42,6 +42,7 @@ export class CreateUserDto {
   })
   password: string;
 
+  @ApiHideProperty()
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;

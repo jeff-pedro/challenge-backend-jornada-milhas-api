@@ -1,8 +1,7 @@
 {
   "name": "jornada-milhas",
-  "version": "1.8.1",
-  "description": "Restful API that communicates with a travel destination website",
-  "author": "Jefferson Santos",
+  "version": "1.9.0",
+  "description": "A RESTful API for a travel platform, enabling destination registration, user testimonials, and user account management.",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -35,6 +34,7 @@
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/platform-express": "^11.0.7",
+    "@nestjs/swagger": "^11.0.5",
     "@nestjs/typeorm": "^11.0.0",
     "bcrypt": "^5.1.1",
     "cache-manager": "^6.4.0",
@@ -91,5 +91,11 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "author": {
+    "name": "Jefferson Santos",
+    "email": "jeffersonpedro89@gmail.com",
+    "url": "https://github.com/jeff-pedro/"
+  },
+  "homepage": "https://github.com/jeff-pedro/challenge-backend-jornada-milhas/"
 }

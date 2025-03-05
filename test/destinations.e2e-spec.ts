@@ -5,15 +5,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModuleTest } from './app.module.spec';
 import { JwtService } from '@nestjs/jwt';
+import { Repository } from 'typeorm';
+import { Destination } from '../src/modules/destinations/entities/destination.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('DestinationsController (e2e)', () => {
   let app: INestApplication;
+  let destinationRepository: Repository<Destination>;
   let destinationId: string;
   let destinationName: string;
   let jwtService: JwtService;
   let accessToken: string;
 
   const DESTINATION_URL = '/destinations';
+  const DESTINATION_REPOSITORY_TOKEN = getRepositoryToken(Destination);
 
   beforeAll(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -29,25 +34,22 @@ describe('DestinationsController (e2e)', () => {
         transform: true,
       }),
     );
-
     await app.init();
-
+    
+    destinationRepository = moduleRef.get<Repository<Destination>>(DESTINATION_REPOSITORY_TOKEN);
+    
     // Generate access token
     jwtService = moduleRef.get<JwtService>(JwtService);
     accessToken = await jwtService.signAsync({ sub: 'test-user-id' });
 
-    const destinatioResponse = await request(app.getHttpServer())
-      .post(DESTINATION_URL)
-      .auth(accessToken, { type: 'bearer' })
-      .send({
-        name: 'Berlin',
-        photos: [{ url: 'berlin.jpg' }],
-        target: 'Go to Berlin in 2025',
-        descriptiveText: 'Some descriptive text about Berlin...',
-      });
+    const { id, name } = await destinationRepository.save({
+      name: 'Berlin',
+      target: 'Go to Berlin in 2025',
+      descriptiveText: 'Some descriptive text about Berlin...',
+    });
 
-    destinationId = destinatioResponse.body.id;
-    destinationName = destinatioResponse.body.name;
+    destinationId = id;
+    destinationName = name;
   });
 
   afterAll(async () => {
@@ -60,7 +62,6 @@ describe('DestinationsController (e2e)', () => {
         .post(DESTINATION_URL)
         .send({
           name: 'Amsterdam',
-          photos: [{ url: 'amsterdam1.jpg' }, { url: 'amsterdam2.jpg' }],
           target: 'Go to Amsterdam in 2030',
           descriptiveText: 'Some descriptive text about Amsterdam...',
         })
@@ -72,7 +73,6 @@ describe('DestinationsController (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(DESTINATION_URL)
         .send({
-          photos: true,
           name: 1,
           price: '4500.00',
         })
@@ -96,7 +96,6 @@ describe('DestinationsController (e2e)', () => {
       async (key, value) => {
         const destinationDto = {
           name: 'Amsterdam',
-          photos: [{ url: 'amsterdam1.jpg' }, { url: 'amsterdam2.jpg' }],
           target: 'Go to Amsterdam in 2030',
           descriptiveText: 'Some descriptive text about Amsterdam...',
         };
@@ -112,51 +111,12 @@ describe('DestinationsController (e2e)', () => {
       },
     );
 
-    it('should return an error when passing more than 2 photos to the array', async () => {
-      const response = await request(app.getHttpServer())
-        .post(DESTINATION_URL)
-        .auth(accessToken, { type: 'bearer' })
-        .send({
-          name: 'Amsterdam',
-          photos: [
-            { url: 'photo1.jpg' },
-            { url: 'photo1.jpg' },
-            { url: 'photo1.jpg' },
-          ],
-          target: 'Go to Amsterdam in 2030',
-          descriptiveText: 'Some descriptive text about Amsterdam...',
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body.message[0]).toBe(
-        'photos must contain no more than 2 elements',
-      );
-    });
-
-    it('should return an error when passing less than 1 photo to the array', async () => {
-      const response = await request(app.getHttpServer())
-        .post(DESTINATION_URL)
-        .auth(accessToken, { type: 'bearer' })
-        .send({
-          name: 'Amsterdam',
-          photos: [],
-          target: 'Go to Amsterdam in 2030',
-          descriptiveText: 'Some descriptive text about Amsterdam...',
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body.message[0]).toBe(
-        'photos must contain at least 1 elements',
-      );
-    });
-
     it('should return an error when passing a non-existent property', async () => {
       const response = await request(app.getHttpServer())
         .post(DESTINATION_URL)
         .auth(accessToken, { type: 'bearer' })
         .send({
           name: 'Amsterdam',
-          photos: [{ url: 'photo1.jpg' }],
           target: 'Go to Amsterdam in 2030',
           descriptiveText: 'Some descriptive text about Amsterdam...',
           nonExistentProperty: '',
@@ -176,7 +136,6 @@ describe('DestinationsController (e2e)', () => {
         .auth(accessToken, { type: 'bearer' })
         .send({
           name: 'Amsterdam',
-          photos: [{ url: 'photo1.jpg' }],
           target,
           descriptiveText: 'Some descriptive text about Amsterdam...',
         });
@@ -194,7 +153,7 @@ describe('DestinationsController (e2e)', () => {
       // Create a large file for testing
       fs.writeFileSync(filePath, 'a'.repeat(1024));
       
-      return await request(app.getHttpServer())
+      return request(app.getHttpServer())
         .post(`${DESTINATION_URL}/${destinationId}/upload`)
         .auth(accessToken, { type: 'bearer' })
         .attach('files', filePath)

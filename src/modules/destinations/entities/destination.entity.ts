@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Photo } from '../../photos/entities/photo.entity';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'destinations' })
 export class Destination {
@@ -23,12 +24,15 @@ export class Destination {
   @Column({ name: 'descriptive_text', nullable: false })
   descriptiveText: string;
 
+  @ApiHideProperty()
   @CreateDateColumn({ name: 'created_at' })
   createdAt?: string;
 
+  @ApiHideProperty()
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt?: string;
 
+  @ApiHideProperty()
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt?: string;
 

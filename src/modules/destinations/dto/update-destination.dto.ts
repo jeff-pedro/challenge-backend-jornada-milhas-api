@@ -1,6 +1,4 @@
-import { OmitType, PartialType } from '@nestjs/mapped-types';
+import { OmitType, PartialType } from '@nestjs/swagger';
 import { CreateDestinationDto } from './create-destination.dto';
 
-export class UpdateDestinationDto extends PartialType(
-  OmitType(CreateDestinationDto, ['photos']),
-) {}
+export class UpdateDestinationDto extends PartialType(CreateDestinationDto) {}

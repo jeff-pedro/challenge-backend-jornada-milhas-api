@@ -6,6 +6,7 @@ import { CreateTestimonialDto } from './dto/create-testimonial.dto';
 import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 import { User } from '../users/entities/user.entity';
 import { Photo } from '../photos/entities/photo.entity';
+import { ListTestimonialDto } from './dto/list-testimonial.dto';
 
 @Injectable()
 export class TestimonialsService {
@@ -39,7 +40,7 @@ export class TestimonialsService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('User not found.');
     }
 
     return user;
@@ -53,7 +54,7 @@ export class TestimonialsService {
     });
 
     if (testimonialSaved.length === 0) {
-      throw new NotFoundException('Any testimonial was found');
+      throw new NotFoundException('Any testimonial was found.');
     }
 
     return testimonialSaved;
@@ -61,29 +62,24 @@ export class TestimonialsService {
 
   async findOne(
     id: string,
-  ): Promise<{ id: string; name: string; photo: Photo; testimonial: string }> {
+  ): Promise<{ id: string; userId: string; testimonial: string }> {
     const testimonialSaved = await this.testimonialRepository.findOne({
       where: { id },
       relations: ['user'],
       select: {
         user: {
-          firstName: true,
-          lastName: true,
-          photo: {
-            url: true,
-          },
+          id: true,
         },
       },
     });
 
     if (!testimonialSaved) {
-      throw new NotFoundException('Testimonial not found');
+      throw new NotFoundException('Testimonial not found.');
     }
 
     return {
       id: testimonialSaved.id,
-      name: `${testimonialSaved.user.firstName} ${testimonialSaved.user.lastName}`,
-      photo: testimonialSaved.user.photo,
+      userId: testimonialSaved.user.id,
       testimonial: testimonialSaved.testimonial,
     };
   }
@@ -100,7 +96,7 @@ export class TestimonialsService {
     });
 
     if (testimonialSaved === null) {
-      throw new NotFoundException('Testimonial not found');
+      throw new NotFoundException('Testimonial not found.');
     }
 
     if (testimonialSaved?.user.id !== userId) {
@@ -117,14 +113,30 @@ export class TestimonialsService {
     const testimonialToDelete = await this.testimonialRepository.delete(id);
 
     if (testimonialToDelete.affected === 0) {
-      throw new NotFoundException('Testimonial not found');
+      throw new NotFoundException('Testimonial not found.');
     }
   }
 
-  async getRandomTestimonials(): Promise<Testimonial[]> {
-    return await this.testimonialRepository.find({
+  async getRandomTestimonials(): Promise<{id: string, userId: string, testimonial: string}[]> {
+    const testimonials = await this.testimonialRepository.find({
       order: { id: 'ASC' },
       take: 3,
+      relations: ['user'],
+      select: {
+        user: {
+          id: true,
+        },
+      }
     });
+
+    if(testimonials.length === 0) {
+      throw new NotFoundException('Any testimonial was found.');
+    }
+
+    return testimonials.map(t => ({
+      id: t.id,
+      testimonial: t.testimonial,
+      userId: t.user.id
+    }));
   }
 }

@@ -49,7 +49,7 @@ describe('TestimonialsController', () => {
       const req = { user: { sub: userId } } as UserRequest;
       const createTestimonialDto: CreateTestimonialDto = { testimonial: 'Text' };
       const testimonialSaved = { id: '1', userId, testimonial: 'Text' };
-      const result = new ListTestimonialDto(testimonialSaved.id, testimonialSaved.userId, testimonialSaved.testimonial);
+      const result = new ListTestimonialDto(testimonialSaved);
 
       jest.spyOn(testimonialsService, 'create').mockResolvedValueOnce(testimonialSaved);
 
@@ -80,13 +80,8 @@ describe('TestimonialsController', () => {
       const id = '1';
       const testimonial = {
         id: '1',
-        name: 'Foo',
-        photo: new Photo(),
         testimonial: 'bla bla bla',
-        user: [] as never,
-        createdAt: '2024-01-01',
-        updatedAt: '2024-01-01',
-        deletedAt: '2024-01-01',
+        userId: '1',
       };
       jest.spyOn(testimonialsService, 'findOne').mockResolvedValue(testimonial);
 
@@ -101,7 +96,7 @@ describe('TestimonialsController', () => {
       const id = '1';
       const req = { user: { sub: '1' } } as UserRequest;
       const dataToUpdate: UpdateTestimonialDto = { testimonial: 'Text updated' };
-      const result = { message: `Testimonial #${id} was updated` };
+      const result = { message: `Testimonial #${id} was updated.` };
       jest.spyOn(testimonialsService, 'update').mockResolvedValueOnce(undefined);
 
       expect(await controller.update(id, dataToUpdate, req)).toEqual(result);
@@ -111,7 +106,7 @@ describe('TestimonialsController', () => {
   describe('delete', () => {
     it('should return a message with the deleted id', async () => {
       const id = '1';
-      const expected = { message: `Testimonial #${id} was deleted` };
+      const expected = { message: `Testimonial #${id} was deleted.` };
       jest.spyOn(testimonialsService, 'remove').mockResolvedValueOnce();
 
       const result = await controller.remove(id);
