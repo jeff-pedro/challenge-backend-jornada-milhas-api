@@ -16,6 +16,8 @@ import { RedisOptions } from './config/app-options.constants';
 import { HttpCacheInterceptor } from './resources/interceptors/http-cache.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { GlobalLoggerInterceptor } from './resources/interceptors/global-logger.interceptor';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -29,6 +31,10 @@ import { GlobalLoggerInterceptor } from './resources/interceptors/global-logger.
       inject: [DatabaseConfigService],
     }),
     CacheModule.registerAsync(RedisOptions),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/static',
+    }),
     TestimonialsModule,
     DestinationsModule,
     UsersModule,

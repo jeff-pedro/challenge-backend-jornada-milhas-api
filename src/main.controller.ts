@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { Public } from './resources/decorators/public-route.decorator';
-import { ApiExcludeController, ApiOperation } from '@nestjs/swagger';
+import { ApiExcludeController } from '@nestjs/swagger';
 
 @ApiExcludeController()
 @Controller()

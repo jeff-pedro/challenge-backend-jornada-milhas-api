@@ -11,19 +11,26 @@ async function bootstrap() {
     cors: true,
   });
 
-  const { version, homepage, description, author } = require('../package.json');
+  app.setGlobalPrefix('/api/v1');
 
+  const { version, description, author } = require('../package.json');
   const config = new DocumentBuilder()
     .setTitle('Jornada Milhas API')
     .setDescription(description)
     .setVersion(version)
     .setContact('🧑🏽‍💻 Development', author.url, author.email)
-    .setExternalDoc('📚 More about the project...', 'https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki')
+    .setExternalDoc(
+      '📚 More about the project...', 
+      'https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki'
+    )
     .addBearerAuth()
     .build();
-    
     const documentFactory = () => SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, documentFactory);
+    SwaggerModule.setup('docs', app, documentFactory, {
+      useGlobalPrefix: true,
+      customSiteTitle: 'JM Documentation',
+      customfavIcon: '/static/logo.png'
+    });
 
   const configService = app.get(ConfigService<{ app: { port: number } }, true>);
   const port = configService.get('app.port', { infer: true });
