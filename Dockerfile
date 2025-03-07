@@ -11,6 +11,8 @@ RUN npm ci --include=dev
 COPY tsconfig*.json ./
 COPY nest-cli.json ./
 COPY src/ src/
+COPY wwwroot/ wwwroot/
+
 # build the Nest application
 RUN npm run build
 
@@ -53,6 +55,7 @@ COPY package*.json ./
 # copy the dependencies from the previous stages
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=development /usr/src/app/dist ./dist
+COPY --from=development /usr/src/app/wwwroot ./wwwroot
 
 EXPOSE 3000 443
 # run migrations and start the application
