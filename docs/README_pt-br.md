@@ -17,6 +17,24 @@
   Bem-vindo à <strong>Jornada Milhas API</strong>, uma API Restful projetada para uma plataforma fictícia de recomendação de destinos de viagem. Este projeto foi desenvolvido durante o <strong>Challenge Back-End</strong> da <a href="https://cursos.alura.com.br" alt="Alura webpage">Alura</a> para aplicar e aprofundar os conhecimentos em tecnologias modernas de desenvolvimento web.
 <p align="center">
 
+## Principais Recursos
+
+#### 🔐 Autenticação e Usuários
+- Registro e autenticação de usuários
+- Gestão de perfis de usuários
+- Rotas protegidas com JWT
+
+#### 🌍 Destinos
+- Cadastro e gestão de destinos turísticos
+- Upload de fotos dos destinos
+- Busca de destinos por nome
+- Descrições enriquecidas dos locais
+
+#### 💬 Depoimentos
+- Cadastro de experiências dos viajantes
+- Visualização de depoimentos
+- Seleção aleatória de depoimentos para página inicial
+
 ## 📖 Documentação
 
 Para uma documentação detalhada, incluindo instruções de configuração, uso da API e detalhes do projeto, acesse o [GitHub Wiki](https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki).

@@ -22,7 +22,25 @@
 <img src="https://img.shields.io/github/v/release/jeff-pedro/challenge-backend-jornada-milhas?display_name=tag&include_prereleases&style=for-the-badge">
 <img src="https://img.shields.io/badge/node-v22.11.0-blueviolet?style=for-the-badge&logo=node.js)](https://nodejs.org/download/">
 <a href='https://eslint.org/' target='_blank'><img src="https://img.shields.io/badge/Style-eslint-ff69b4.svg?style=for-the-badge&logo=eslint"></a>
-<a href='https://prettier.io/' target='_blank'><img src="https://img.shields.io/badge/Formatter-prittier-F7B93E.svg?style=for-the-badge&logo=prettier"></a>
+<a href='https://prettier.io/' target='_blank'><img src="https://img.shields.io/badge/Formatter-prettier-F7B93E.svg?style=for-the-badge&logo=prettier"></a>
+
+## Key Features
+
+#### 🔐 Authentication & Users 
+- User registration and authentication
+- User profile management
+- Protected routes with JWT
+
+#### 🌍 Destinations
+- Registration and management of tourist destinations
+- Uploading photos of destinations
+- Searching for destinations by name
+- Rich descriptions of locations
+
+#### 💬 Testimonials
+- Travelers' experience submissions
+- Viewing testimonials
+- Random selection of testimonials for the homepage
 
 ## 📖 Documentation
 

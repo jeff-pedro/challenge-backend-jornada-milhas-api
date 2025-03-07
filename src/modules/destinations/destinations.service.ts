@@ -122,7 +122,7 @@ export class DestinationsService {
 
     for (const file of files) {
       const photoEntity = new Photo();
-      photoEntity.url = file.path;
+      photoEntity.url = (file as any).location ?? file.path;
       photoEntity.description = 'Photo description'; // TODO: auto-generate via AI
       destination.photos.push(photoEntity);
     }
