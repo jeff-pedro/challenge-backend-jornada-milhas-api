@@ -23,6 +23,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { Photo } from '../photos/entities/photo.entity';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import FilesUploadDto from './dto/files-upload.dto';
+import { FILE_CONSTRAINTS } from 'src/config/constants/app.constants';
 
 @Controller('destinations')
 export class DestinationsController {
@@ -70,8 +71,8 @@ export class DestinationsController {
     @Param('id', ParseUUIDPipe) id: string,
     @UploadedFiles(
       new ParseFilePipeBuilder()
-        .addMaxSizeValidator({ maxSize: 1024 * 1024 * 5 })
-        .addFileTypeValidator({ fileType: 'image/jpeg' })
+        .addMaxSizeValidator({ maxSize: FILE_CONSTRAINTS.MAX_SIZE })
+        .addFileTypeValidator({ fileType: FILE_CONSTRAINTS.ALLOWED_TYPES })
         .build({
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
         }),
