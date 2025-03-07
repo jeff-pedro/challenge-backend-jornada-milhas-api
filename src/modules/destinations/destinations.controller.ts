@@ -23,11 +23,11 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { Photo } from '../photos/entities/photo.entity';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import FilesUploadDto from './dto/files-upload.dto';
-import { FILE_CONSTRAINTS } from 'src/config/constants/app.constants';
+import { FILE_CONSTRAINTS } from '../../config/constants/app.constants';
 
 @Controller('destinations')
 export class DestinationsController {
-  constructor(private readonly destinationsService: DestinationsService) {}
+  constructor(private readonly destinationsService: DestinationsService) { }
 
   /** 
    * Create a destination
@@ -38,7 +38,7 @@ export class DestinationsController {
    * @throws {401} Authorization information is missing or invalid.
    */
   @ApiBearerAuth()
-  @ApiCreatedResponse({ description: 'Successful operation.', type: CreateDestinationDto})
+  @ApiCreatedResponse({ description: 'Successful operation.', type: CreateDestinationDto })
   @Post()
   async create(
     @Body() createDestinationDto: CreateDestinationDto,
@@ -65,7 +65,7 @@ export class DestinationsController {
     type: FilesUploadDto
   })
   @ApiParam({ name: 'id', description: 'ID of destination to update' })
-  @ApiCreatedResponse({ description: 'Successful operation.', type: [Photo]})
+  @ApiCreatedResponse({ description: 'Successful operation.', type: [Photo] })
   @Post(':id/upload')
   async uploadPhotos(
     @Param('id', ParseUUIDPipe) id: string,
@@ -89,12 +89,13 @@ export class DestinationsController {
    * @throws {404} Any destination was found.
    */
   @Public()
-  @ApiOkResponse({ description: 'Successful operation', type: Destination})
-  @ApiQuery({ 
-    name: 'name', 
-    required: false, 
-    description: 'The destination name that needs to be fetched.', 
-    example: 'user1' })
+  @ApiOkResponse({ description: 'Successful operation', type: Destination })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    description: 'The destination name that needs to be fetched.',
+    example: 'user1'
+  })
   @Get()
   async findAll(@Query('name') name?: string): Promise<Destination[]> {
     return this.destinationsService.findAll(name);
@@ -117,7 +118,7 @@ export class DestinationsController {
   ): Promise<ListDestinationDto> {
     const destination = await this.destinationsService.findOne(id);
     const { id: destId, photos, name, target, descriptiveText } = destination;
-    return new ListDestinationDto( destId, photos, name, target, descriptiveText)
+    return new ListDestinationDto(destId, photos, name, target, descriptiveText)
   }
 
   /**
