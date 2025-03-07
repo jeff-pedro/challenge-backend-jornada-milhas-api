@@ -15,7 +15,7 @@ import { User } from './entities/user.entity';
 import { HashingPassword } from '../../resources/pipes/hashing-password.pipe';
 import { ListUserDto } from './dto/list-user.dto';
 import { Public } from '../../resources/decorators/public-route.decorator';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiSecurity, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiParam } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -50,7 +50,6 @@ export class UsersController {
    * 
    * @throws {404} Any destination was found.
    */
-  @Public() // TODO: Tornar privada
   @Get()
   async findAll(): Promise<User[]> {
     const user = await this.usersService.findAll();

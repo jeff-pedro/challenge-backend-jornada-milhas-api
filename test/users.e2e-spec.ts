@@ -132,7 +132,10 @@ describe('UsersController (e2e)', () => {
 
   describe('/GET users', () => {
     it('should return status of 200', () => {
-      return request(app.getHttpServer()).get(USER_URL).expect(200);
+      return request(app.getHttpServer())
+        .get(USER_URL)
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
     });
   });
 
