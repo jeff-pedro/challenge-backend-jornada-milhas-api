@@ -1,5 +1,5 @@
 import { INestApplication } from "@nestjs/common";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
 import { APP_DEFAULTS, SWAGGER_URL } from "src/config/constants/app.constants";
 import { SwaggerUI } from "./swagger-ui.class";
 import { ConfigService } from "@nestjs/config";
@@ -15,8 +15,8 @@ export class SwaggerDocumentBuilder {
     this.configService = app.get(ConfigService);
   }
 
-  private buildConfig() {
-    const docBuilder = new DocumentBuilder()
+  private buildConfig(): Omit<OpenAPIObject, 'paths'> {
+    return new DocumentBuilder()
       .setTitle(APP_DEFAULTS.NAME)
       .setDescription(description)
       .setVersion(version)
@@ -30,25 +30,24 @@ export class SwaggerDocumentBuilder {
         scheme: 'bearer',
         type: 'http',
         in: 'header'
-      }, 'JWTAuthorization');
-
-      return docBuilder.build();
+      }, 'JWTAuthorization')
+      .build();
   }
 
-  private createDocument() {
-    const config = this.buildConfig();
-    return SwaggerModule.createDocument(this.app, config);
+  private createDocument(): OpenAPIObject {
+    return SwaggerModule.createDocument(this.app, this.buildConfig());
   }
 
-  public setupSwagger() {
+  public setupSwagger(): void {
     const document = this.createDocument();
     const baseUrl = this.configService.get<string>('APP_URL') || APP_DEFAULTS.URL;
     const applicationUrl = `${baseUrl}/${APP_DEFAULTS.GLOBAL_PREFIX}`;
-    console.log(applicationUrl);
     
     const swaggerUI = new SwaggerUI(applicationUrl);
+    const swaggerPath = this.configService.get<string>('SWAGGER_URL') || SWAGGER_URL;
+
     SwaggerModule.setup(
-      this.configService.get<string>('SWAGGER_URL') || SWAGGER_URL,
+      swaggerPath,
       this.app,
       document,
       swaggerUI.customOptions,
