@@ -1,5 +1,6 @@
-import { plainToInstance } from 'class-transformer';
+import { plainToInstance, Transform } from 'class-transformer';
 import {
+  IsBoolean,
   IsEnum,
   IsIn,
   IsNumber,
@@ -81,6 +82,12 @@ class EnvironmentVariables {
 
   @IsString()
   UPLOAD_DESTINATION_PATH: string;
+
+  @IsBoolean()
+  @Transform(({value}) => {
+    return value === 'true';
+  })
+  CACHE_ENABLED: string;
 }
 
 export function validate(config: Record<string, unknown>) {
