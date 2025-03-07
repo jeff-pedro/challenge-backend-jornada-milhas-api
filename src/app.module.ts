@@ -30,15 +30,11 @@ import { join } from 'path';
       useClass: DatabaseConfigService,
       inject: [DatabaseConfigService],
     }),
-<<<<<<< HEAD
-    CacheModule.registerAsync(RedisOptions),
+    CacheModule.registerAsync(CacheConfig),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
       serveRoot: '/static',
     }),
-=======
-    CacheModule.registerAsync(CacheConfig),
->>>>>>> a83d09c83dcee818a264b066bbe9278103fe9a71
     TestimonialsModule,
     DestinationsModule,
     UsersModule,
