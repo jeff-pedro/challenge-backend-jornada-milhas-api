@@ -5,12 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Destination } from './entities/destination.entity';
 import { Photo } from '../photos/entities/photo.entity';
 import { MulterModule } from '@nestjs/platform-express';
-import { MulterOptions } from '../../config/app-options.constants';
+import { StorageConfig } from '../../config/modules/storage.config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Destination, Photo]),
-    MulterModule.registerAsync(MulterOptions)
+    MulterModule.registerAsync(StorageConfig)
   ],
   providers: [DestinationsService],
   controllers: [DestinationsController],

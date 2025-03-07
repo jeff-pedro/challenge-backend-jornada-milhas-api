@@ -1,6 +1,6 @@
 {
   "name": "jornada-milhas",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "A RESTful API for a travel platform, enabling destination registration, user testimonials, and user account management.",
   "private": true,
   "license": "MIT",
@@ -25,6 +25,7 @@
     "typeorm:drop": "npm run typeorm -- schema:drop"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.758.0",
     "@google/generative-ai": "^0.21.0",
     "@keyv/redis": "^4.2.0",
     "@nestjs/cache-manager": "^3.0.0",
@@ -41,6 +42,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "keyv": "^5.2.3",
+    "multer-s3": "^3.0.1",
     "pg": "^8.13.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
@@ -56,6 +58,7 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/multer": "^1.4.12",
+    "@types/multer-s3": "^3.0.3",
     "@types/node": "^22.13.1",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",

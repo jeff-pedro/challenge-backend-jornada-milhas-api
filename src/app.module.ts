@@ -12,7 +12,7 @@ import { MainModule } from './main.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './resources/filters/http-exception.filters';
 import { CacheModule } from '@nestjs/cache-manager';
-import { RedisOptions } from './config/app-options.constants';
+import { CacheConfig } from './config/modules/cache.config';
 import { HttpCacheInterceptor } from './resources/interceptors/http-cache.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { GlobalLoggerInterceptor } from './resources/interceptors/global-logger.interceptor';
@@ -28,7 +28,7 @@ import { GlobalLoggerInterceptor } from './resources/interceptors/global-logger.
       useClass: DatabaseConfigService,
       inject: [DatabaseConfigService],
     }),
-    CacheModule.registerAsync(RedisOptions),
+    CacheModule.registerAsync(CacheConfig),
     TestimonialsModule,
     DestinationsModule,
     UsersModule,
