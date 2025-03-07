@@ -1,6 +1,6 @@
 {
   "name": "jornada-milhas",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "A RESTful API for a travel platform, enabling destination registration, user testimonials, and user account management.",
   "private": true,
   "license": "MIT",
