@@ -1,32 +1,13 @@
-import { NestFactory } from '@nestjs/core';
+import { NestApplication, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerDocumentBuilder } from './swagger/swagger-document-builder';
+import { APP_DEFAULTS } from './config/constants/app.constants';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    abortOnError: false,
-    cors: true,
-  });
-
-  const { version, homepage, description, author } = require('../package.json');
-
-  const config = new DocumentBuilder()
-    .setTitle('Jornada Milhas API')
-    .setDescription(description)
-    .setVersion(version)
-    .setContact('🧑🏽‍💻 Development', author.url, author.email)
-    .setExternalDoc('📚 More about the project...', 'https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki')
-    .addBearerAuth()
-    .build();
-    
-    const documentFactory = () => SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, documentFactory);
-
-  const configService = app.get(ConfigService<{ app: { port: number } }, true>);
-  const port = configService.get('app.port', { infer: true });
+function setupAplication(app: INestApplication) {
+  app.setGlobalPrefix(APP_DEFAULTS.GLOBAL_PREFIX);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -37,9 +18,23 @@ async function bootstrap() {
   );
 
   // Allows injecting dependencies into custom validator classes
-  useContainer(app.select(AppModule), {
-    fallbackOnErrors: true
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+}
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, {
+    abortOnError: false,
+    cors: true,
   });
+
+  setupAplication(app);
+    
+  const swaggerDocumentBuilder = new SwaggerDocumentBuilder(app);
+  swaggerDocumentBuilder.setupSwagger();
+  
+  const configService = app.get(ConfigService<{ app: { port: number } }, true>);
+  const port = configService.get('app.port', { infer: true });
+
 
   await app.listen(port);
   console.log(`Application is running on: ${await app.getUrl()}`);
