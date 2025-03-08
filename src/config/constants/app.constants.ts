@@ -1,7 +1,7 @@
 export const APP_DEFAULTS = {
     NAME: 'Jornada Milhas API',
     URL: 'http://localhost:3000/',
-    GLOBAL_PREFIX: 'api/v1',
+    GLOBAL_PREFIX: '/api/v1',
 }
 export const FILE_CONSTRAINTS = {
     MAX_SIZE: 5 * 1024 * 1024, // 5MB

@@ -5,6 +5,8 @@ import { ConfigService } from "@nestjs/config";
 import { StorageEngine } from "multer";
 import { diskStorage } from "multer";
 import { StorageStrategy } from "./interfaces/storage-strategy.interface";
+import { Request } from 'express';
+import { APP_DEFAULTS } from '../constants/app.constants';
 
 export const s3Strategy: StorageStrategy = {
   getStorage: (config: ConfigService): StorageEngine => multerS3({
@@ -16,8 +18,12 @@ export const s3Strategy: StorageStrategy = {
       }
     }),
     bucket: config.get<string>('AWS_S3_BUCKET') || '',
-    key: (req, file, cb) => {
-      cb(null, Date.now().toString())
+    key: (req: Request, file, cb) => {
+      const url = req.originalUrl;
+      const endpointName = url.replace(APP_DEFAULTS.GLOBAL_PREFIX, '').split('/').filter(Boolean)[0];
+      const filePath = `${endpointName}/${Date.now().toString()}`
+
+      cb(null, filePath);
     }
   })
 }
