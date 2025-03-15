@@ -17,9 +17,9 @@
   Welcome to the <strong>Jornada Milhas API</strong>, a Restful API designed for a fictional travel destination recommendation platform. This project was developed during the <strong>Challenge Back-End</strong> by <a href="https://cursos.alura.com.br" alt="Alura webpage">Alura</a> to apply and deepen knowledge in modern web development technologies.
 <p align="center">
 
-<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/jeff-pedro/challenge-backend-jornada-milhas/tests.yml?branch=main&style=for-the-badge&label=tests">
-<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/jeff-pedro/challenge-backend-jornada-milhas/build-deploy.yml?branch=main&style=for-the-badge">
-<img src="https://img.shields.io/github/v/release/jeff-pedro/challenge-backend-jornada-milhas?display_name=tag&include_prereleases&style=for-the-badge">
+<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/jeff-pedro/challenge-backend-jornada-milhas-api/tests.yml?branch=main&style=for-the-badge&label=tests">
+<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/jeff-pedro/challenge-backend-jornada-milhas-api/build-deploy.yml?branch=main&style=for-the-badge">
+<img src="https://img.shields.io/github/v/release/jeff-pedro/challenge-backend-jornada-milhas-api?display_name=tag&include_prereleases&style=for-the-badge">
 <img src="https://img.shields.io/badge/node-v22.11.0-blueviolet?style=for-the-badge&logo=node.js)](https://nodejs.org/download/">
 <a href='https://eslint.org/' target='_blank'><img src="https://img.shields.io/badge/Style-eslint-ff69b4.svg?style=for-the-badge&logo=eslint"></a>
 <a href='https://prettier.io/' target='_blank'><img src="https://img.shields.io/badge/Formatter-prettier-F7B93E.svg?style=for-the-badge&logo=prettier"></a>
@@ -44,7 +44,7 @@
 
 ## 📖 Documentation
 
-For detailed documentation, including setup instructions, API usage, and project details, visit the [GitHub Wiki](https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki).
+For detailed documentation, including setup instructions, API usage, and project details, visit the [GitHub Wiki](https://github.com/jeff-pedro/challenge-backend-jornada-milhas-api/wiki).
 
 ---
 
@@ -58,7 +58,7 @@ npm install
 npm run start:dev
 ```
 
-For additional setup steps and configuration, check the [Installation Guide](https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki/Installation).
+For additional setup steps and configuration, check the [Installation Guide](https://github.com/jeff-pedro/challenge-backend-jornada-milhas-api/wiki/Installation).
 
 <!-- ---
 
@@ -70,6 +70,6 @@ We welcome contributions! Check out the [Contributing Guidelines](https://github
 
 ## 📬 Contact
 
-- Author: [Jefferson Santos](https://jefferson.sapituca.site)  
+- Author: [Jefferson Santos](https://jefferson.buguei.space)  
 - LinkedIn: [Jefferson Pedro](https://www.linkedin.com/in/jeffersonpedro)  
-- Website: [Jornada Milhas](https://jornadamilhas.sapituca.site)
+- Website: [Jornada Milhas](https://jornadamilhas.buguei.space)
