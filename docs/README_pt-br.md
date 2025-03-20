@@ -28,7 +28,7 @@
 - Cadastro e gestão de destinos turísticos
 - Upload de fotos dos destinos
 - Busca de destinos por nome
-- Descrições enriquecidas dos locais
+- Descrições enriquecidas dos destinos através de IA
 
 #### 💬 Depoimentos
 - Cadastro de experiências dos viajantes
