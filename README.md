@@ -54,6 +54,9 @@ For detailed documentation, including setup instructions, API usage, and project
 # Install dependencies
 npm install
 
+# Start the database
+docker compose up db -d
+
 # Start the app in development mode
 npm run start:dev
 ```
