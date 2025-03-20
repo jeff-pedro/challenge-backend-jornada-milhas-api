@@ -35,7 +35,7 @@
 - Registration and management of tourist destinations
 - Uploading photos of destinations
 - Searching for destinations by name
-- Rich descriptions of locations with help of AI
+- Rich descriptions of locations powered by AI
 
 #### 💬 Testimonials
 - Travelers' experience submissions
