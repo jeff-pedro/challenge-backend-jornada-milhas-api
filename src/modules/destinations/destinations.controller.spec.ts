@@ -1,13 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { DestinationsController } from './destinations.controller';
 import { DestinationsService } from './destinations.service';
 import { Photo } from '../photos/entities/photo.entity';
+import { Destination } from './entities/destination.entity';
+import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
+
+const moduleMocker = new ModuleMocker(global);
 
 describe('DestinationsController', () => {
-  let controller: DestinationsController;
-  let destinationService: DestinationsService;
+  let destinationsController: DestinationsController;
+  let destinationsService: DestinationsService;
 
-  const destination = {
+  const destinationMock = {
     id: '1',
     photos: [new Photo()],
     name: 'Test',
@@ -16,93 +20,84 @@ describe('DestinationsController', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const moduleRef = await Test.createTestingModule({
       controllers: [DestinationsController],
-      providers: [
-        {
-          provide: DestinationsService,
-          useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
-            attachPhotos: jest.fn(),
-          },
-        },
-      ],
-    }).compile();
+    })
+    .useMocker((token) => {
+      if (token === DestinationsService) {
+        return {
+          findAll: jest.fn().mockResolvedValue([destinationMock]),
+          create: jest.fn().mockResolvedValue(destinationMock),
+          findOne: jest.fn().mockResolvedValue(destinationMock),
+          update: jest.fn(),
+          remove: jest.fn(),
+          attachPhotos: jest.fn().mockResolvedValue([{}]),
+        }
+      }
+      if (typeof token === 'function') {
+        const mockMetadata = moduleMocker.getMetadata(
+          token,
+        ) as MockFunctionMetadata<any, any>;
+        const Mock = moduleMocker.generateFromMetadata(mockMetadata);
+        return new Mock();
+        
+      }
+    })
+    .compile();
 
-    controller = module.get<DestinationsController>(DestinationsController);
-    destinationService = module.get<DestinationsService>(DestinationsService);
+    destinationsController = moduleRef.get(DestinationsController);
+    destinationsService = moduleRef.get(DestinationsService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(destinationsController).toBeDefined();
   });
 
   it('destinationService should be defined', () => {
-    expect(destinationService).toBeDefined();
+    expect(destinationsService).toBeDefined();
   });
 
   describe('create', () => {
     it('should return an object of destination', async () => {
-      const createDestinationDto = {
-        photos: [
-          { url: 'http://photo1.jpg', description: 'photo description' },
-        ],
+      const destinationDto = {
         name: 'Test',
         target: 'Test target',
         descriptiveText: 'Text description',
       };
-      const result = destination;
-      jest.spyOn(destinationService, 'create').mockResolvedValue(destination);
-
-      expect(await controller.create(createDestinationDto)).toEqual(result);
+      const result = destinationMock;
+      expect(await destinationsController.create(destinationDto)).toEqual(result);
     });
   });
   
-
   describe('uploadPhotos', () => {
     it('should return a successful message', async () => {
-      const photos = new Photo();
       const files: Express.Multer.File[] = [];
-  
-      jest.spyOn(destinationService, 'attachPhotos').mockResolvedValue([photos]);
 
-      const result = await controller.uploadPhotos('1', files)
-
-      expect(result).toHaveLength(1);
+      expect(await destinationsController.uploadPhotos('1', files)).toHaveLength(1);
     });
   });
 
   describe('findAll', () => {
     it('should return an object of destination', async () => {
-      jest
-        .spyOn(destinationService, 'findAll')
-        .mockResolvedValue([destination]);
-
-      expect(await controller.findAll('')).toStrictEqual([destination]);
+      const results: Destination[] = [destinationMock];
+      expect(await destinationsController.findAll()).toStrictEqual(results);
     });
   });
 
   describe('findOne', () => {
     it('should return an array of destinations', async () => {
-      const result = destination;
-
-      jest.spyOn(destinationService, 'findOne').mockResolvedValue(destination);
-
-      expect(await controller.findOne('1')).toEqual(result);
+      const result = destinationMock;
+      expect(await destinationsController.findOne('1')).toEqual(result);
     });
   });
 
   describe('update', () => {
     it('should return a sucesseful message', async () => {
       const result = {
-        message: `Destination #${destination.id} was updated`,
+        message: `Destination #${destinationMock.id} was updated`,
       };
 
-      expect(await controller.update('1', { name: 'Netherlands' })).toEqual(
+      expect(await destinationsController.update('1', { name: 'Netherlands' })).toEqual(
         result,
       );
     });
@@ -111,10 +106,10 @@ describe('DestinationsController', () => {
   describe('delete', () => {
     it('should return a sucesseful message', async () => {
       const result = {
-        message: `Destination #${destination.id} was deleted`,
+        message: `Destination #${destinationMock.id} was deleted`,
       };
 
-      expect(await controller.remove('1')).toEqual(result);
+      expect(await destinationsController.remove('1')).toEqual(result);
     });
   });
 });
