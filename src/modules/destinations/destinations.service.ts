@@ -1,40 +1,38 @@
 import {
+  Inject,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { UpdateDestinationDto } from './dto/update-destination.dto';
 import { Destination } from './entities/destination.entity';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDestinationDto } from './dto/create-destination.dto';
-import { GoogleGenerativeAI, GoogleGenerativeAIError } from '@google/generative-ai';
 import { Photo } from '../photos/entities/photo.entity';
+import { IAService } from './ia.service.interface';
 
 @Injectable()
 export class DestinationsService {
   constructor(
     @InjectRepository(Destination)
     private destinationRepository: Repository<Destination>,
-    private configService: ConfigService<
-      {
-        app: { accessKeys: { geminiApiKey: string } };
-      },
-      true
-    >,
+    @Inject('IAService')
+    private readonly iaService: IAService,
   ) {}
   async create(
     createDestinationDto: CreateDestinationDto,
   ): Promise<Destination> {
     if (!createDestinationDto.descriptiveText) {
-      const textDescription = `Faça um resumo sobre ${createDestinationDto.name} enfatizando o 
+      const prompt = `Faça um resumo sobre ${createDestinationDto.name} enfatizando o 
       porque este lugar é incrível. Utilize uma linguagem 
       informal de até 100 caracteres no máximo em cada parágrafo. 
       Crie 2 parágrafos neste resumo. O texto deve ser escrito em português do Brasil.`;
 
-      createDestinationDto.descriptiveText =
-        await this.generateDescriptionWithGemini(textDescription);
+      const textDescription = await this.iaService.generateText(prompt);
+
+      createDestinationDto.descriptiveText = textDescription !== null
+      ? textDescription
+      : '';
     }
 
     return this.destinationRepository.save(createDestinationDto);
@@ -88,32 +86,6 @@ export class DestinationsService {
 
     if (destinationToDelete.affected === 0) {
       throw new NotFoundException('Destination not found');
-    }
-  }
-
-  async generateDescriptionWithGemini(prompt: string): Promise<string> {
-    try {
-      const token = this.configService.get('app.accessKeys.geminiApiKey', {
-        infer: true,
-      });
-      const genAI = new GoogleGenerativeAI(token);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-      const chat = await model.generateContent(prompt);
-
-      return chat.response.text() || "Description unavailable";
-    } catch (error) {
-      
-      console.error("Error getting Gemini description", error.message, error);
-
-      if (error instanceof GoogleGenerativeAIError) {
-        throw new UnauthorizedException('Unauthorized api key', {
-          cause: error,
-        });
-      }
-
-      console.error("Error getting Gemini description", error.message, error);
-      throw new Error("Error getting Gemini description");
     }
   }
 
