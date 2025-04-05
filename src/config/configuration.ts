@@ -18,9 +18,9 @@ export default (): EnvironmentConfig => {
 
   const getAppConfig = (): AppConfig => ({
     port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
-    ia: {
+    ai: {
       apiKey: process.env.GEMINI_API_KEY,
-      model: process.env.GEMINI_MODEL || 'gemini-1.5-flash'
+      model: process.env.GEMINI_MODEL || 'gemini-2.0-flash'
     }
   });
 

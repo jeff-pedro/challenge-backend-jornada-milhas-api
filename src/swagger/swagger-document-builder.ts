@@ -41,7 +41,7 @@ export class SwaggerDocumentBuilder {
   public setupSwagger(): void {
     const document = this.createDocument();
     const baseUrl = this.configService.get<string>('APP_URL') || APP_DEFAULTS.URL;
-    const applicationUrl = `${baseUrl}/${APP_DEFAULTS.GLOBAL_PREFIX}`;
+    const applicationUrl = `${baseUrl}${APP_DEFAULTS.GLOBAL_PREFIX}`;
     
     const swaggerUI = new SwaggerUI(applicationUrl);
     const swaggerPath = this.configService.get<string>('SWAGGER_URL') || SWAGGER_URL;
