@@ -13,7 +13,7 @@ import {
   ParseFilePipeBuilder,
   HttpStatus,
 } from '@nestjs/common';
-import { DestinationsService } from './destinations.service';
+import { DestinationsService } from './services/destinations.service';
 import { CreateDestinationDto } from './dto/create-destination.dto';
 import { UpdateDestinationDto } from './dto/update-destination.dto';
 import { ListDestinationDto } from './dto/list-destination.dto';

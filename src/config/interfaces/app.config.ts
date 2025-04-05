@@ -1,6 +1,7 @@
 export interface AppConfig {
   port: number;
-  accessKeys: {
-    geminiApiKey: string | undefined;
-  };
+  ia: {
+    apiKey: string | undefined
+    model: string
+  }
 }
