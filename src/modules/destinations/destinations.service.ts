@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDestinationDto } from './dto/create-destination.dto';
 import { Photo } from '../photos/entities/photo.entity';
-import { IAService } from './ia.service.interface';
+import { IAService } from './ai.service.interface';
 
 @Injectable()
 export class DestinationsService {

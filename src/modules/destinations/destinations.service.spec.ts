@@ -6,7 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
 import { Photo } from '../photos/entities/photo.entity';
-import { IAService } from './ia.service.interface';
+import { IAService } from './ai.service.interface';
 
 // Disable console.error
 global.console.error = jest.fn();

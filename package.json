@@ -45,6 +45,7 @@
     "jest-mock": "^29.7.0",
     "keyv": "^5.2.3",
     "multer-s3": "^3.0.1",
+    "openai": "^4.90.0",
     "pg": "^8.13.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
