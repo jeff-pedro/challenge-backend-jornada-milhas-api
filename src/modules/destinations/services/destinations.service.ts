@@ -3,13 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UpdateDestinationDto } from './dto/update-destination.dto';
-import { Destination } from './entities/destination.entity';
+import { UpdateDestinationDto } from '../dto/update-destination.dto';
+import { Destination } from '../entities/destination.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateDestinationDto } from './dto/create-destination.dto';
-import { Photo } from '../photos/entities/photo.entity';
-import { IAService } from './ai.service.interface';
+import { CreateDestinationDto } from '../dto/create-destination.dto';
+import { Photo } from '../../photos/entities/photo.entity';
+import { IAService } from '../interfaces/ai.service.interface';
+import { AI_PROMPTS } from '../constants/ai-prompts.constants';
 
 @Injectable()
 export class DestinationsService {
@@ -23,16 +24,8 @@ export class DestinationsService {
     createDestinationDto: CreateDestinationDto,
   ): Promise<Destination> {
     if (!createDestinationDto.descriptiveText) {
-      const prompt = `Faça um resumo sobre ${createDestinationDto.name} enfatizando o 
-      porque este lugar é incrível. Utilize uma linguagem 
-      informal de até 100 caracteres no máximo em cada parágrafo. 
-      Crie 2 parágrafos neste resumo. O texto deve ser escrito em português do Brasil.`;
-
-      const textDescription = await this.iaService.generateText(prompt);
-
-      createDestinationDto.descriptiveText = textDescription !== null
-      ? textDescription
-      : '';
+      const prompt = AI_PROMPTS.DESTINATION_DESCRIPTION(createDestinationDto.name);
+      createDestinationDto.descriptiveText = await this.iaService.generateText(prompt) ?? '';
     }
 
     return this.destinationRepository.save(createDestinationDto);

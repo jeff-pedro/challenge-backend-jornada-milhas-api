@@ -33,7 +33,7 @@ import { join } from 'path';
     CacheModule.registerAsync(CacheConfig),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'wwwroot'),
-      serveRoot: '/api/v1/wwwroot',
+      serveRoot: 'api/v1/wwwroot',
     }),
     TestimonialsModule,
     DestinationsModule,

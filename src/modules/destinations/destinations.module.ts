@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { DestinationsService } from './destinations.service';
+import { DestinationsService } from './services/destinations.service';
 import { DestinationsController } from './destinations.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Destination } from './entities/destination.entity';
 import { Photo } from '../photos/entities/photo.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { StorageConfig } from '../../config/modules/storage.config';
-import { GeminiService } from './gemini.service';
+import { GeminiService } from './services/gemini.service';
 
 @Module({
   imports: [

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { IAService } from "./ai.service.interface";
+import { IAService } from "../interfaces/ai.service.interface";
 
 @Injectable()
 export class GeminiService implements IAService {
@@ -14,7 +14,7 @@ export class GeminiService implements IAService {
     this.model = genAI.getGenerativeModel({ model: this.configService.get<string>('app.ia.model')! });
   }
 
-  async generateText(prompt: string): Promise<string | null> {
+  async generateText(prompt: string, file?: unknown): Promise<string | null> {
     try {
       const chat = await this.model.generateContent(prompt);
       return chat.response.text() || "Text unavailable";

@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { DestinationsController } from './destinations.controller';
-import { DestinationsService } from './destinations.service';
+import { DestinationsService } from './services/destinations.service';
 import { Photo } from '../photos/entities/photo.entity';
 import { Destination } from './entities/destination.entity';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
