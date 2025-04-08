@@ -3,14 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UpdateDestinationDto } from '../dto/update-destination.dto';
-import { Destination } from '../entities/destination.entity';
+import { UpdateDestinationDto } from './dto/update-destination.dto';
+import { Destination } from './entities/destination.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateDestinationDto } from '../dto/create-destination.dto';
-import { Photo } from '../../photos/entities/photo.entity';
-import { IAService } from '../interfaces/ai.service.interface';
-import { AI_PROMPTS } from '../constants/ai-prompts.constants';
+import { CreateDestinationDto } from './dto/create-destination.dto';
+import { Photo } from '../photos/entities/photo.entity';
+import { IAService } from '../ai/interfaces/ai.service.interface';
+import { AI_PROMPTS } from './constants/ai-prompts.constants';
 
 @Injectable()
 export class DestinationsService {

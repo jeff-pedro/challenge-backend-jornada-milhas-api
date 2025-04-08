@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { GeminiService } from './gemini.service';
+import { GeminiService } from '../gemini.service';
 import { GoogleGenerativeAIError } from '@google/generative-ai';
 import { UnauthorizedException } from '@nestjs/common';
 

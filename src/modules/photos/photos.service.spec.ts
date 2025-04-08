@@ -6,7 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import * as downloadHelper from '../../helpers/downloadImageFromUrl';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
-import { IAService } from '../destinations/interfaces/ai.service.interface';
+import { IAService } from '../ai/interfaces/ai.service.interface';
 
 const moduleMocker = new ModuleMocker(global);
 jest.mock('../../helpers/downloadImageFromUrl');

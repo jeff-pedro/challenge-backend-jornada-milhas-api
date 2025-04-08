@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Photo } from './entities/photo.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IAService } from '../destinations/interfaces/ai.service.interface';
+import { IAService } from '../ai/interfaces/ai.service.interface';
 import { AI_PROMPTS } from './constants/ai-prompts.constants';
 import { ConfigService } from '@nestjs/config';
 import { downloadImageFromUrl } from '../../helpers/downloadImageFromUrl';

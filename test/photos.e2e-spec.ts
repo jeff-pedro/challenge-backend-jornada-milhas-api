@@ -5,7 +5,7 @@ import { AppModuleTest } from './app.module.spec';
 import { Repository } from 'typeorm';
 import { Photo } from '../src/modules/photos/entities/photo.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { IAService } from 'src/modules/destinations/interfaces/ai.service.interface';
+import { IAService } from 'src/modules/ai/interfaces/ai.service.interface';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
