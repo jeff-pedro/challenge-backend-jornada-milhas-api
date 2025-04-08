@@ -1,6 +1,6 @@
 export interface AppConfig {
   port: number;
-  ia: {
+  ai: {
     apiKey: string | undefined
     model: string
   }

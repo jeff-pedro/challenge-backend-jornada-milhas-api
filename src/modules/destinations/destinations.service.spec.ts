@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
 import { DestinationsService } from './destinations.service';
-import { Destination } from '../entities/destination.entity';
+import { Destination } from './entities/destination.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
-import { Photo } from '../../photos/entities/photo.entity';
-import { IAService } from '../interfaces/ai.service.interface';
+import { Photo } from '../photos/entities/photo.entity';
+import { IAService } from '../ai/interfaces/ai.service.interface';
 
 // Disable console.error
 global.console.error = jest.fn();

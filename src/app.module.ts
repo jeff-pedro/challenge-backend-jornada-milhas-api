@@ -18,6 +18,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { GlobalLoggerInterceptor } from './resources/interceptors/global-logger.interceptor';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AIModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { join } from 'path';
     UsersModule,
     PhotosModule,
     AuthModule,
+    AIModule,
     MainModule,
   ],
   providers: [
@@ -59,7 +61,7 @@ import { join } from 'path';
       provide: APP_INTERCEPTOR,
       useClass: GlobalLoggerInterceptor
     },
-    ConsoleLogger
+    ConsoleLogger,
   ],
 })
 export class AppModule {}

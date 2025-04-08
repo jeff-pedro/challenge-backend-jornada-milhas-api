@@ -3,14 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UpdateDestinationDto } from '../dto/update-destination.dto';
-import { Destination } from '../entities/destination.entity';
+import { UpdateDestinationDto } from './dto/update-destination.dto';
+import { Destination } from './entities/destination.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateDestinationDto } from '../dto/create-destination.dto';
-import { Photo } from '../../photos/entities/photo.entity';
-import { IAService } from '../interfaces/ai.service.interface';
-import { AI_PROMPTS } from '../constants/ai-prompts.constants';
+import { CreateDestinationDto } from './dto/create-destination.dto';
+import { Photo } from '../photos/entities/photo.entity';
+import { IAService } from '../ai/interfaces/ai.service.interface';
+import { AI_PROMPTS } from './constants/ai-prompts.constants';
 
 @Injectable()
 export class DestinationsService {
@@ -87,8 +87,10 @@ export class DestinationsService {
 
     for (const file of files) {
       const photoEntity = new Photo();
-      photoEntity.url = (file as any).location ?? file.path;
-      photoEntity.description = 'Photo description'; // TODO: auto-generate via AI
+      const photoUri = (file as any).location ?? file.path;
+
+      photoEntity.url = photoUri;
+      
       destination.photos.push(photoEntity);
     }
     
