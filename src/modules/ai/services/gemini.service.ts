@@ -17,10 +17,7 @@ export class GeminiService implements IAService {
       const contents: any[] = [prompt];
 
       if (file) {
-        const image = await ai.files.upload({
-          file,
-          // config: { mimeType: 'image/jpeg' } // TODO: adicionar extensão aos arquivos
-        });
+        const image = await ai.files.upload({ file });
 
         contents.push(
           createPartFromUri(image.uri as string, image.mimeType as string)
@@ -31,7 +28,7 @@ export class GeminiService implements IAService {
         model: this.configService.get<string>('app.ai.model')!,
         contents: createUserContent(contents),
       });
-
+      
       return response.text || "Text unavailable";
     } catch (error) {
       this.logger.error(error.message);
