@@ -16,7 +16,7 @@ import { GeminiService } from './services/gemini.service';
   providers: [
     DestinationsService,
     {
-      provide: "IAService",
+      provide: 'IAService',
       useClass: GeminiService,
     },
 ],
