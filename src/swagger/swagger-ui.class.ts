@@ -13,8 +13,8 @@ interface SwaggerUIOptions {
 export class SwaggerUI {
   private static readonly SITE_TITLE = 'Jornada Milhas Docs';
   private static readonly ASSETS = {
-    FAVICON: 'icon-logo.ico',
-    TOPBAR_ICON: 'logo.png'
+    FAVICON: 'logo-orange.png',
+    TOPBAR_ICON: 'logo-white-tagline.png'
   };
 
   private readonly _customOptions: SwaggerUIOptions;
@@ -47,7 +47,7 @@ export class SwaggerUI {
     return `
       .topbar-wrapper {
         content:url('${this.getAssetsUrl(SwaggerUI.ASSETS.TOPBAR_ICON)}');
-        width: 130px;
+        width: 200px;
         height: auto;
       }
         
