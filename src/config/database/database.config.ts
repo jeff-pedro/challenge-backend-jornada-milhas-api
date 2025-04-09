@@ -3,6 +3,7 @@ import { DatabaseConfig } from "../interfaces/database.config";
 import { join } from "path";
 
 const entities = [__dirname + '/../../modules/**/entities/*.entity{.js,.ts}'];
+const migrations = [__dirname + '/../../database/migrations/*{.js,.ts}'];
 
 export const getDevelopmentConfig = (): DatabaseConfig => ({
     type: 'postgres',
@@ -12,6 +13,7 @@ export const getDevelopmentConfig = (): DatabaseConfig => ({
     password: process.env.DB_PASSWORD ?? 'root',
     database: process.env.DB_NAME ?? 'jornadamilhas',
     entities,
+    migrations,
     synchronize: true, // synchronize tables with entities - only for development
     logging: true,
 });
@@ -24,6 +26,7 @@ export const getProductionConfig = (isSSLEnabled: boolean): DatabaseConfig => ({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME ?? 'jornadamilhas',
     entities,
+    migrations,
     synchronize: false, // never use synchronize: true in production - otherwise you can lose production data
     logging: false,
     ssl: isSSLEnabled
@@ -37,6 +40,7 @@ export const getTestConfig = (): DatabaseConfig => ({
     type: 'sqlite',
     database: ':memory:',
     entities,
+    migrations,
     dropSchema: true,
     synchronize: true,
     logging: false,
