@@ -6,15 +6,19 @@ import { Repository } from 'typeorm';
 import { Photo } from '../src/modules/photos/entities/photo.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { IAService } from 'src/modules/ai/interfaces/ai.service.interface';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let photoRepository: Repository<Photo>;
   let iaService: IAService;
+  let userId: string;
+  let jwtService: JwtService;
+  let accessToken: string;
 
   const PHOTO_REPOSITORY_TOKEN = getRepositoryToken(Photo);
-
   const PHOTO_URL = '/photos'
+  const USER_URL = '/users';
 
   const mockPhoto = {
     id: 1,
@@ -37,6 +41,22 @@ describe('AuthController (e2e)', () => {
     iaService = moduleFixture.get('IAService')
 
     await app.init();
+
+    const userResponse = await request(app.getHttpServer())
+      .post(USER_URL)
+      .send({
+        firstName: 'Jana',
+        lastName: 'Doe',
+        photo: { url: 'profile.jpg' },
+        email: 'jane@mail.com',
+        password: 'Abc-123',
+      });
+
+    userId = userResponse.body.id;
+
+    // Generate an access token
+    jwtService = moduleFixture.get<JwtService>(JwtService);
+    accessToken = await jwtService.signAsync({ userId });
   });
 
   afterAll(async () => {
@@ -51,6 +71,7 @@ describe('AuthController (e2e)', () => {
       // Act
       return request(app.getHttpServer())
         .get(`${PHOTO_URL}/${mockPhoto.id}`)
+        .auth(accessToken, { type: 'bearer' })
         .expect(200); // Assert
     });
   });
@@ -63,7 +84,7 @@ describe('AuthController (e2e)', () => {
       // Act
       const response = await request(app.getHttpServer())
         .patch(`${PHOTO_URL}/${mockPhoto.id}/description`)
-        .send()
+        .auth(accessToken, { type: 'bearer' })
         .expect(200);
 
       // Assert
@@ -78,8 +99,9 @@ describe('AuthController (e2e)', () => {
 
     it('should return 404 when photo not found', async () => {
       await request(app.getHttpServer())
-      .patch(`${PHOTO_URL}/999/description`)
-      .expect(404);
+        .patch(`${PHOTO_URL}/999/description`)
+        .auth(accessToken, { type: 'bearer' })
+        .expect(404);
     });
   });
 });
