@@ -18,7 +18,9 @@ export class PhotosService {
   ){}
 
   async findOne(id: number) {
-    return this.photoRepository.findOneBy({ id });
+    const photo = await this.photoRepository.findOneBy({ id });
+    if (!photo) throw new NotFoundException('Photo not found');
+    return photo;
   }
 
   async generateAndUpdatePhotoDescription(id: number) {
