@@ -6,6 +6,7 @@ export interface DatabaseConfig {
     password?: string;
     database:string;
     entities: string[],
+    migrations: string[],
     synchronize?: boolean;
     logging?: boolean;
     ssl?: boolean | { ca: string }
