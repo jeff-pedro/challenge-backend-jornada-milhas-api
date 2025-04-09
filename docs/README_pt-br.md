@@ -1,5 +1,5 @@
 <p align="right">
-  <a href="./readme_pt-br.md" title="português">
+  <a href="./README_pt-br.md" title="português">
     <img src="./img/brazil.png" alt="documento em português" width="30">
   </a>
   <a href="../README.md" title="inglês">
