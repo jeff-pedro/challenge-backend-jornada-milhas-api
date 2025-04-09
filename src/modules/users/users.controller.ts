@@ -50,6 +50,7 @@ export class UsersController {
    * 
    * @throws {404} Any destination was found.
    */
+  @ApiBearerAuth()
   @Get()
   async findAll(): Promise<User[]> {
     const user = await this.usersService.findAll();

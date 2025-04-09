@@ -47,7 +47,7 @@ export class SwaggerUI {
     return `
       .topbar-wrapper {
         content:url('${this.getAssetsUrl(SwaggerUI.ASSETS.TOPBAR_ICON)}');
-        width: 200px;
+        width: 300px;
         height: auto;
       }
         
