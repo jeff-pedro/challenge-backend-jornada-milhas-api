@@ -35,6 +35,10 @@
 - Visualização de depoimentos
 - Seleção aleatória de depoimentos para página inicial
 
+#### 📷 Fotos
+- Gestão de fotos
+- Geração de descrição de imagens automaticamente com AI
+
 ## 📖 Documentação
 
 Para uma documentação detalhada, incluindo instruções de configuração, uso da API e detalhes do projeto, acesse o [GitHub Wiki](https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki).
@@ -53,6 +57,6 @@ Para etapas adicionais de configuração, consulte o [Guia de Instalação](http
 
 ## 📬 Contato
 
-* Autor: [Jefferson Santos](https://jefferson.sapituca.site)  
+* Autor: [Jefferson Santos](https://jefferson.buguei.space)  
 * LinkedIn: [Jefferson Pedro](https://www.linkedin.com/in/jeffersonpedro)  
-* Site: [Jornada Milhas](https://jornadamilhas.sapituca.site)
+* Site: [Jornada Milhas](https://jornadamilhas.buguei.space)

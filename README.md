@@ -42,6 +42,10 @@
 - Viewing testimonials
 - Random selection of testimonials for the homepage
 
+#### 📷 Photos
+- Photos management
+- Generate photo description automatically with AI
+
 ## 📖 Documentation
 
 For detailed documentation, including setup instructions, API usage, and project details, visit the [GitHub Wiki](https://github.com/jeff-pedro/challenge-backend-jornada-milhas-api/wiki).
