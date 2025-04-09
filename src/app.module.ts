@@ -34,7 +34,7 @@ import { AIModule } from './modules/ai/ai.module';
     CacheModule.registerAsync(CacheConfig),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'wwwroot'),
-      serveRoot: 'api/v1/wwwroot',
+      serveRoot: '/api/v1/wwwroot',
     }),
     TestimonialsModule,
     DestinationsModule,

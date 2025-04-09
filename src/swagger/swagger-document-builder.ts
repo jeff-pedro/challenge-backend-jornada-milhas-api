@@ -23,7 +23,7 @@ export class SwaggerDocumentBuilder {
       .setContact('🧑🏽‍💻 Development', author.url, author.email)
       .setExternalDoc(
         '📚 More about the project...',
-        'https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki'
+        'https://github.com/jeff-pedro/challenge-backend-jornada-milhas-api/wiki'
       )
       .addBearerAuth({
         bearerFormat: 'JWT',
