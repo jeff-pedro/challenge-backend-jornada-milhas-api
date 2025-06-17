@@ -25,12 +25,7 @@ export class SwaggerDocumentBuilder {
         '📚 More about the project...',
         'https://github.com/jeff-pedro/challenge-backend-jornada-milhas-api/wiki'
       )
-      .addBearerAuth({
-        bearerFormat: 'JWT',
-        scheme: 'bearer',
-        type: 'http',
-        in: 'header'
-      }, 'JWTAuthorization')
+      .addBearerAuth()
       .build();
   }
 
