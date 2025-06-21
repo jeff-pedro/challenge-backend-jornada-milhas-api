@@ -7,7 +7,7 @@ export class ListDestinationDto {
     readonly photos: Photo[],
     readonly name: string,
     readonly target: string,
-    readonly price: string,
+    readonly price: number,
     readonly description: DestinationDescription,
   ) {}
 }

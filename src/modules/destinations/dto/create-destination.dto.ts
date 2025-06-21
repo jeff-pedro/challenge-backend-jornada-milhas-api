@@ -1,6 +1,7 @@
 import {
   IsDecimal,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -19,11 +20,11 @@ export class CreateDestinationDto {
   @MaxLength(160)
   target: string;
   
-  @IsString()
-  @IsDecimal({ decimal_digits: '2', locale: 'pt-BR' })
-  price: string;
-
   @IsOptional()
+  @IsNumber()
+  price: number;
+
+  @IsOptional() 
   @ValidateNested()
   @Type(() => DestinationDescriptionDto)
   description?: DestinationDescriptionDto;

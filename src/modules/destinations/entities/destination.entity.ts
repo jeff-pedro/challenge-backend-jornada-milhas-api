@@ -24,8 +24,8 @@ export class Destination {
   @Column({ name: 'target', length: 160, nullable: false })
   target: string;
   
-  @Column({ name: 'price', nullable: true })
-  price: string;
+  @Column({ name: 'price', nullable: true, default: 0 })
+  price: number;
 
   @ApiHideProperty()
   @CreateDateColumn({ name: 'created_at' })
