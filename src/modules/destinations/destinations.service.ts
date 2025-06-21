@@ -19,13 +19,15 @@ export class DestinationsService {
     private destinationRepository: Repository<Destination>,
     @Inject('IAService')
     private readonly iaService: IAService,
-  ) {}
+  ) {};
+
   async create(
     createDestinationDto: CreateDestinationDto,
   ): Promise<Destination> {
-    if (!createDestinationDto.descriptiveText) {
+    if (!createDestinationDto.description) {
       const prompt = AI_PROMPTS.DESTINATION_DESCRIPTION(createDestinationDto.name);
-      createDestinationDto.descriptiveText = await this.iaService.generateText(prompt) ?? '';
+      // TODO: implement this
+      // createDestinationDto.description = await this.iaService.generateText(prompt) ?? '';
     }
 
     return this.destinationRepository.save(createDestinationDto);
@@ -48,9 +50,15 @@ export class DestinationsService {
   async findOne(id: string): Promise<Destination> {
     const destinationSaved = await this.destinationRepository
     .createQueryBuilder('destination')
-    .leftJoinAndSelect('destination.photos', 'photo')
+    .leftJoin('destination.description', 'description')
+    .leftJoin('destination.photos', 'photos')
+    .select(['destination', 'photos'])
+    .addSelect([
+      'description.text', 
+      'description.title', 
+      'description.subtitle'
+    ])
     .where('destination.id = :id', { id })
-    .select(['destination', 'photo.url'])
     .getOne();
 
     if (!destinationSaved) {
