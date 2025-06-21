@@ -25,9 +25,20 @@ export class DestinationsService {
     createDestinationDto: CreateDestinationDto,
   ): Promise<Destination> {
     if (!createDestinationDto.description) {
-      const prompt = AI_PROMPTS.DESTINATION_DESCRIPTION(createDestinationDto.name);
-      // TODO: implement this
-      // createDestinationDto.description = await this.iaService.generateText(prompt) ?? '';
+      const promptText = AI_PROMPTS.DESTINATION_DESCRIPTION_TEXT(createDestinationDto.name);
+      const text = await this.iaService.generateText(promptText) ?? '';
+      
+      const promptTitle = AI_PROMPTS.DESTINATION_DESCRIPTION_TITLE(text);
+      const promptSubtitle = AI_PROMPTS.DESTINATION_DESCRIPTION_SUBTITLE(text);
+      
+      const title = await this.iaService.generateText(promptTitle) ?? '';
+      const subtitle = await this.iaService.generateText(promptSubtitle) ?? '';
+
+      createDestinationDto.description = {
+        text,
+        title,
+        subtitle
+      };
     }
 
     return this.destinationRepository.save(createDestinationDto);
