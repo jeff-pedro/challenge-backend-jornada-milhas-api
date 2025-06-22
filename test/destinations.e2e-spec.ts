@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { Destination } from '../src/modules/destinations/entities/destination.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { CreateDestinationDto } from 'src/modules/destinations/dto/create-destination.dto';
 
 describe('DestinationsController (e2e)', () => {
   let app: INestApplication;
@@ -19,6 +20,17 @@ describe('DestinationsController (e2e)', () => {
 
   const DESTINATION_URL = '/destinations';
   const DESTINATION_REPOSITORY_TOKEN = getRepositoryToken(Destination);
+
+  const mockDestination: CreateDestinationDto = {
+    name: 'Germany',
+    target: 'Go to Germany in 2025',
+    price: 8000,
+    description: {
+      text: 'Some descriptive text about Germany...',
+      title: 'Title about text',
+      subtitle: 'Subtitle about text'
+    },
+  }
 
   beforeAll(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -43,9 +55,14 @@ describe('DestinationsController (e2e)', () => {
     accessToken = await jwtService.signAsync({ sub: 'test-user-id' });
 
     const { id, name } = await destinationRepository.save({
-      name: 'Berlin',
-      target: 'Go to Berlin in 2025',
-      descriptiveText: 'Some descriptive text about Berlin...',
+      name: 'New York',
+      target: 'Go to New York in 2025',
+      price: 5000,
+      description: {
+        text: 'Some descriptive text about New York...',
+        title: 'Title about text',
+        subtitle: 'Subtitle about text'
+      }
     });
 
     destinationId = id;
@@ -60,25 +77,38 @@ describe('DestinationsController (e2e)', () => {
     it('should return status of 201', async () => {
       return request(app.getHttpServer())
         .post(DESTINATION_URL)
-        .send({
-          name: 'Amsterdam',
-          target: 'Go to Amsterdam in 2030',
-          descriptiveText: 'Some descriptive text about Amsterdam...',
-        })
+        .send(mockDestination)
         .auth(accessToken, { type: 'bearer' })
         .expect(201);
     });
 
+    it('should return destination.description created by AI', async () => {
+      let destination = { ...mockDestination };
+      delete destination.description;
+
+      const response = await request(app.getHttpServer())
+        .post(DESTINATION_URL)
+        .send(destination)
+        .auth(accessToken, { type: 'bearer' })
+        .expect(201);
+
+      expect(response.body.description).toHaveProperty('text');
+      expect(response.body.description.text.length > 0).toBeTruthy()
+      expect(response.body.description).toHaveProperty('title');
+      expect(response.body.description.title.length > 0).toBeTruthy()
+      expect(response.body.description).toHaveProperty('subtitle');
+      expect(response.body.description.subtitle.length > 0).toBeTruthy()
+    });
+
     it('should return an error when receiving invalid type data', async () => {
-      const res = await request(app.getHttpServer())
+      const response = await request(app.getHttpServer())
         .post(DESTINATION_URL)
         .send({
-          name: 1,
-          price: '4500.00',
+          price: 'invalid value',
         })
         .auth(accessToken, { type: 'bearer' });
 
-      expect(res.body).toEqual(
+      expect(response.body).toEqual(
         expect.objectContaining({
           message: expect.any(Array),
           error: expect.any(String),
@@ -90,24 +120,19 @@ describe('DestinationsController (e2e)', () => {
     it.each([
       ['name', ''],
       ['target', ''],
-      ['descriptiveText', ''],
     ])(
       'should return an error when the %s property is empty',
       async (key, value) => {
-        const destinationDto = {
-          name: 'Amsterdam',
-          target: 'Go to Amsterdam in 2030',
-          descriptiveText: 'Some descriptive text about Amsterdam...',
-        };
-        Object.assign(destinationDto, { [key]: value });
-
-        const res = await request(app.getHttpServer())
-          .post(DESTINATION_URL)
+        const destination = { ...mockDestination };
+        Object.assign(destination, { [key]: value });
+        
+        const response = await request(app.getHttpServer())
+        .post(DESTINATION_URL)
           .auth(accessToken, { type: 'bearer' })
-          .send(destinationDto);
-
-        expect(res.status).toBe(400);
-        expect(res.body.message[0]).toBe(`${key} should not be empty`);
+          .send(destination);
+        
+        expect(response.status).toBe(400);
+        expect(response.body.message[0]).toBe(`${key} should not be empty`);
       },
     );
 
@@ -116,9 +141,7 @@ describe('DestinationsController (e2e)', () => {
         .post(DESTINATION_URL)
         .auth(accessToken, { type: 'bearer' })
         .send({
-          name: 'Amsterdam',
-          target: 'Go to Amsterdam in 2030',
-          descriptiveText: 'Some descriptive text about Amsterdam...',
+          ...mockDestination,
           nonExistentProperty: '',
         });
 
@@ -134,16 +157,34 @@ describe('DestinationsController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .post(DESTINATION_URL)
         .auth(accessToken, { type: 'bearer' })
-        .send({
-          name: 'Amsterdam',
-          target,
-          descriptiveText: 'Some descriptive text about Amsterdam...',
-        });
+        .send({ ...mockDestination, target });
 
       expect(response.status).toBe(400);
       expect(response.body.message[0]).toBe(
         'target must be shorter than or equal to 160 characters',
       );
+    });
+
+    it.each([
+      ['text', ''],
+      ['title', ''],
+      ['subtitle', '']
+    ])('should return an error when the description property %s is empty', async (key, value) => {
+      const destination = { ...mockDestination };
+      Object.assign(destination, { 
+        description: {
+          ...destination.description,
+          [key]: value
+        }
+      });
+
+      const response = await request(app.getHttpServer())
+        .post(DESTINATION_URL)
+        .auth(accessToken, { type: 'bearer' })
+        .send(destination);
+
+      expect(response.status).toBe(400);
+      expect(response.body.message[0]).toBe(`description.${key} should not be empty`);
     });
   });
 

@@ -3,12 +3,15 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Photo } from '../../photos/entities/photo.entity';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { DestinationDescription } from './destination-description.entity';
 
 @Entity({ name: 'destinations' })
 export class Destination {
@@ -20,9 +23,9 @@ export class Destination {
 
   @Column({ name: 'target', length: 160, nullable: false })
   target: string;
-
-  @Column({ name: 'descriptive_text', nullable: false })
-  descriptiveText: string;
+  
+  @Column({ name: 'price', nullable: true, default: 0 })
+  price: number;
 
   @ApiHideProperty()
   @CreateDateColumn({ name: 'created_at' })
@@ -40,4 +43,11 @@ export class Destination {
     cascade: true,
   })
   photos: Photo[];
+
+  @OneToOne(() => DestinationDescription, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  description: DestinationDescription;  
 }

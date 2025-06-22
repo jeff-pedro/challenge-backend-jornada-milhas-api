@@ -35,13 +35,15 @@ jobs:
                 cache: 'npm'
 
             - name: Copy .env file
-              env: 
+              env:
+                GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
                 HASH_SALT: ${{ secrets.HASH_SALT }}
                 JWT_SECRET: ${{ secrets.JWT_SECRET }}
                 JWT_EXPIRES_IN: 60s
                 UPLOAD_DESTINATION_PATH: ./upload/destinations
               run: |
                 cp .env.example .env.test
+                sed -i "s/^GEMINI_API_KEY=.*/GEMINI_API_KEY=${GEMINI_API_KEY}/" .env.test
                 sed -i "s/^HASH_SALT=.*/HASH_SALT=${HASH_SALT}/" .env.test
                 sed -i "s/^JWT_SECRET=.*/JWT_SECRET=${JWT_SECRET}/" .env.test
                 sed -i "s/^JWT_EXPIRES_IN=.*/JWT_EXPIRES_IN=${JWT_EXPIRES_IN}/" .env.test

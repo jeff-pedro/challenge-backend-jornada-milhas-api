@@ -19,13 +19,26 @@ export class DestinationsService {
     private destinationRepository: Repository<Destination>,
     @Inject('IAService')
     private readonly iaService: IAService,
-  ) {}
+  ) {};
+
   async create(
     createDestinationDto: CreateDestinationDto,
   ): Promise<Destination> {
-    if (!createDestinationDto.descriptiveText) {
-      const prompt = AI_PROMPTS.DESTINATION_DESCRIPTION(createDestinationDto.name);
-      createDestinationDto.descriptiveText = await this.iaService.generateText(prompt) ?? '';
+    if (!createDestinationDto.description) {
+      const promptText = AI_PROMPTS.DESTINATION_DESCRIPTION_TEXT(createDestinationDto.name);
+      const text = await this.iaService.generateText(promptText) ?? '';
+      
+      const promptTitle = AI_PROMPTS.DESTINATION_DESCRIPTION_TITLE(text);
+      const promptSubtitle = AI_PROMPTS.DESTINATION_DESCRIPTION_SUBTITLE(text);
+      
+      const title = await this.iaService.generateText(promptTitle) ?? '';
+      const subtitle = await this.iaService.generateText(promptSubtitle) ?? '';
+
+      createDestinationDto.description = {
+        text,
+        title,
+        subtitle
+      };
     }
 
     return this.destinationRepository.save(createDestinationDto);
@@ -48,9 +61,15 @@ export class DestinationsService {
   async findOne(id: string): Promise<Destination> {
     const destinationSaved = await this.destinationRepository
     .createQueryBuilder('destination')
-    .leftJoinAndSelect('destination.photos', 'photo')
+    .leftJoin('destination.description', 'description')
+    .leftJoin('destination.photos', 'photos')
+    .select(['destination', 'photos'])
+    .addSelect([
+      'description.text', 
+      'description.title', 
+      'description.subtitle'
+    ])
     .where('destination.id = :id', { id })
-    .select(['destination', 'photo.url'])
     .getOne();
 
     if (!destinationSaved) {

@@ -117,8 +117,9 @@ export class DestinationsController {
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<ListDestinationDto> {
     const destination = await this.destinationsService.findOne(id);
-    const { id: destId, photos, name, target, descriptiveText } = destination;
-    return new ListDestinationDto(destId, photos, name, target, descriptiveText)
+    const { id: destId, photos, name, target, price, description } = destination;
+    
+    return new ListDestinationDto(destId, photos, name, target, price, description);
   }
 
   /**
