@@ -35,7 +35,8 @@ jobs:
                 cache: 'npm'
 
             - name: Copy .env file
-              env: 
+              env:
+                GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
                 HASH_SALT: ${{ secrets.HASH_SALT }}
                 JWT_SECRET: ${{ secrets.JWT_SECRET }}
                 JWT_EXPIRES_IN: 60s
