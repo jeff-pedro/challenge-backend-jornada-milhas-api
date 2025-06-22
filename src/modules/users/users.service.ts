@@ -53,13 +53,16 @@ export class UsersService {
   }
 
   private prepareUserUpdate(user: User, updateUserDto: UpdateUserDto): User {
+    const userEntity = new User();
     const updatedUser = { ...user, ...updateUserDto };
 
     if (updateUserDto.photo && user.photo !== null) {
       updatedUser.photo = { ...user.photo, ...updateUserDto.photo };
     }
+    
+    Object.assign(userEntity, updatedUser);
 
-    return updatedUser;
+    return userEntity;
   }
 
   private async findUserBy(where: object): Promise<User> {
