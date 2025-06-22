@@ -55,6 +55,7 @@ export class User {
   @ApiProperty({ type: () => Photo })
   @OneToOne(() => Photo, (photo) => photo.user, {
     cascade: true,
+    eager: true,
   })
   photo: Photo;
 }
