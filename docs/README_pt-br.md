@@ -41,7 +41,7 @@
 
 ## 📖 Documentação
 
-Para uma documentação detalhada, incluindo instruções de configuração, uso da API e detalhes do projeto, acesse o [GitHub Wiki](https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki).
+Para uma documentação detalhada, incluindo instruções de configuração, uso da API e detalhes do projeto, acesse o [GitHub Wiki](https://github.com/jeff-pedro/challenge-backend-jornada-milhas-api/wiki).
 
 ## 🚀 Quick Start
 
