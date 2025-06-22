@@ -5,8 +5,6 @@ import { Repository } from 'typeorm';
 import { CreateTestimonialDto } from './dto/create-testimonial.dto';
 import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 import { User } from '../users/entities/user.entity';
-import { Photo } from '../photos/entities/photo.entity';
-import { ListTestimonialDto } from './dto/list-testimonial.dto';
 
 @Injectable()
 export class TestimonialsService {
@@ -47,17 +45,24 @@ export class TestimonialsService {
   }
 
   async findAll(options?: object): Promise<Testimonial[]> {
-    const testimonialSaved = await this.testimonialRepository.find({
+    const testimonialsSaved = await this.testimonialRepository.find({
       ...options,
       relations: ['user'],
-      select: { user: { id: true }}
+      select: 
+        { 
+          user: { 
+            id: true,
+            firstName: true,
+            lastName: true
+          }
+        }
     });
-
-    if (testimonialSaved.length === 0) {
+  
+    if (testimonialsSaved.length === 0) {
       throw new NotFoundException('Any testimonial was found.');
     }
 
-    return testimonialSaved;
+    return testimonialsSaved;
   }
 
   async findOne(
