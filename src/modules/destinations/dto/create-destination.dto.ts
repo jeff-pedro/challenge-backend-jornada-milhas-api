@@ -22,7 +22,7 @@ export class CreateDestinationDto {
   
   @IsOptional()
   @IsNumber()
-  price: number;
+  price?: number;
 
   @IsOptional() 
   @ValidateNested()
