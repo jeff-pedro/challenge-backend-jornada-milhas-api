@@ -4,6 +4,7 @@ import { DestinationsService } from './destinations.service';
 import { Photo } from '../photos/entities/photo.entity';
 import { Destination } from './entities/destination.entity';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
+import { CreateDestinationDto } from './dto/create-destination.dto';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -16,7 +17,13 @@ describe('DestinationsController', () => {
     photos: [new Photo()],
     name: 'Test',
     target: 'Test target',
-    descriptiveText: 'Text description',
+    price: 0,
+    description: {
+      id: '1',
+      text: 'Text description',
+      title: 'Title description',
+      subtitle: 'Subtitle description'
+    },
   };
 
   beforeEach(async () => {
@@ -59,10 +66,15 @@ describe('DestinationsController', () => {
 
   describe('create', () => {
     it('should return an object of destination', async () => {
-      const destinationDto = {
+      const destinationDto: CreateDestinationDto = {
         name: 'Test',
         target: 'Test target',
-        descriptiveText: 'Text description',
+        price: 0,
+        description: {
+          text: 'Text description',
+          title: 'Title description',
+          subtitle: 'Subtitle description'
+        },
       };
       const result = destinationMock;
       expect(await destinationsController.create(destinationDto)).toEqual(result);
