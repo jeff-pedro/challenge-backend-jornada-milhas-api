@@ -49,8 +49,8 @@ Para uma documentação detalhada, incluindo instruções de configuração, uso
 # Instalar dependências
 npm install
 
-# Executar o app em modo desenvolvimento
-npm run start:dev
+# Executar a aplicação e o banco de dados
+docker compose up -d
 ```
 
 Para etapas adicionais de configuração, consulte o [Guia de Instalação](https://github.com/jeff-pedro/challenge-backend-jornada-milhas/wiki/Installation).
