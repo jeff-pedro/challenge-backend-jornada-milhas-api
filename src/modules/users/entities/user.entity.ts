@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { Photo } from '../../photos/entities/photo.entity';
 import { Testimonial } from '../../testimonials/entities/testimonial.entity';
 import {
@@ -12,6 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { capitalize } from 'src/helpers/capitalize';
 
 @Entity({ name: 'users' })
 export class User {
@@ -26,6 +27,12 @@ export class User {
   @ApiProperty()
   @Column({ name: 'last_name', length: 255, nullable: false })
   lastName: string;
+
+  @ApiProperty()
+  @Expose()
+  get fullName(): string {
+    return `${capitalize(this.firstName)} ${capitalize(this.lastName)}`;
+  }
 
   @ApiProperty()
   @Column({ name: 'email', length: 70, nullable: false })
