@@ -11,8 +11,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { capitalize } from 'src/helpers/capitalize';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { capitalize } from '../../../helpers/capitalize';
 
 @Entity({ name: 'users' })
 export class User {
@@ -65,4 +65,8 @@ export class User {
     eager: true,
   })
   photo: Photo;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }
