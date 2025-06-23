@@ -56,17 +56,12 @@ describe('UsersService', () => {
       ...mockUser,
       ...updateUserDto,
       photo: { ...mockUser.photo, ...updateUserDto.photo },
-    };
+    } as User;
 
     it('should call userRepository.findOne with correct params', async () => {
-      const mockUpdatedUser = {
-        ...mockUser,
-        ...updateUserDto,
-        photo: { ...mockUser.photo, ...updateUserDto.photo },
-      };
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser);
       jest.spyOn(userRepository, 'save').mockResolvedValue(mockUpdatedUser);
-
+      
       await service.update('1', updateUserDto);
 
       expect(userRepository.findOne).toHaveBeenCalledWith({

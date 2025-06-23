@@ -21,6 +21,7 @@ describe('TestimonialsService', () => {
     id: '1',
     firstName: 'John',
     lastName: 'Wick',
+    fullName: 'John Wick',
     email: 'john@gmail.com',
     isActive: true,
     photo: new Photo(),
