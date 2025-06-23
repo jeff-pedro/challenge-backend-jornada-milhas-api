@@ -59,7 +59,7 @@ export class UsersService {
       updatedUser.photo = { ...user.photo, ...updateUserDto.photo };
     }
 
-    return updatedUser;
+    return new User(updatedUser);
   }
 
   private async findUserBy(where: object): Promise<User> {

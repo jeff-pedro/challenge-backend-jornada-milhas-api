@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
@@ -18,10 +18,12 @@ import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
+  @Transform(({ value }) => value.toUpperCase())
   firstName: string;
 
   @IsNotEmpty()
   @IsString()
+  @Transform(({ value }) => value.toUpperCase())
   lastName: string;
 
   @ApiProperty({ type: PhotoUserDto })
