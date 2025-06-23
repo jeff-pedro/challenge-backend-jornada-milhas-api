@@ -7,6 +7,11 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  UploadedFile,
+  UseInterceptors,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,7 +20,11 @@ import { User } from './entities/user.entity';
 import { HashingPassword } from '../../resources/pipes/hashing-password.pipe';
 import { ListUserDto } from './dto/list-user.dto';
 import { Public } from '../../resources/decorators/public-route.decorator';
-import { ApiBearerAuth, ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import UploadPhotoUserDto from './dto/upload-photo-user.dto';
+import { Express } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FILE_CONSTRAINTS } from '../../config/constants/app.constants';
 
 @Controller('users')
 export class UsersController {
@@ -42,6 +51,37 @@ export class UsersController {
     return new ListUserDto(savedUser);
   }
 
+  @Public() // Turn route handler public (custom decorator)
+  // API Documentation
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'JPEG/PNG image file of user to upload.',
+    type: UploadPhotoUserDto
+  })
+  @ApiParam({ name: 'id', description: 'ID of user to update' })
+  
+  
+  
+  
+  @UseInterceptors(FileInterceptor('avatar'))
+  @Post(':id/upload')
+  async uploadPhoto(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: FILE_CONSTRAINTS.MAX_SIZE }),
+          new FileTypeValidator({ fileType: FILE_CONSTRAINTS.ALLOWED_TYPES })
+        ]
+      })
+    ) 
+    avatar: Express.Multer.File
+  ) {
+      return avatar.buffer.toString();
+  }
+ 
+  
+  
   /**
    * 
    * Get all users
