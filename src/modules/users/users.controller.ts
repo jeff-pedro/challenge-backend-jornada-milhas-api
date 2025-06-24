@@ -25,6 +25,7 @@ import UploadPhotoUserDto from './dto/upload-photo-user.dto';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FILE_CONSTRAINTS } from '../../config/constants/app.constants';
+import { Photo } from '../photos/entities/photo.entity';
 
 @Controller('users')
 export class UsersController {
@@ -51,7 +52,7 @@ export class UsersController {
     return new ListUserDto(savedUser);
   }
 
-  @Public() // Turn route handler public (custom decorator)
+  @Public()
   // API Documentation
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -59,10 +60,6 @@ export class UsersController {
     type: UploadPhotoUserDto
   })
   @ApiParam({ name: 'id', description: 'ID of user to update' })
-  
-  
-  
-  
   @UseInterceptors(FileInterceptor('avatar'))
   @Post(':id/upload')
   async uploadPhoto(
@@ -76,11 +73,9 @@ export class UsersController {
       })
     ) 
     avatar: Express.Multer.File
-  ) {
-      return avatar.buffer.toString();
+  ): Promise<Photo> {
+      return this.usersService.attachPhoto(id, avatar);
   }
- 
-  
   
   /**
    * 

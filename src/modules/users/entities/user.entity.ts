@@ -57,4 +57,8 @@ export class User {
     cascade: true,
   })
   photo: Photo;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }
