@@ -1,6 +1,5 @@
 import { Photo } from '../../photos/entities/photo.entity';
-import { ApiProperty } from '@nestjs/swagger';
-import { PhotoUserDto } from './photo-user.dto';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 export class ListUserDto {
     readonly id: string;
@@ -11,7 +10,7 @@ export class ListUserDto {
     
     readonly email: string;
 
-    @ApiProperty({ type: PhotoUserDto })
+    @ApiHideProperty()
     readonly photo?: Photo;
 
     constructor (partial: Partial<ListUserDto>) {

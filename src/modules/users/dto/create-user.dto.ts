@@ -26,7 +26,7 @@ export class CreateUserDto {
   @Transform(({ value }) => value.toUpperCase())
   lastName: string;
 
-  @ApiProperty({ type: PhotoUserDto })
+  @ApiHideProperty()
   @ValidateNested()
   @Type(() => PhotoUserDto)
   photo?: Photo;

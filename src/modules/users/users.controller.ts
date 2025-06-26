@@ -71,7 +71,7 @@ export class UsersController {
     type: UploadPhotoUserDto
   })
   @ApiParam({ name: 'id', description: 'ID of user to update' })
-  @ApiCreatedResponse({ description: 'Successful operation.', type: [Photo] })
+  @ApiCreatedResponse({ description: 'Successful operation.', type: Photo })
   @UseInterceptors(FileInterceptor('avatar'))
   @Post(':id/upload')
   async uploadPhoto(
