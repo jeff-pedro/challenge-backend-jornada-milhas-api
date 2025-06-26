@@ -1,13 +1,13 @@
 import * as request from 'supertest';
 import * as path from 'path';
 import * as fs from 'fs';
+import { Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { AppModuleTest } from './app.module.spec';
-import { JwtService } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
-import { Destination } from '../src/modules/destinations/entities/destination.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { AppModuleTest } from './app.module.spec';
+import { Destination } from '../src/modules/destinations/entities/destination.entity';
 import { CreateDestinationDto } from 'src/modules/destinations/dto/create-destination.dto';
 
 describe('DestinationsController (e2e)', () => {
@@ -190,7 +190,7 @@ describe('DestinationsController (e2e)', () => {
 
   describe('/POST destination/{id}/upload', () => {
     it('should return status of 201', async () => {
-      const filePath = path.join(__dirname, 'test.jpg');
+    const filePath = path.join(__dirname, 'test.jpg');
       // Create a large file for testing
       fs.writeFileSync(filePath, 'a'.repeat(1024));
       
@@ -229,10 +229,10 @@ describe('DestinationsController (e2e)', () => {
         });
     });
 
-    it('should return error when file size is gretter than 5MB', async () => {
+    it('should return error when file size is gretter than 1MB', async () => {
       const largeFilePath = path.join(__dirname, 'large-test.jpg');
       // Create a large file for testing
-      fs.writeFileSync(largeFilePath, 'a'.repeat(1024 * 1024 * 6)); // 6MB file
+      fs.writeFileSync(largeFilePath, 'a'.repeat(1024 * 1024 * 2)); // 2MB file
 
       return request(app.getHttpServer())
         .post(`${DESTINATION_URL}/${destinationId}/upload`)

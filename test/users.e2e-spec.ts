@@ -4,6 +4,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppModuleTest } from './app.module.spec';
 import { JwtService } from '@nestjs/jwt';
 import { useContainer } from 'class-validator';
+import * as path from 'path';
+import * as fs from 'fs';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
@@ -47,6 +49,17 @@ describe('UsersController (e2e)', () => {
     // Generate an access token
     jwtService = moduleRef.get<JwtService>(JwtService);
     accessToken = await jwtService.signAsync({ userId });
+  });
+
+  afterAll(() => {
+    // Cleans the upload path 
+    const basePath = path.parse(__dirname).dir;
+    const uploadPath = path.join(basePath, `${process.env.UPLOAD_USERS_PATH}`);
+    const uploadDirPath = path.parse(uploadPath).dir;
+
+    if (fs.existsSync(uploadDirPath)) {
+      fs.rmSync(uploadDirPath, { recursive: true });
+    }
   });
 
   describe('/POST users', () => {
@@ -127,6 +140,64 @@ describe('UsersController (e2e)', () => {
           password: '123123',
         })
         .expect(400);
+    });
+  });
+
+  describe('/POST/:id attachPhoto users', () => {
+    it('should return status 201', () => {
+      const filePath = path.join(__dirname, 'test.jpg');
+      fs.writeFileSync(filePath, 'file');
+      
+      request(app.getHttpServer())
+        .post(`${USER_URL}/${userId}/upload`)
+        .auth(accessToken, { type: 'bearer' })
+        .attach('avatar', filePath)
+        .expect(201)
+        .then(() => {
+          fs.unlinkSync(filePath);
+        });
+    });
+
+    it('should return error when the file is not attached', async () => {
+      const response = await request(app.getHttpServer())
+        .post(`${USER_URL}/${userId}/upload`)
+        .auth(accessToken, { type: 'bearer' })
+        .expect(422);
+
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('File is required');
+    });
+
+    it('should return error when the file format is not supported', async () => {
+      const filePath = path.join(__dirname, 'test.txt');
+      fs.writeFileSync(filePath, '');
+      
+      const response = await request(app.getHttpServer())
+        .post(`${USER_URL}/${userId}/upload`)
+        .auth(accessToken, { type: 'bearer' })
+        .attach('avatar', filePath)
+        .expect(422);
+        
+        expect(response.body).toHaveProperty('message');
+        expect(response.body.message).toContain('Validation failed');
+        
+        fs.unlinkSync(filePath);
+    });
+
+    it('should return error when file size is gretter than 1MB', async () => {
+      const filePath = path.join(__dirname, 'test.png');
+      fs.writeFileSync(filePath, 'a'.repeat((1024 * 1024 * 1) + 1));
+
+      const response = await request(app.getHttpServer())
+        .post(`${USER_URL}/${userId}/upload`)
+        .auth(accessToken, { type: 'bearer' })
+        .attach('avatar', filePath)
+        .expect(422);
+        
+        expect(response.body).toHaveProperty('message');
+        expect(response.body.message).toContain('Validation failed');
+
+        fs.unlinkSync(filePath);
     });
   });
 
