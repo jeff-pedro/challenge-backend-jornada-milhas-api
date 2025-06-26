@@ -11,7 +11,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'users' })
 export class User {
@@ -54,7 +54,7 @@ export class User {
 
   @ApiProperty({ type: () => Photo })
   @OneToOne(() => Photo, (photo) => photo.user, {
-    cascade: true,
+    cascade: true
   })
   photo: Photo;
 

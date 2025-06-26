@@ -24,7 +24,7 @@ export class CreateUserDto {
   @IsString()
   lastName: string;
 
-  @ApiProperty({ type: PhotoUserDto })
+  @ApiHideProperty()
   @ValidateNested()
   @Type(() => PhotoUserDto)
   photo?: Photo;
