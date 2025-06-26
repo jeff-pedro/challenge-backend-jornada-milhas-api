@@ -82,7 +82,8 @@ describe('DestinationsController (e2e)', () => {
         .expect(201);
     });
 
-    it('should return destination.description created by AI', async () => {
+    // desligado: consome a cota da API
+    it.skip('should return destination.description created by AI', async () => {
       let destination = { ...mockDestination };
       delete destination.description;
 
