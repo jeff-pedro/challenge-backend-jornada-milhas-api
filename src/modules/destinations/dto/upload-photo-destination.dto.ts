@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-class FilesUploadDto {
+class UploadPhotoDestinationDto {
     @ApiProperty({ 
         description: 'Photo to upload', 
         type: 'array', 
@@ -9,5 +9,5 @@ class FilesUploadDto {
     files: any[];
 }
 
-export default FilesUploadDto;
+export default UploadPhotoDestinationDto;
   

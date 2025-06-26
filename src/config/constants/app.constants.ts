@@ -5,7 +5,7 @@ export const APP_DEFAULTS = {
 }
 export const FILE_CONSTRAINTS = {
     MAX_SIZE: 1024 * 1024, // 1MB
-    ALLOWED_TYPES: /^image\/(jpe?g|png)$/i,
+    ALLOWED_TYPES: '.(png|jpeg|jpg)',
 }
 export const CACHE_DEFAULTS = {
     TTL: 10000, // 10s

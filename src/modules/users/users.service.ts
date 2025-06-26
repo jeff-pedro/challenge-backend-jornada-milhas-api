@@ -91,8 +91,8 @@ export class UsersService {
       user.photo = new Photo();
     }
 
-    user.photo.url = (file as any).location ?? file.path;
-    
+    user.photo.url = (file as any).location ?? file.path; 
+
     await this.userRepository.save(user);
     
     return user.photo;

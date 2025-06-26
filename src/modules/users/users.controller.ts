@@ -12,6 +12,7 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,7 +21,7 @@ import { User } from './entities/user.entity';
 import { HashingPassword } from '../../resources/pipes/hashing-password.pipe';
 import { ListUserDto } from './dto/list-user.dto';
 import { Public } from '../../resources/decorators/public-route.decorator';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiParam } from '@nestjs/swagger';
 import UploadPhotoUserDto from './dto/upload-photo-user.dto';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -52,14 +53,25 @@ export class UsersController {
     return new ListUserDto(savedUser);
   }
 
-  @Public()
-  // API Documentation
+  /**
+   * 
+   * Upload an photo
+   *
+   * @remarks This operation allows you to upload an photo for some user.
+   * 
+   * @throws {400} Invalid ID supplied. Only UUID format is allowed.
+   * @throws {401} Authorization information is missing or invalid.
+   * @throws {404} Any user was found with the provided information.
+   * @throws {422} Image file is missing or has an invalid format.
+   */
+  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'JPEG/PNG image file of user to upload.',
     type: UploadPhotoUserDto
   })
   @ApiParam({ name: 'id', description: 'ID of user to update' })
+  @ApiCreatedResponse({ description: 'Successful operation.', type: [Photo] })
   @UseInterceptors(FileInterceptor('avatar'))
   @Post(':id/upload')
   async uploadPhoto(
@@ -69,7 +81,8 @@ export class UsersController {
         validators: [
           new MaxFileSizeValidator({ maxSize: FILE_CONSTRAINTS.MAX_SIZE }),
           new FileTypeValidator({ fileType: FILE_CONSTRAINTS.ALLOWED_TYPES })
-        ]
+        ],
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       })
     ) 
     avatar: Express.Multer.File
