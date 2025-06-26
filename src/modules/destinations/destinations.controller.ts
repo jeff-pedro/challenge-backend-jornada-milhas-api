@@ -24,6 +24,7 @@ import { Photo } from '../photos/entities/photo.entity';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import UploadPhotoDestinationDto from './dto/upload-photo-destination.dto';
 import { FILE_CONSTRAINTS } from '../../config/constants/app.constants';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Controller('destinations')
 export class DestinationsController {
@@ -98,8 +99,11 @@ export class DestinationsController {
     example: 'user1'
   })
   @Get()
-  async findAll(@Query('name') name?: string): Promise<Destination[]> {
-    return this.destinationsService.findAll(name);
+  async findAll(
+    @Query() paginationDto: PaginationDto,
+    @Query('name') name?: string
+  ) {
+    return this.destinationsService.findAll(paginationDto, name);
   }
 
   /**

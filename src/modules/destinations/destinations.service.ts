@@ -11,6 +11,7 @@ import { CreateDestinationDto } from './dto/create-destination.dto';
 import { Photo } from '../photos/entities/photo.entity';
 import { IAService } from '../ai/interfaces/ai.service.interface';
 import { AI_PROMPTS } from './constants/ai-prompts.constants';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Injectable()
 export class DestinationsService {
@@ -44,18 +45,34 @@ export class DestinationsService {
     return this.destinationRepository.save(createDestinationDto);
   }
 
-  async findAll(name?: string): Promise<Destination[]> {
-    const destinationSaved = await this.destinationRepository.find({
+  async findAll(paginationDto: PaginationDto, name?: string): Promise<{ 
+    items: Destination[],
+    totalCount: number,
+    totalPages: number,
+    currentPage: number | undefined
+  }> {  
+    const { page, limit } = paginationDto;
+
+    const [destinations, totalCount] = await this.destinationRepository.findAndCount({
       where: { name },
       relations: ['photos'],
       select: { photos: { url: true } },
+      skip: (page! - 1) * limit!,
+      take: limit,
     });
 
-    if (destinationSaved.length === 0) {
+    const totalPages = Math.ceil(totalCount / limit!);
+
+    if (destinations.length === 0) {
       throw new NotFoundException('Any destination was found');
     }
 
-    return destinationSaved;
+    return {
+      items: destinations,
+      totalCount,
+      totalPages,
+      currentPage: page,
+    };
   }
 
   async findOne(id: string): Promise<Destination> {
