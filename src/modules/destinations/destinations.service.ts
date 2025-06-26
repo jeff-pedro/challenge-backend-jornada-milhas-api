@@ -109,7 +109,7 @@ export class DestinationsService {
       const photoUri = (file as any).location ?? file.path;
 
       photoEntity.url = photoUri;
-      
+
       destination.photos.push(photoEntity);
     }
     

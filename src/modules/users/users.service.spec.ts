@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
+import { Photo } from '../photos/entities/photo.entity';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -179,4 +180,49 @@ describe('UsersService', () => {
       expect(service.findAll()).rejects.toThrow('Any user was found');
     });
   });
+
+  describe('attachPhoto', () => {
+    const mockUser = { id: '1', photo: new Photo() } as User;
+    const file = {} as Express.Multer.File;
+    
+    it('should call userRepository.findOne with correct params', async () => {
+      // Arrange
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(mockUser);
+
+      // Act
+      await service.attachPhoto('1', file);
+
+      // Assert
+      expect(userRepository.findOne).toHaveBeenCalledWith({
+        where: { id: '1' },
+        relations: ['photo'],
+      });
+    });
+
+    it('should call userRepository.save with correct params', async () => {
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(mockUser);
+
+      await service.attachPhoto('1', file);
+
+      expect(userRepository.save).toHaveBeenCalledTimes(1);  
+      expect(userRepository.save).toHaveBeenCalledWith(mockUser);
+    });
+
+    it('should return the updated photo', async () => {
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(mockUser);
+
+      const response = await service.attachPhoto('1', file);
+
+      expect(response).toBe(mockUser.photo);  
+    });
+
+    it('should return the saved photo', async () => {
+      const mockUser = { id: '1' } as User;
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(mockUser);
+
+      const response = await service.attachPhoto('1', file);
+
+      expect(response).toBe(mockUser.photo);  
+    })
+  })
 });

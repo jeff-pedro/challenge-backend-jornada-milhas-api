@@ -23,9 +23,12 @@ export const s3Strategy: StorageStrategy = {
     key: (req: Request, file, cb) => {
       const ext = file.originalname.split('.')[1]
       const url = req.originalUrl;
-      const endpointName = url.replace(APP_DEFAULTS.GLOBAL_PREFIX, '').split('/').filter(Boolean)[0];
+      const endpointName = url
+        .replace(APP_DEFAULTS.GLOBAL_PREFIX, '')
+        .split('/')
+        .filter(Boolean)[0];
       const uniqueSuffix = Date.now().toString() + Math.round(Math.random() * 1E9);
-      const filePath = `${endpointName}/${uniqueSuffix}.${ext}`
+      const filePath = `${endpointName}/${uniqueSuffix}.${ext}`;
 
       cb(null, filePath);
     }
@@ -35,9 +38,15 @@ export const s3Strategy: StorageStrategy = {
 export const localStrategy: StorageStrategy = {
   getStorage: (config: ConfigService): StorageEngine => diskStorage({
     destination: (req, file, cb) => {
-      const ext = file.originalname.split('.')[1]
       const { id } = req.params;
-      const uploadPath = `${config.get<string>('UPLOAD_DESTINATION_PATH')}/${id}`;
+      const url = req.originalUrl;
+      const endpointName = url
+          .replace(APP_DEFAULTS.GLOBAL_PREFIX, '')
+          .split('/')
+          .filter(Boolean)[0]
+          .toUpperCase();
+      
+      const uploadPath = `${config.get<string>(`UPLOAD_${endpointName}_PATH`)}/${id}`;
 
       if (!fs.existsSync(uploadPath)) {
         fs.mkdirSync(uploadPath, { recursive: true });
@@ -46,7 +55,7 @@ export const localStrategy: StorageStrategy = {
       cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
-      const ext = file.originalname.split('.')[1]
+      const ext = file.originalname.split('.')[1];
       const uniqueSuffix = Date.now().toString() + Math.round(Math.random() * 1E9);
       cb(null, `${uniqueSuffix}.${ext}`);
     }

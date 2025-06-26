@@ -22,7 +22,7 @@ import { Public } from '../../resources/decorators/public-route.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Photo } from '../photos/entities/photo.entity';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
-import FilesUploadDto from './dto/files-upload.dto';
+import UploadPhotoDestinationDto from './dto/upload-photo-destination.dto';
 import { FILE_CONSTRAINTS } from '../../config/constants/app.constants';
 
 @Controller('destinations')
@@ -52,20 +52,20 @@ export class DestinationsController {
    *
    * @remarks This operation allows you to upload an photo for some destination.
    * 
-   * @throws {400} Invalid ID supplied. Only UUID format is allowed.
+   * @throws {400} Missing file or invalid ID supplied. Only UUID format is allowed.
    * @throws {401} Authorization information is missing or invalid.
    * @throws {404} Any destination was found with the provided information.
    * @throws {422} Image file is missing or has an invalid format.
    */
-  @UseInterceptors(FilesInterceptor('files'))
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'JPEG images files of destinations to upload.',
-    type: FilesUploadDto
+    description: 'JPEG/PNG images files of destinations to upload.',
+    type: UploadPhotoDestinationDto
   })
   @ApiParam({ name: 'id', description: 'ID of destination to update' })
   @ApiCreatedResponse({ description: 'Successful operation.', type: [Photo] })
+  @UseInterceptors(FilesInterceptor('files'))
   @Post(':id/upload')
   async uploadPhotos(
     @Param('id', ParseUUIDPipe) id: string,
@@ -76,7 +76,8 @@ export class DestinationsController {
         .build({
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
         }),
-    ) files: Express.Multer.File[]
+    ) 
+    files: Express.Multer.File[]
   ): Promise<Photo[]> {
     return this.destinationsService.attachPhotos(id, files);
   }

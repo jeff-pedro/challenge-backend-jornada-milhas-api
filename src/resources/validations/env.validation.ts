@@ -81,13 +81,40 @@ class EnvironmentVariables {
   JWT_EXPIRES_IN: string;
 
   @IsString()
-  UPLOAD_DESTINATION_PATH: string;
+  UPLOAD_DESTINATIONS_PATH: string;
+
+  @IsString()
+  UPLOAD_USERS_PATH: string;
 
   @IsBoolean()
   @Transform(({value}) => {
     return value === 'true';
   })
   CACHE_ENABLED: string;
+
+  @IsString()
+  CACHE_STRATEGY: string;
+  
+  @IsString()
+  CACHE_MAX_ITEMS: string;
+  
+  @IsString()
+  AWS_S3_ENABLE: string;
+  
+  @IsString()
+  AWS_ACCESS_KEY_ID: string;
+  
+  @IsString()
+  AWS_SECRET_ACCESS_KEY: string;
+  
+  @IsString()
+  AWS_REGION: string;
+  
+  @IsString()
+  AWS_S3_BUCKET: string;
+
+  @IsString()
+  SWAGGER_URL: string;
 }
 
 export function validate(config: Record<string, unknown>) {

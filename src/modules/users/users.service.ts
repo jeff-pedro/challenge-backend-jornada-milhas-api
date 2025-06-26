@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { Photo } from '../photos/entities/photo.entity';
 
 @Injectable()
 export class UsersService {
@@ -69,7 +70,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User not found`);
+      throw new NotFoundException('User not found');
     }
 
     return user;
@@ -81,5 +82,19 @@ export class UsersService {
     if (user.affected === 0) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
+  }
+
+  async attachPhoto(id: string, file: Express.Multer.File): Promise<Photo> {
+    const user = await this.findUserBy({ id });
+
+    if (!user.photo) {
+      user.photo = new Photo();
+    }
+
+    user.photo.url = (file as any).location ?? file.path; 
+
+    await this.userRepository.save(user);
+    
+    return user.photo;
   }
 }
