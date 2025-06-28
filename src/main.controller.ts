@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { Public } from './resources/decorators/public-route.decorator';
+import { Public } from './common/decorators/public-route.decorator';
 import { ApiExcludeController } from '@nestjs/swagger';
 
 @ApiExcludeController()

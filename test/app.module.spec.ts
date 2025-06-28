@@ -7,10 +7,10 @@ import { UsersModule } from '../src/modules/users/users.module';
 import { PhotosModule } from '../src/modules/photos/photos.module';
 import { DatabaseConfigService } from '../src/config/database/database-options.constants';
 import configuration from '../src/config/configuration';
-import { validate } from '../src/resources/validations/env.validation';
+import { validate } from '../src/common/validations/env.validation';
 import { MainModule } from '../src/main.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { HttpExceptionFilter } from '../src/resources/filters/http-exception.filters';
+import { HttpExceptionFilter } from '../src/common/filters/http-exception.filters';
 import { AuthModule } from '../src/modules/auth/auth.module';
 import { EmptyLogger } from './empty-logger';
 

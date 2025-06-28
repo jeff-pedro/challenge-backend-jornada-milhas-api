@@ -14,7 +14,7 @@ import { CreateTestimonialDto } from './dto/create-testimonial.dto';
 import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 import { ListTestimonialDto } from './dto/list-testimonial.dto';
 import { Testimonial } from './entities/testimonial.entity';
-import { Public } from '../../resources/decorators/public-route.decorator';
+import { Public } from '../../common/decorators/public-route.decorator';
 import { UserRequest } from '../auth/auth.guard';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
 
