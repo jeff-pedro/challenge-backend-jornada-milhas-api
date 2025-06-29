@@ -47,7 +47,7 @@ export class DestinationsService {
   }
 
   async findAll(params: PaginationQueryParamsDto): Promise<PaginatedDto<Destination>> {
-    const { page = 1, limit = 6, search: name } = params;
+    const { page, limit, search: name } = params;
 
     const offset = (page - 1) * limit;
 

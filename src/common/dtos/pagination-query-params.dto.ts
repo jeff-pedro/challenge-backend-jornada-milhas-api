@@ -13,7 +13,7 @@ export class PaginationQueryParamsDto {
   @IsInt()
   @Min(1)
   @Type(() => Number)
-  page?: number = 1;
+  page: number = 1;
 
   @ApiProperty({
     description: 'Number of itens per page',
@@ -25,7 +25,7 @@ export class PaginationQueryParamsDto {
   @IsInt()
   @Min(1)
   @Type(() => Number)
-  limit?: number = 6;
+  limit: number = 6;
 
   @ApiProperty({ description: 'Search term', required: false })
   @IsOptional()
