@@ -13,6 +13,7 @@ import {
   MaxFileSizeValidator,
   FileTypeValidator,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,6 +28,9 @@ import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FILE_CONSTRAINTS } from '../../config/constants/app.constants';
 import { Photo } from '../photos/entities/photo.entity';
+import { ApiPaginatedResponse } from '../../common/decorators/api-paginated-response.decorator';
+import { PaginationQueryParamsDto } from '../../common/dtos/pagination-query-params.dto';
+import { PaginatedDto } from '../../common/dtos/paginated.dto';
 
 @Controller('users')
 export class UsersController {
@@ -98,10 +102,13 @@ export class UsersController {
    * 
    * @throws {404} Any destination was found.
    */
+  @ApiPaginatedResponse(User)
   @ApiBearerAuth()
   @Get()
-  async findAll(): Promise<User[]> {
-    const user = await this.usersService.findAll();
+  async findAll(
+    @Query() paginationDto: PaginationQueryParamsDto
+  ): Promise<PaginatedDto<User>> {
+    const user = await this.usersService.findAll(paginationDto);
     return user;
   }
 

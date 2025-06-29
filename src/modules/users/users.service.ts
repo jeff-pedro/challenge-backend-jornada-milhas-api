@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { Photo } from '../photos/entities/photo.entity';
+import { PaginationQueryParamsDto } from 'src/common/dtos/pagination-query-params.dto';
+import { PaginatedDto } from 'src/common/dtos/paginated.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,17 +19,27 @@ export class UsersService {
     return this.userRepository.save(createUserDto);
   }
 
-  async findAll(): Promise<User[]> {
-    const users = await this.userRepository.find({
+  async findAll(params: PaginationQueryParamsDto): Promise<PaginatedDto<User>> {
+    const { page, limit } = params;
+    const offset = (page - 1) * limit
+
+    const [users,  total] = await this.userRepository.findAndCount({
       relations: ['photo'],
       select: { photo: { url: true } },
+      skip: offset,
+      take: limit,
     });
 
     if (!users) {
       throw new NotFoundException('Any user was found');
     }
 
-    return users;
+    return {
+      total,
+      limit,
+      offset,
+      results: users,
+    };
   }
 
   async findOne(id: string): Promise<User> {
