@@ -39,7 +39,7 @@ describe('DestinationsService', () => {
             where: jest.fn().mockReturnThis(),
             getOne: jest.fn().mockResolvedValue(null)
           }),
-          find: jest.fn().mockResolvedValue([]),
+          findAndCount: jest.fn().mockResolvedValue([ [], 0 ]),
           findBy: jest.fn(),
           findOne: jest.fn(),
           save: jest.fn(),
@@ -128,7 +128,8 @@ describe('DestinationsService', () => {
 
   describe('findAll', () => {
     it('should throw an error if destination not found', async () => {
-      const result = destinationsService.findAll();
+      const queryParams = {};
+      const result = destinationsService.findAll(queryParams);
 
       expect(result).rejects.toBeInstanceOf(NotFoundException);
       expect(result).rejects.toThrow('Any destination was found');
