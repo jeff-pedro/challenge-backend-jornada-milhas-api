@@ -42,6 +42,7 @@ describe('DestinationsService', () => {
           findAndCount: jest.fn().mockResolvedValue([ [], 0 ]),
           findBy: jest.fn(),
           findOne: jest.fn(),
+          findOneBy: jest.fn(),
           save: jest.fn(),
           update: jest.fn().mockResolvedValue({ affected: 0, generatedMaps: [], raw: '' }),
           delete: jest.fn().mockResolvedValue({ affected: 0, raw: '' }),
