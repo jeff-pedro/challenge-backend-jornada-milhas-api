@@ -21,6 +21,7 @@ describe('UsersService', () => {
           provide: USER_REPOSITORY_TOKEN,
           useValue: {
             find: jest.fn(),
+            findAndCount: jest.fn(),
             findOne: jest.fn(),
             save: jest.fn(),
           },
@@ -151,7 +152,6 @@ describe('UsersService', () => {
   });
 
   describe('findAll', () => {
-    it('should call userRepository.find with correct params', async () => {
       const mockUsers = [
         {
           id: '1',
@@ -164,20 +164,28 @@ describe('UsersService', () => {
       const expectedParams = {
         relations: ['photo'],
         select: { photo: { url: true } },
+        skip: 0,
+        take: 1,
       };
 
-      jest.spyOn(userRepository, 'find').mockResolvedValueOnce(mockUsers);
+      const queryParams = { page: 1, limit: 1 }
 
-      await service.findAll();
+    it('should call userRepository.find with correct params', async () => {
+      jest.spyOn(userRepository, 'findAndCount').mockResolvedValueOnce([ mockUsers, 1 ]);
 
-      expect(userRepository.find).toHaveBeenCalledWith(expectedParams);
+      await service.findAll(queryParams);
+
+      expect(userRepository.findAndCount).toHaveBeenCalledWith(expectedParams);
     });
 
     it('should throw NotFoundException if any user was found', async () => {
-      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
+      const queryParams = { page: 1, limit: 1 }
+      jest.spyOn(userRepository, 'findAndCount').mockResolvedValueOnce([ [], 1 ]);
 
-      expect(service.findAll()).rejects.toBeInstanceOf(NotFoundException);
-      expect(service.findAll()).rejects.toThrow('Any user was found');
+      const result = service.findAll(queryParams);
+
+      expect(result).rejects.toBeInstanceOf(NotFoundException);
+      expect(result).rejects.toThrow('Any user was found');
     });
   });
 
