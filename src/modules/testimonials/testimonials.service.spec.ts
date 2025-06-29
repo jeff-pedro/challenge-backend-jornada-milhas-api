@@ -41,6 +41,7 @@ describe('TestimonialsService', () => {
           useValue: {
             save: jest.fn(),
             find: jest.fn(),
+            findAndCount: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
@@ -134,9 +135,9 @@ describe('TestimonialsService', () => {
 
   describe('findAll', () => {
     it('should throw an error if testimonial not found', async () => {
-      jest.spyOn(testimonialRepository, 'find').mockResolvedValueOnce([]);
+      jest.spyOn(testimonialRepository, 'findAndCount').mockResolvedValueOnce([ [], 0 ]);
 
-      const result = service.findAll();
+      const result = service.findAll({limit: 1, page: 1 });
 
       expect(result).rejects.toBeInstanceOf(NotFoundException);
       expect(result).rejects.toThrow('Any testimonial was found');

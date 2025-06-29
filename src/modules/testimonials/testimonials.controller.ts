@@ -19,8 +19,8 @@ import { Public } from '../../common/decorators/public-route.decorator';
 import { UserRequest } from '../auth/auth.guard';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
 import { PaginatedDto } from 'src/common/dtos/paginated.dto';
-import { PaginationQueryParamsDto } from 'src/common/dtos/pagination-query-params.dto';
-import { ApiPaginatedResponse } from 'src/common/decorators/api-paginated-response.decorator';
+import { PaginationQueryParamsDto } from '../../common/dtos/pagination-query-params.dto';
+import { ApiPaginatedResponse } from '../../common/decorators/api-paginated-response.decorator';
 
 @Controller()
 export class TestimonialsController {

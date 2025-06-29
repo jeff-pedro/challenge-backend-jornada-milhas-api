@@ -8,6 +8,7 @@ import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 import { Testimonial } from './entities/testimonial.entity';
 import { UserRequest } from '../auth/auth.guard';
 import { UserPayload } from '../auth/auth.service';
+import { PaginatedDto } from 'src/common/dtos/paginated.dto';
 
 describe('TestimonialsController', () => {
   let testimonialsService: TestimonialsService;
@@ -69,9 +70,15 @@ describe('TestimonialsController', () => {
           deletedAt: '2024-01-01',
         },
       ];
-      jest.spyOn(testimonialsService, 'findAll').mockResolvedValue(testimonialSaved);
+      const paginatedTestimonial: PaginatedDto<Testimonial> = {
+        total: 1,
+        limit: 1,
+        offset: 0,
+        results: testimonialSaved 
+      } 
+      jest.spyOn(testimonialsService, 'findAll').mockResolvedValue(paginatedTestimonial);
 
-      expect(await controller.findAll()).toStrictEqual(testimonialSaved);
+      expect(await controller.findAll({ limit: 1, page: 1 })).toStrictEqual(paginatedTestimonial);
     });
   });
 
