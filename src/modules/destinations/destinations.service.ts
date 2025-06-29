@@ -55,8 +55,8 @@ export class DestinationsService {
       where: { name },
       relations: ['photos'],
       select: { photos: { url: true } },
-      skip: (page - 1) * limit,
-      take: offset,
+      skip: offset,
+      take: limit,
     });
 
     if (destinations.length === 0) {
@@ -96,14 +96,16 @@ export class DestinationsService {
     id: string,
     updateDestinationDto: UpdateDestinationDto,
   ): Promise<void> {
-    const destinationToUpdate = await this.destinationRepository.update(
-      { id },
-      updateDestinationDto,
-    );
 
-    if (destinationToUpdate.affected === 0) {
+    const destinationSaved = await this.destinationRepository.findOneBy({ id });
+
+    if (!destinationSaved) {
       throw new NotFoundException('Destination not found');
     }
+
+    Object.assign(destinationSaved, updateDestinationDto);
+
+    await this.destinationRepository.save(destinationSaved);
   }
 
   async remove(id: string): Promise<void> {
