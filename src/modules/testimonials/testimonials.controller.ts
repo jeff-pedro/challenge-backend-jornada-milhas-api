@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   Req,
 } from '@nestjs/common';
 import { TestimonialsService } from './testimonials.service';
@@ -17,6 +18,9 @@ import { Testimonial } from './entities/testimonial.entity';
 import { Public } from '../../common/decorators/public-route.decorator';
 import { UserRequest } from '../auth/auth.guard';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
+import { PaginatedDto } from 'src/common/dtos/paginated.dto';
+import { PaginationQueryParamsDto } from '../../common/dtos/pagination-query-params.dto';
+import { ApiPaginatedResponse } from '../../common/decorators/api-paginated-response.decorator';
 
 @Controller()
 export class TestimonialsController {
@@ -53,11 +57,14 @@ export class TestimonialsController {
    * 
    * @throws {404} Any testimonial was found.
    */
+  @ApiPaginatedResponse(Testimonial)
   @Public()
   @Get('/testimonials')
-  async findAll(): Promise<Testimonial[]> {
-    const testimonialsList = await this.testimonialsService.findAll();
-    return testimonialsList;
+  async findAll(
+    @Query() paginationDto: PaginationQueryParamsDto
+  ): Promise<PaginatedDto<Testimonial>> {
+    const testimonials = await this.testimonialsService.findAll(paginationDto);
+    return testimonials;
   }
 
   /**

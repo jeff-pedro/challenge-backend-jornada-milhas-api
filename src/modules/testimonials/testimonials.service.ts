@@ -1,10 +1,12 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, Search } from '@nestjs/common';
 import { Testimonial } from './entities/testimonial.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateTestimonialDto } from './dto/create-testimonial.dto';
 import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 import { User } from '../users/entities/user.entity';
+import { PaginationQueryParamsDto } from 'src/common/dtos/pagination-query-params.dto';
+import { PaginatedDto } from 'src/common/dtos/paginated.dto';
 
 @Injectable()
 export class TestimonialsService {
@@ -44,9 +46,13 @@ export class TestimonialsService {
     return user;
   }
 
-  async findAll(options?: object): Promise<Testimonial[]> {
-    const testimonialsSaved = await this.testimonialRepository.find({
+  async findAll(params: PaginationQueryParamsDto, options?: object): Promise<PaginatedDto<Testimonial>> {
+    const { page, limit, search: testimonial } = params;
+    const offset = (page - 1) * limit;
+
+    const [testimonials, total] = await this.testimonialRepository.findAndCount({
       ...options,
+      where: { testimonial },
       relations: ['user'],
       select: 
         { 
@@ -55,14 +61,21 @@ export class TestimonialsService {
             firstName: true,
             lastName: true
           }
-        }
+        },
+        skip: offset,
+        take: limit,
     });
   
-    if (testimonialsSaved.length === 0) {
+    if (testimonials.length === 0) {
       throw new NotFoundException('Any testimonial was found.');
     }
 
-    return testimonialsSaved;
+    return {
+      total,
+      limit,
+      offset,
+      results: testimonials 
+    };
   }
 
   async findOne(
