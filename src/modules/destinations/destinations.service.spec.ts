@@ -128,7 +128,7 @@ describe('DestinationsService', () => {
 
   describe('findAll', () => {
     it('should throw an error if destination not found', async () => {
-      const queryParams = {};
+      const queryParams = { limit: 1, page: 1 };
       const result = destinationsService.findAll(queryParams);
 
       expect(result).rejects.toBeInstanceOf(NotFoundException);
