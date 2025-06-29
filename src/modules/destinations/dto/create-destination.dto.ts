@@ -22,6 +22,7 @@ export class CreateDestinationDto {
   
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   price?: number;
 
   @IsOptional() 

@@ -24,7 +24,7 @@ export class Destination {
   @Column({ name: 'target', length: 160, nullable: false })
   target: string;
   
-  @Column({ name: 'price', nullable: true, default: 0 })
+  @Column('decimal', { name: 'price', default: 0 })
   price: number;
 
   @ApiHideProperty()
