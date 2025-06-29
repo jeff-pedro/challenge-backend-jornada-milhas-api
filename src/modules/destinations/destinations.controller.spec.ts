@@ -92,7 +92,7 @@ describe('DestinationsController', () => {
   describe('findAll', () => {
     it('should return an object of destination', async () => {
       const results: Destination[] = [destinationMock];
-      expect(await destinationsController.findAll()).toStrictEqual(results);
+      expect(await destinationsController.findAll({})).toStrictEqual(results);
     });
   });
 

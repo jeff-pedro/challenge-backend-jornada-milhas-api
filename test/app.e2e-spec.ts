@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { AppModuleTest } from './app.module.spec';
-import { validate } from '../src/resources/validations/env.validation';
+import { validate } from '../src/common/validations/env.validation';
 
 
 describe('AppModule', () => {

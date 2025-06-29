@@ -11,6 +11,8 @@ import { CreateDestinationDto } from './dto/create-destination.dto';
 import { Photo } from '../photos/entities/photo.entity';
 import { IAService } from '../ai/interfaces/ai.service.interface';
 import { AI_PROMPTS } from './constants/ai-prompts.constants';
+import { PaginationQueryParamsDto } from '../../common/dtos/pagination-query-params.dto';
+import { PaginatedDto } from 'src/common/dtos/paginated.dto';
 
 @Injectable()
 export class DestinationsService {
@@ -19,7 +21,7 @@ export class DestinationsService {
     private destinationRepository: Repository<Destination>,
     @Inject('IAService')
     private readonly iaService: IAService,
-  ) {};
+  ) { };
 
   async create(
     createDestinationDto: CreateDestinationDto,
@@ -27,10 +29,10 @@ export class DestinationsService {
     if (!createDestinationDto.description) {
       const promptText = AI_PROMPTS.DESTINATION_DESCRIPTION_TEXT(createDestinationDto.name);
       const text = await this.iaService.generateText(promptText) ?? '';
-      
+
       const promptTitle = AI_PROMPTS.DESTINATION_DESCRIPTION_TITLE(text);
       const promptSubtitle = AI_PROMPTS.DESTINATION_DESCRIPTION_SUBTITLE(text);
-      
+
       const title = await this.iaService.generateText(promptTitle) ?? '';
       const subtitle = await this.iaService.generateText(promptSubtitle) ?? '';
 
@@ -44,33 +46,44 @@ export class DestinationsService {
     return this.destinationRepository.save(createDestinationDto);
   }
 
-  async findAll(name?: string): Promise<Destination[]> {
-    const destinationSaved = await this.destinationRepository.find({
+  async findAll(params: PaginationQueryParamsDto): Promise<PaginatedDto<Destination>> {
+    const { page = 1, limit = 6, search: name } = params;
+
+    const offset = (page - 1) * limit;
+
+    const [destinations, total] = await this.destinationRepository.findAndCount({
       where: { name },
       relations: ['photos'],
       select: { photos: { url: true } },
+      skip: (page - 1) * limit,
+      take: offset,
     });
 
-    if (destinationSaved.length === 0) {
+    if (destinations.length === 0) {
       throw new NotFoundException('Any destination was found');
     }
 
-    return destinationSaved;
+    return {
+      total,
+      limit,
+      offset,
+      results: destinations,
+    }
   }
 
   async findOne(id: string): Promise<Destination> {
     const destinationSaved = await this.destinationRepository
-    .createQueryBuilder('destination')
-    .leftJoin('destination.description', 'description')
-    .leftJoin('destination.photos', 'photos')
-    .select(['destination', 'photos'])
-    .addSelect([
-      'description.text', 
-      'description.title', 
-      'description.subtitle'
-    ])
-    .where('destination.id = :id', { id })
-    .getOne();
+      .createQueryBuilder('destination')
+      .leftJoin('destination.description', 'description')
+      .leftJoin('destination.photos', 'photos')
+      .select(['destination', 'photos'])
+      .addSelect([
+        'description.text',
+        'description.title',
+        'description.subtitle'
+      ])
+      .where('destination.id = :id', { id })
+      .getOne();
 
     if (!destinationSaved) {
       throw new NotFoundException('Destination not found');
@@ -112,7 +125,7 @@ export class DestinationsService {
 
       destination.photos.push(photoEntity);
     }
-    
+
     await this.destinationRepository.save(destination);
     return destination.photos;
   }

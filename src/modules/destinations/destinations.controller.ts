@@ -18,12 +18,15 @@ import { CreateDestinationDto } from './dto/create-destination.dto';
 import { UpdateDestinationDto } from './dto/update-destination.dto';
 import { ListDestinationDto } from './dto/list-destination.dto';
 import { Destination } from './entities/destination.entity';
-import { Public } from '../../resources/decorators/public-route.decorator';
+import { Public } from '../../common/decorators/public-route.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Photo } from '../photos/entities/photo.entity';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiCreatedResponse, ApiExtraModels, ApiOkResponse, ApiParam, ApiQuery, getSchemaPath } from '@nestjs/swagger';
 import UploadPhotoDestinationDto from './dto/upload-photo-destination.dto';
 import { FILE_CONSTRAINTS } from '../../config/constants/app.constants';
+import { PaginationQueryParamsDto } from '../../common/dtos/pagination-query-params.dto';
+import { PaginatedDto } from '../../common/dtos/paginated.dto';
+import { ApiPaginatedResponse } from '../../common/decorators/api-paginated-response.decorator';
 
 @Controller('destinations')
 export class DestinationsController {
@@ -89,17 +92,13 @@ export class DestinationsController {
    * 
    * @throws {404} Any destination was found.
    */
+  @ApiPaginatedResponse(Destination)
   @Public()
-  @ApiOkResponse({ description: 'Successful operation', type: Destination })
-  @ApiQuery({
-    name: 'name',
-    required: false,
-    description: 'The destination name that needs to be fetched.',
-    example: 'user1'
-  })
   @Get()
-  async findAll(@Query('name') name?: string): Promise<Destination[]> {
-    return this.destinationsService.findAll(name);
+  async findAll(
+    @Query() paginationDto: PaginationQueryParamsDto,
+  ): Promise<PaginatedDto<Destination>> {
+    return this.destinationsService.findAll(paginationDto);
   }
 
   /**

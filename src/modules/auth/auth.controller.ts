@@ -1,7 +1,7 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signin.dto';
-import { Public } from '../../resources/decorators/public-route.decorator';
+import { Public } from '../../common/decorators/public-route.decorator';
 import { ApiOkResponse } from '@nestjs/swagger';
 
 @Controller('auth')
