@@ -51,7 +51,9 @@ describe('UsersController (e2e)', () => {
     accessToken = await jwtService.signAsync({ userId });
   });
 
-  afterAll(() => {
+  afterAll(async () => {
+    await app.close();
+
     // Cleans the upload path 
     const basePath = path.parse(__dirname).dir;
     const uploadPath = path.join(basePath, `${process.env.UPLOAD_USERS_PATH}`);

@@ -71,6 +71,15 @@ describe('DestinationsController (e2e)', () => {
 
   afterAll(async () => {
     await app.close();
+    
+    // Cleans the upload path 
+    const basePath = path.parse(__dirname).dir;
+    const uploadPath = path.join(basePath, `${process.env.UPLOAD_DESTINATIONS_PATH}`);
+    const uploadDirPath = path.parse(uploadPath).dir;
+
+    if (fs.existsSync(uploadDirPath)) {
+      fs.rmSync(uploadDirPath, { recursive: true });
+    }
   });
 
   describe('/POST destinations', () => {
@@ -256,13 +265,13 @@ describe('DestinationsController (e2e)', () => {
 
     it('should return status 200 when receives via query params a valid destination name', () => {
       return request(app.getHttpServer())
-        .get(`${DESTINATION_URL}/?name=${destinationName}`)
+        .get(`${DESTINATION_URL}/?search=${destinationName}`)
         .expect(200);
     });
 
     it('should return an error when receives via query params an non-existent destination name', async () => {
       const response = await request(app.getHttpServer())
-      .get(`${DESTINATION_URL}/?name=NonExistentDestination`)
+      .get(`${DESTINATION_URL}/?search=NonExistentDestination`)
 
       expect(response.status).toBe(404);
       expect(response.body.message).toBe('Any destination was found');
