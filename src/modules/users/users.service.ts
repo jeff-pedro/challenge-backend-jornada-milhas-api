@@ -30,7 +30,7 @@ export class UsersService {
       take: limit,
     });
 
-    if (!users) {
+    if (users.length === 0) {
       throw new NotFoundException('Any user was found');
     }
 
